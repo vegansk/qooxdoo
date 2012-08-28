@@ -43,3 +43,4 @@
 
 \bqx\.core\.MEvents\b=qx.core.MEvent
 
+\bqx\.ui\.core\.Command=qx.ui.command.Command
