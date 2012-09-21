@@ -593,6 +593,7 @@ qx.Class.define("qx.event.handler.DragDrop",
       // Stop event
       if (this.__sessionActive) {
         e.stopPropagation();
+        e.preventDefault();
       }
 
       // Clean up
@@ -662,13 +663,16 @@ qx.Class.define("qx.event.handler.DragDrop",
       var dropable = this.__findDroppable(target);
       if (dropable && dropable != this.__dropTarget)
       {
+        this.__dropTarget = dropable;
         this.__validDrop = true;
         this.__detectAction();
         
-        this.__validDrop = this.__fireEvent("dragover", dropable, this.__dragTarget, true, e);
-        this.__dropTarget = dropable;
-
-        this.__detectAction();
+        qx.event.Timer.once(function() {
+          this.__validDrop = this.__fireEvent("dragover", dropable, this.__dragTarget, true, e);
+          
+  
+          this.__detectAction();
+        }, this, 0);
       }
     },
 
