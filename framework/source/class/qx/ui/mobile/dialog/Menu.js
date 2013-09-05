@@ -232,8 +232,8 @@ qx.Class.define("qx.ui.mobile.dialog.Menu",
 
     // overridden
     _updatePosition : function() {
-      var parentHeight = qx.bom.element.Style.get(qx.ui.mobile.dialog.Popup.ROOT.getContentElement(),"height");
-      var listScrollerHeight = parseInt(parentHeight) * 0.75;
+      var parentHeight = qx.ui.mobile.dialog.Popup.ROOT.getContentElement().getHeight();
+      var listScrollerHeight = parentHeight * 0.75;
       
       if (this.getVisibleListItems() != null) {
         var newListScrollerHeight = this.__selectionList.getListItemHeight() * this.getVisibleListItems();
