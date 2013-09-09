@@ -129,11 +129,11 @@ qx.Class.define("domains.Application",
       q("#domain-names").on("click", function() {
         asc = !asc;
         this.getSiblings().setHtml(asc ? "↓" : "↑");
-        q("tbody").getChildren().sort(function(a, b) {
+        q("#domains tbody").getChildren().sort(function(a, b) {
           var txtA = q(a).getChildren()[1].textContent;
           var txtB = q(b).getChildren()[1].textContent
           return txtA === txtB ? 0 : asc ? txtA > txtB : txtA < txtB;
-        }).appendTo("tbody");
+        }).appendTo("#domains tbody");
       });
 
       // checkbox
