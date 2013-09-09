@@ -33,6 +33,10 @@ qx.Bootstrap.define("qx.module.ui.Widget", {
         }
         item.templates[name] = template;
       });
+
+      this.render();
+
+      return this;
     },
 
 
@@ -51,6 +55,7 @@ qx.Bootstrap.define("qx.module.ui.Widget", {
       return template;
     },
 
+    render : function() {},
 
 
 

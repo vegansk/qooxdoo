@@ -45,6 +45,9 @@ qx.Bootstrap.define("qx.module.ui.Calendar", {
 
     _monthNames : ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
     _dayNames : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    render : function() {
+      this.showValue(this.getProperty("shownValue"));
+    },
 
 
     setValue : function(value) {
