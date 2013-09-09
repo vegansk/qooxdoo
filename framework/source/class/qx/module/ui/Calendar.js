@@ -64,22 +64,26 @@ qx.Bootstrap.define("qx.module.ui.Calendar", {
 
       this.setHtml(this._getTable(value));
 
-      this.find(".qx-calendar-prev").on("click", function() {
-        var shownValue = this.getProperty("shownValue");
-        this.showValue(new Date(shownValue.getFullYear(), shownValue.getMonth() - 1))
-      }, this);
 
-      this.find(".qx-calendar-next").on("click", function() {
-        var shownValue = this.getProperty("shownValue");
-        this.showValue(new Date(shownValue.getFullYear(), shownValue.getMonth() + 1))
-      }, this);
+      this.forEach(function(item) {
+        item = qxWeb(item);
+        item.find(".qx-calendar-prev").on("click", function() {
+          var shownValue = item.getProperty("shownValue");
+          item.showValue(new Date(shownValue.getFullYear(), shownValue.getMonth() - 1))
+        }, this);
 
-      this.find(".qx-calendar-day").on("click", function(e) {
-        var day = qxWeb(e.getTarget());
-        var value = this.getValue();
-        var newValue = new Date(day.getAttribute("value"));
-        this.setValue(newValue);
-        this.emit("changeValue", newValue);
+        item.find(".qx-calendar-next").on("click", function() {
+          var shownValue = item.getProperty("shownValue");
+          item.showValue(new Date(shownValue.getFullYear(), shownValue.getMonth() + 1))
+        }, this);
+
+        item.find(".qx-calendar-day").on("click", function(e) {
+          var day = qxWeb(e.getTarget());
+          var value = item.getValue();
+          var newValue = new Date(day.getAttribute("value"));
+          item.setValue(newValue);
+          item.emit("changeValue", newValue);
+        }, this);
       }, this);
     },
 
