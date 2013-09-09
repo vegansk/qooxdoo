@@ -168,6 +168,7 @@ qx.Class.define("domains.Application",
         console.log("New Date:" + e);
       });
 
+      q("#date2").calendar().setTemplate("dayRow", q("#dayRow").getHtml());
 
       // TADA!!!
       toolbar.setStyle("display", "block");
