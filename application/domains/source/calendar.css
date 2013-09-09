@@ -11,10 +11,8 @@
 }
 
 .qx-calendar button:focus {
-  
-  
-  
-  
+  -webkit-text-stroke: 1px rgb(34, 68, 187);
+  color: rgb(34, 68, 187);
 }
 
 
