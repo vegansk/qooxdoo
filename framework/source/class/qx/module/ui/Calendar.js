@@ -13,12 +13,15 @@ qx.Bootstrap.define("qx.module.ui.Calendar", {
                    "<td colspan='1' title='Next Month' class='qx-calendar-next'><button>&gt;</button></td>" +
                  "</tr>",
       dayRow : "<tr>" +
-              "{{#row}}<td>{{.}}</td>{{/row}}" +
-            "</tr>",
+                 "{{#row}}<td>{{.}}</td>{{/row}}" +
+               "</tr>",
       row : "<tr>" +
               "{{#row}}<td class='{{cssClass}}'><button class='qx-calendar-day' value='{{date}}'>{{day}}</button></td>{{/row}}" +
             "</tr>",
-      table : "<table><thead>{{{thead}}}</thead><tbody>{{{tbody}}}</tbody></table>"
+      table : "<table><thead>{{{thead}}}</thead><tbody>{{{tbody}}}</tbody></table>",
+
+      monthNames : ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+      dayNames : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     }
   },
 
@@ -40,38 +43,35 @@ qx.Bootstrap.define("qx.module.ui.Calendar", {
 
 
   members : {
-    _value : null,
-    _shownValue : null,
-
-    _monthNames : ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-    _dayNames : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
     render : function() {
       this.showValue(this.getProperty("shownValue"));
     },
 
 
     setValue : function(value) {
-      this._value = value;
+      this.setProperty("value", value);
       this.showValue(value);
     },
 
 
     getValue : function() {
-      return this._value;
+      return this.getProperty("value");
     },
 
 
     showValue : function(value) {
-      this._shownValue = value;
+      this.setProperty("shownValue", value);
 
       this.setHtml(this._getTable(value));
 
       this.find(".qx-calendar-prev").on("click", function() {
-        this.showValue(new Date(this._shownValue.getFullYear(), this._shownValue.getMonth() - 1))
+        var shownValue = this.getProperty("shownValue");
+        this.showValue(new Date(shownValue.getFullYear(), shownValue.getMonth() - 1))
       }, this);
 
       this.find(".qx-calendar-next").on("click", function() {
-        this.showValue(new Date(this._shownValue.getFullYear(), this._shownValue.getMonth() + 1))
+        var shownValue = this.getProperty("shownValue");
+        this.showValue(new Date(shownValue.getFullYear(), shownValue.getMonth() + 1))
       }, this);
 
       this.find(".qx-calendar-day").on("click", function(e) {
@@ -100,14 +100,14 @@ qx.Bootstrap.define("qx.module.ui.Calendar", {
 
     _getControlsData : function(date) {
       return {
-        month: this._monthNames[date.getMonth()],
+        month: this.getTemplate("monthNames")[date.getMonth()],
         year: date.getFullYear()
       }
     },
 
     _getDayRowData : function(date) {
       return {
-        row: this._dayNames
+        row: this.getTemplate("dayNames")
       };
     },
 
@@ -130,8 +130,8 @@ qx.Bootstrap.define("qx.module.ui.Calendar", {
 
         for (var i=0; i<7; i++) {
           var cssClasses = helpDate.getMonth() !== date.getMonth() ? "othermonth" : "";
-          if (this._value) {
-            cssClasses += helpDate.toDateString() === this._value.toDateString() ? " selected" : "";
+          if (this.getProperty("value")) {
+            cssClasses += helpDate.toDateString() === this.getProperty("value").toDateString() ? " selected" : "";
           }
           cssClasses += today.toDateString() === helpDate.toDateString() ? " today" : "";
 
