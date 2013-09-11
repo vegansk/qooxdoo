@@ -1,7 +1,7 @@
 qx.Class.define("qx.test.performance.element.Element",
 {
   extend : qx.dev.unit.TestCase,
-  include : qx.dev.unit.MMeasure,
+  include : [qx.dev.unit.MMeasure, qx.dev.unit.MRequirements],
 
   members :
   {
@@ -32,6 +32,7 @@ qx.Class.define("qx.test.performance.element.Element",
     CREATE_ITERATIONS : 1000,
     RESIZE_ITERATIONS : 500,
     DISPOSE_ITERATIONS : 1000,
+    DURATION: 1000,
 
     _createElement : function() {
       return new qx.html.Element("div");
@@ -186,6 +187,21 @@ qx.Class.define("qx.test.performance.element.Element",
           this.flush();
         },
         1, this.DISPOSE_ITERATIONS
+      );
+    },
+
+    testCreateWithInnerHtml : function()
+    {
+      this.measureIterations(
+        "create DOM element with innerHTML",
+        null,
+        function() {
+          var helper = qx.dom.Element.getHelperElement();
+          helper.innerHTML = "<input type='text'>";
+          var element = helper.firstChild;
+        },
+        null,
+        this.DURATION
       );
     }
   }

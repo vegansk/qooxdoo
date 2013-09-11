@@ -9,7 +9,9 @@ qx.Class.define("qx.test.performance.element.Html",
 
   members :
   {
-    ITERATIONS : 5000,
+    CREATEITERATIONS : 1000,
+
+    MODIFYITERATIONS : 500,
 
     __cont : null,
 
@@ -26,15 +28,14 @@ qx.Class.define("qx.test.performance.element.Html",
         border: "1px solid blue",
         padding: "10px"
       };
-      this.__cont = new qx.ui.container.Composite(new qx.ui.layout.Basic());
-      this.getRoot().add(this.__cont, {edge: 0});
+
       qx.ui.core.queue.Manager.flush();
+      qx.html.Element.flush();
     },
 
     tearDown : function()
     {
       qxWeb("body > div").getChildren().remove();
-      this.__cont.destroy();
     },
 
     __createHtmlElement : function()
@@ -46,7 +47,7 @@ qx.Class.define("qx.test.performance.element.Html",
       inner.setAttribute("text", "Some Text");
       outer.add(inner);
 
-      this.__cont.getContentElement().add(outer);
+      this.getRoot(true).getContentElement().add(outer);
     },
 
     __createQxWeb : function()
@@ -58,40 +59,96 @@ qx.Class.define("qx.test.performance.element.Html",
       .setHtml("Some Text")
       .appendTo(outer);
 
-      outer.appendTo(this.__cont.getContentElement());
+      outer.appendTo(this.getRoot().getContentElement());
     },
 
-    testQxHtml : function() {
+    testStartupQxHtml : function() {
       this.measure(
         "create HTML elements",
 
         function() {
-          for (var i=0; i<= this.ITERATIONS; i++) {
+          for (var i=0; i<= this.CREATEITERATIONS; i++) {
             this.__createHtmlElement();
           }
+          qx.html.Element.flush();
         }.bind(this),
 
-        function() {
-          qx.html.Element.flush();
-        },
+        null,
 
-        this.ITERATIONS
+        this.CREATEITERATIONS
       );
     },
 
-    testQxWeb : function() {
+    testStartupQxWeb : function() {
       this.measure(
         "create qxWeb elements",
 
         function() {
-          for (var i=0; i<= this.ITERATIONS; i++) {
+          for (var i=0; i<= this.CREATEITERATIONS; i++) {
             this.__createQxWeb();
           }
         }.bind(this),
 
         null,
 
-        this.ITERATIONS
+        this.CREATEITERATIONS
+      );
+    },
+
+    testModifyQxHtml : function() {
+      for (var i=0; i<= this.MODIFYITERATIONS; i++) {
+        this.__createHtmlElement();
+      }
+
+      qx.html.Element.flush();
+      this.measure(
+        "modify HTML elements",
+
+        function() {
+          var children = this.getRoot(true).getContentElement().getChildren();
+          children.forEach(function(child, index) {
+            child.setStyles({
+              left: "50px",
+              top: "50px",
+              backgroundColor: "blue",
+              padding: "5px 10px"
+            });
+            if (index % 100) {
+              qx.html.Element.flush();
+            }
+          });
+          qx.html.Element.flush();
+        }.bind(this),
+
+        null,
+
+        this.MODIFYITERATIONS
+      );
+    },
+
+    testModifyQxWeb : function() {
+      for (var i=0; i<= this.MODIFYITERATIONS; i++) {
+        this.__createQxWeb();
+      }
+
+      this.measure(
+        "modify qxWeb elements",
+
+        function() {
+          var children = this.getRoot().getContentElement().getChildren();
+          children.forEach(function(child, index) {
+            qxWeb(child).setStyles({
+              left: "50px",
+              top: "50px",
+              backgroundColor: "blue",
+              padding: "5px 10px"
+            });
+          });
+        }.bind(this),
+
+        null,
+
+        this.MODIFYITERATIONS
       );
     }
   }

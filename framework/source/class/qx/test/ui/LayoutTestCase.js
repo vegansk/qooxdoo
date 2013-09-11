@@ -54,16 +54,18 @@ qx.Class.define("qx.test.ui.LayoutTestCase",
     },
 
 
-    getRoot : function()
+    getRoot : function(html)
     {
       var cls = qx.test.ui.LayoutTestCase;
 
-      if (cls._root) {
+      if (cls._root && (html ? cls._root.classname == "qx.test.ui.HtmlApplication" :
+          cls._root.classname == "qx.ui.root.Application"))
+      {
         return cls._root;
       }
 
       qx.theme.manager.Meta.getInstance().initialize();
-      cls._root = new qx.ui.root.Application(document);
+      cls._root = html ? new qx.test.ui.HtmlApplication(document) : new qx.ui.root.Application(document);
 
       cls.__oldApplication = qx.core.Init.getApplication();
       cls.__oldGetApp = qx.core.Init.getApplication;
@@ -75,8 +77,8 @@ qx.Class.define("qx.test.ui.LayoutTestCase",
           },
           close : function() {},
           terminate : function() {}
-        }
-      }
+        };
+      };
 
       return cls._root;
     },
