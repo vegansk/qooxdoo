@@ -220,9 +220,9 @@ qx.Class.define("qx.ui.core.scroll.NativeScrollBar",
       var content = this.getContentElement();
 
       if (this.__isHorizontal) {
-        content.scrollToX(value)
+        content.setProperty("scrollLeft", value);
       } else {
-        content.scrollToY(value);
+        content.setProperty("scrollTop", value);
       }
     },
 

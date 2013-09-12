@@ -427,10 +427,10 @@ qx.Class.define("qx.ui.form.Slider",
         var padding = (this.getPaddingTop() || 0) + decoratorPadding;
       }
 
-      var sliderLocation = this.__sliderLocation = qx.bom.element.Location.get(this.getContentElement().getDomElement())[locationProperty];
+      var sliderLocation = this.__sliderLocation = qx.bom.element.Location.get(this.getContentElement()[0])[locationProperty];
       sliderLocation += padding;
 
-      var knobLocation = this.__knobLocation = qx.bom.element.Location.get(knob.getContentElement().getDomElement())[locationProperty];
+      var knobLocation = this.__knobLocation = qx.bom.element.Location.get(knob.getContentElement()[0])[locationProperty];
 
       if (e.getTarget() === knob)
       {
@@ -523,14 +523,14 @@ qx.Class.define("qx.ui.form.Slider",
           {
             deltaSlider = e.getDocumentLeft() - (this._valueToPosition(this.getValue()) + this.__sliderLocation);
 
-            positionSlider = qx.bom.element.Location.get(this.getContentElement().getDomElement())["top"];
+            positionSlider = qx.bom.element.Location.get(this.getContentElement()[0])["top"];
             deltaPosition = e.getDocumentTop() - (positionSlider + this.getChildControl("knob").getBounds().top);
           }
           else
           {
             deltaSlider = e.getDocumentTop() - (this._valueToPosition(this.getValue()) + this.__sliderLocation);
 
-            positionSlider = qx.bom.element.Location.get(this.getContentElement().getDomElement())["left"];
+            positionSlider = qx.bom.element.Location.get(this.getContentElement()[0])["left"];
             deltaPosition = e.getDocumentLeft() - (positionSlider + this.getChildControl("knob").getBounds().left);
           }
 

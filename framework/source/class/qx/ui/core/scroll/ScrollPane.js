@@ -204,8 +204,8 @@ qx.Class.define("qx.ui.core.scroll.ScrollPane",
     {
       var contentEl = this.getContentElement();
 
-      this.setScrollX(contentEl.getScrollX());
-      this.setScrollY(contentEl.getScrollY());
+      this.setScrollX(contentEl.getProperty("scrollLeft"));
+      this.setScrollY(contentEl.getProperty("scrollTop"));
     },
 
 
@@ -222,14 +222,14 @@ qx.Class.define("qx.ui.core.scroll.ScrollPane",
       var domX = contentEl.getScrollX();
 
       if (internalX != domX) {
-        contentEl.scrollToX(internalX);
+        contentEl.setProperty("scrollLeft", internalX);
       }
 
       var internalY = this.getScrollY();
       var domY = contentEl.getScrollY();
 
       if (internalY != domY) {
-        contentEl.scrollToY(internalY);
+        contentEl.setProperty("scrollTop", internalY);
       }
     },
 
@@ -497,13 +497,13 @@ qx.Class.define("qx.ui.core.scroll.ScrollPane",
 
     // property apply
     _applyScrollX : function(value) {
-      this.getContentElement().scrollToX(value);
+      this.getContentElement().setProperty("scrollLeft", value);
     },
 
 
     // property apply
     _applyScrollY : function(value) {
-      this.getContentElement().scrollToY(value);
+      this.getContentElement().setProperty("scrollTop", value);
     }
   }
 });
