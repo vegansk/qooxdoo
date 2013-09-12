@@ -63,8 +63,7 @@ qx.Class.define("qx.ui.core.scroll.NativeScrollBar",
     this.addListener("mouseup", this._stopPropagation, this);
     this.addListener("mousemove", this._stopPropagation, this);
     this.addListener("appear", this._onAppear, this);
-
-    this.getContentElement().add(this._getScrollPaneElement());
+    this._getScrollPaneElement().appendTo(this.getContentElement().add());
     this.getContentElement().setStyle("box-sizing", "content-box");
 
     // Configure orientation
@@ -371,7 +370,7 @@ qx.Class.define("qx.ui.core.scroll.NativeScrollBar",
     _onScroll : function(e)
     {
       var container = this.getContentElement();
-      var position = this.__isHorizontal ? container.getScrollX() : container.getScrollY();
+      var position = this.__isHorizontal ? container.getProperty("scrollLeft") : container.getProperty("scrollTop");
       this.setPosition(position);
     },
 
