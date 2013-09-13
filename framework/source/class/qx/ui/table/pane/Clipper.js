@@ -38,7 +38,7 @@ qx.Class.define("qx.ui.table.pane.Clipper",
      * @param value {Integer} The vertical position to scroll to.
      */
     scrollToX : function(value) {
-      this.getContentElement().scrollToX(value, false);
+      this.getContentElement().setProperty("scrollLeft", value);
     },
 
 

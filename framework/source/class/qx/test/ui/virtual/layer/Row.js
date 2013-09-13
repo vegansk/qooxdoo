@@ -30,7 +30,7 @@ qx.Class.define("qx.test.ui.virtual.layer.Row",
 
     _assertCells : function(firstRow, firstColumn, rowCount, columnCount, msg)
     {
-      var children = this.layer.getContentElement().getDomElement().childNodes;
+      var children = this.layer.getContentElement().getChildren();
 
       this.assertEquals(rowCount, children.length);
 

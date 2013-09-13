@@ -1528,14 +1528,7 @@ qx.Class.define("qx.ui.core.Widget",
       // Flush the queues because to detect if the widget ins visible, the
       // queues need to be flushed (see bug #5254)
       qx.ui.core.queue.Manager.flush();
-      // if the element is already rendered, a check for the offsetWidth is enough
-      var element = this.getContentElement().getDomElement();
-      if (element) {
-        // will also be 0 if the parents are not visible
-        return element.offsetWidth > 0;
-      }
-      // if no element is available, it can not be visible
-      return false;
+      return this.getContentElement().getProperty("offsetWidth") > 0;
     },
 
 
@@ -2780,7 +2773,7 @@ qx.Class.define("qx.ui.core.Widget",
      * @return {Boolean} Whether the element is tabable.
      */
     isTabable : function() {
-      return (!!this.getContentElement().getDomElement()) && this.isFocusable();
+      return this.isFocusable();
     },
 
 
@@ -3671,12 +3664,8 @@ qx.Class.define("qx.ui.core.Widget",
      *   <code>right</code> and <code>bottom</code> which contains the distance
      *   of the element relative to the document.
      */
-    getContentLocation : function(mode)
-    {
-      //var domEl = this.getContentElement().getDomElement();
-      //return domEl ? qx.bom.element.Location.get(domEl, mode) : null;
-      //TODO: mode
-      return this.getContentElement().getOffset();
+    getContentLocation : function(mode) {
+      return this.getContentElement().getOffset(mode);
     },
 
 
@@ -3690,14 +3679,8 @@ qx.Class.define("qx.ui.core.Widget",
      *
      * @param value {Integer} Left position
      */
-    setDomLeft : function(value)
-    {
-      var domEl = this.getContentElement().getDomElement();
-      if (domEl) {
-        domEl.style.left = value + "px";
-      } else {
-        throw new Error("DOM element is not yet created!");
-      }
+    setDomLeft : function(value) {
+      this.getContentElement().setStyle("left", value + "px");
     },
 
 
@@ -3711,14 +3694,8 @@ qx.Class.define("qx.ui.core.Widget",
      *
      * @param value {Integer} Top position
      */
-    setDomTop : function(value)
-    {
-      var domEl = this.getContentElement().getDomElement();
-      if (domEl) {
-        domEl.style.top = value + "px";
-      } else {
-        throw new Error("DOM element is not yet created!");
-      }
+    setDomTop : function(value) {
+      this.getContentElement().setStyle("top", value + "px");
     },
 
 
@@ -3735,16 +3712,10 @@ qx.Class.define("qx.ui.core.Widget",
      */
     setDomPosition : function(left, top)
     {
-      var domEl = this.getContentElement().getDomElement();
-      if (domEl)
-      {
-        domEl.style.left = left + "px";
-        domEl.style.top = top + "px";
-      }
-      else
-      {
-        throw new Error("DOM element is not yet created!");
-      }
+      this.getContentElement().setStyles({
+        top : top + "px",
+        left : left + "px"
+      });
     },
 
 

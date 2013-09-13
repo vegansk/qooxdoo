@@ -394,10 +394,8 @@ qx.Class.define("qx.ui.basic.Label",
         parseInt(qx.core.Environment.get("engine.version"), 10) < 16 &&
         parseInt(qx.core.Environment.get("engine.version"), 10) > 9)
       {
-        var domEl = this.getContentElement().getDomElement();
-        if (domEl) {
-          domEl.innerHTML = domEl.innerHTML;
-        }
+        var domEl = this.getContentElement();
+        domEl.setHtml(domEl.getHtml());
       }
     },
 

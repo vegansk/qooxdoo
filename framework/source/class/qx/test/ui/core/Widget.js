@@ -230,14 +230,14 @@ qx.Class.define("qx.test.ui.core.Widget",
       // Scroll and flush
       scroll.scrollChildIntoView(inner2);
       this.flush();
-      scrollTopInitial = scrollPane.getContentElement().getDomElement().scrollTop;
+      scrollTopInitial = scrollPane.getContentElement()[0].scrollTop;
 
       // Scroll, do not flush
       inner1.setHeight(200);
       scroll.scrollChildIntoView(inner2);
 
       qx.event.Timer.once(function() {
-        scrollTop = scrollPane.getContentElement().getDomElement().scrollTop;
+        scrollTop = scrollPane.getContentElement()[0].scrollTop;
       }, this, 250);
 
       this.wait(500, function() {
@@ -281,7 +281,7 @@ qx.Class.define("qx.test.ui.core.Widget",
 
       var listener2 = scroll.addListener("appear", function(ev) {
         var scrollPane = this._getChildren()[0];
-        scrollTop = scrollPane.getContentElement().getDomElement().scrollTop;
+        scrollTop = scrollPane.getContentElement()[0].scrollTop;
       });
 
       qx.event.Timer.once(function() {

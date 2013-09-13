@@ -328,13 +328,8 @@ qx.Class.define("qx.ui.core.FocusHandler",
       }
 
       // Computing location
-      var el1 = widget1.getContentElement().getDomElement();
-      var el2 = widget2.getContentElement().getDomElement();
-
-      var Location = qx.bom.element.Location;
-
-      var loc1 = Location.get(el1);
-      var loc2 = Location.get(el2);
+      var loc1 = widget1.getContentElement().getOffset();
+      var loc2 = widget2.getContentElement().getOffset();
 
       // Sort-Check #2: Top-Position
       if (loc1.top != loc2.top) {

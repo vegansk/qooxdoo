@@ -219,7 +219,7 @@ qx.Class.define("qx.test.ui.LayoutTestCase",
     assertSize : function(widget, width, height, msg)
     {
       this.flush();
-      var el = widget.getContentElement().getDomElement();
+      var el = widget.getContentElement()[0];
       var elHeight = parseInt(el.style.height, 10);
       var elWidth = parseInt(el.style.width, 10);
       this.assertEquals(width, elWidth, msg);
@@ -232,9 +232,9 @@ qx.Class.define("qx.test.ui.LayoutTestCase",
       this.flush();
 
       this.assertNotNull(widget.getContentElement());
-      this.assertNotNull(widget.getContentElement().getDomElement());
+      this.assertNotNull(widget.getContentElement()[0]);
 
-      var content = widget.getContentElement().getDomElement();
+      var content = widget.getContentElement()[0];
 
       var paddingTop = parseInt(qx.bom.element.Style.get(content, "paddingTop"), 10) || 0;
       var paddingRight = parseInt(qx.bom.element.Style.get(content, "paddingRight"), 10) || 0;
@@ -251,7 +251,7 @@ qx.Class.define("qx.test.ui.LayoutTestCase",
     assertStyle : function(widget, style, value, msg)
     {
       this.flush();
-      var element = widget.getContentElement().getDomElement();
+      var element = widget.getContentElement()[0];
       var computedStyle = qx.bom.element.Style.get(element, style);
 
       if (value && style.match(/color/i)) {

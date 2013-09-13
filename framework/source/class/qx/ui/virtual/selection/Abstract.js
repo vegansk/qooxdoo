@@ -211,10 +211,8 @@ qx.Class.define("qx.ui.virtual.selection.Abstract",
 
 
     // overridden
-    _getLocation : function()
-    {
-      var elem = this._pane.getContentElement().getDomElement();
-      return elem ? qx.bom.element.Location.get(elem) : null;
+    _getLocation : function() {
+      return this._pane.getContentElement().getOffset();
     },
 
 

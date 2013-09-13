@@ -124,8 +124,7 @@ qx.Class.define("qx.ui.treevirtual.SelectionManager",
           var columnPositions = tcm._getColToXPosMap();
 
           // Calculate the position of the beginning of the tree column
-          var left = qx.bom.element.Location.getLeft(
-            tree.getContentElement().getDomElement());
+          var left = tree.getContentElement().getOffset().left;
 
           for (var i=0; i<columnPositions[treeCol].visX; i++) {
             left += tcm.getColumnWidth(columnPositions[i].visX);

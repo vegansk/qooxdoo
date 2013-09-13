@@ -349,15 +349,15 @@ qx.Class.define("qx.ui.progressive.renderer.table.Row",
         rendererData.end = (index == 0 ? 1 : 0);
 
         // Append our new row to the pane.
-        state.getPane().getContentElement().getDomElement().appendChild(div);
+        state.getPane().getContentElement().append(div);
         break;
 
       case "start":
         // Get the pane element
-        var elem = state.getPane().getContentElement().getDomElement();
+        var elem = state.getPane().getContentElement();
 
         // Get its children array
-        var children = elem.childNodes;
+        var children = elem.getChildren();
 
         // Are there any children?
         if (children.length > 0)
@@ -372,7 +372,7 @@ qx.Class.define("qx.ui.progressive.renderer.table.Row",
           rendererData.start = (index == 0 ? 1 : 0);
 
           // Insert our new row before the first child.
-          elem.insertBefore(div, children[0]);
+          qxWeb(div).insertBefore(children[0]);
           break;
         }
         else

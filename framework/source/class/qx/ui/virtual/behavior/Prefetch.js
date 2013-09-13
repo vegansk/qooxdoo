@@ -185,15 +185,7 @@ qx.Class.define("qx.ui.virtual.behavior.Prefetch",
 
       if (value)
       {
-        if (!value.getContentElement().getDomElement())
-        {
-          this.__timer.stop();
-          value.addListenerOnce("appear", this.__timer.start, this.__timer);
-        }
-        else
-        {
-          this.__timer.restart();
-        }
+        this.__timer.restart();
 
 //        if (value.hasChildControl("scrollbar-x"))
 //        {

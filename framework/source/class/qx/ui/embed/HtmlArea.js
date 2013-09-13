@@ -485,7 +485,7 @@ qx.Class.define("qx.ui.embed.HtmlArea",
      */
     __setupEditorComponent : function()
     {
-      var domElement = this.getContentElement().getChildren()[0].getDomElement();
+      var domElement = this.getContentElement().getChildren()[0];
       this.__editorComponent = new qx.bom.htmlarea.HtmlArea(domElement,
                                                            this.__initValues.content,
                                                            this.__initValues.styleInfo,
@@ -568,7 +568,7 @@ qx.Class.define("qx.ui.embed.HtmlArea",
     {
       this.__onDOMNodeRemoved = qx.lang.Function.bind(this.__invalidateEditor, this);
 
-      var element = this.getContentElement().getDomElement();
+      var element = this.getContentElement()[0];
       qx.bom.Event.addNativeListener(element, "DOMNodeRemoved", this.__onDOMNodeRemoved);
     },
 
@@ -1372,7 +1372,7 @@ qx.Class.define("qx.ui.embed.HtmlArea",
     qx.event.Registration.removeListener(document.body, "mouseup", this.release, this, true);
     qx.event.Registration.removeListener(document.body, "losecapture", this.release, this, true);
 
-    var element = this.getContentElement().getDomElement();
+    var element = this.getContentElement()[0];
     if (element) {
       qx.bom.Event.removeNativeListener(element, "DOMNodeRemoved", this.__onDOMNodeRemoved);
     }

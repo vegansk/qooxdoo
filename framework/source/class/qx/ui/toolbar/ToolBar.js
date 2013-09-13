@@ -261,15 +261,6 @@ qx.Class.define("qx.ui.toolbar.ToolBar",
             var margins = removedChild.getMarginLeft() + removedChild.getMarginRight();
             margins = Math.max(margins, this.getSpacing());
 
-            // check if the element has been rendered before [BUG #4542]
-            if (removedChild.getContentElement().getDomElement() == null) {
-              // if not, apply the decorator element because it can change the
-              // width of the child with padding e.g.
-              removedChild.syncAppearance();
-              // also invalidate the layout cache to trigger size hint
-              // recalculation
-              removedChild.invalidateLayoutCache();
-            }
             var removedChildWidth = removedChild.getSizeHint().width;
 
             // check if it fits in in case its the last child to replace

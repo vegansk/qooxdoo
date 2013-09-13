@@ -44,7 +44,7 @@ qx.Class.define("qx.test.ui.embed.Iframe",
       this.getRoot().add(this.__iframe);
 
       qx.ui.core.queue.Manager.flush();
-      this.assertNotNull(this.__iframe.getContentElement().getDomElement());
+      this.assertNotNull(this.__iframe.getContentElement()[0]);
     },
 
 

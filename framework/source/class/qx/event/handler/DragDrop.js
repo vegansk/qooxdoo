@@ -657,7 +657,7 @@ qx.Class.define("qx.event.handler.DragDrop",
     {
       var target = e.getTarget();
       var cursor = qx.ui.core.DragDropCursor.getInstance();
-      var cursorEl = cursor.getContentElement().getDomElement();
+      var cursorEl = cursor.getContentElement()[0];
       // don't fire dragover on the cursor
       if (target === cursorEl) {
         return;
@@ -683,7 +683,7 @@ qx.Class.define("qx.event.handler.DragDrop",
     _onMouseOut : function(e)
     {
       var cursor = qx.ui.core.DragDropCursor.getInstance();
-      var cursorEl = cursor.getContentElement().getDomElement();
+      var cursorEl = cursor.getContentElement()[0];
       // prevent dragleave if the target is the cursor
       if (e.getTarget() === cursorEl) {
         return;

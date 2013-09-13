@@ -72,8 +72,7 @@ qx.Class.define("qx.ui.embed.Iframe",
     {
       this.addListenerOnce("appear", function(e)
       {
-        var element = this.getContentElement().getDomElement();
-        qx.bom.Event.addNativeListener(element, "DOMNodeInserted", this._onDOMNodeInserted);
+        this.getContentElement().on("DOMNodeInserted", this._onDOMNodeInserted);
       });
       this._onDOMNodeInserted = qx.lang.Function.listener(this._syncSourceAfterDOMMove, this);
     }
@@ -326,7 +325,7 @@ qx.Class.define("qx.ui.embed.Iframe",
      */
     _syncSourceAfterDOMMove : function()
     {
-      var iframeDomElement = this.getContentElement().getDomElement();
+      var iframeDomElement = this.getContentElement()[0];
       var iframeSource = iframeDomElement.src;
 
       // remove trailing "/"

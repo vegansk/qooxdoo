@@ -412,10 +412,7 @@ qx.Class.define("qx.ui.form.List",
         if (item.isRich()) {
           var control = item.getChildControl("label", true);
           if (control) {
-            var labelNode = control.getContentElement().getDomElement();
-            if (labelNode) {
-              label = qx.bom.element.Attribute.get(labelNode, "text");
-            }
+            label = control.getContentElement().getAttribute("text");
           }
 
         } else {

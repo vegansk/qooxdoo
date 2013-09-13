@@ -560,8 +560,8 @@ qx.Class.define("qx.ui.basic.Image",
 
           // Flush elements to make sure the DOM elements are created.
           qx.html.Element.flush();
-          var currentDomEl = currentEl.getDomElement();
-          var newDomEl = elementToAdd.getDomElement();
+          var currentDomEl = currentEl[0];
+          var newDomEl = elementToAdd[0];
           if (currentDomEl && newDomEl) {
             // Switch the DOM elements' hash codes. This is required for the event
             // layer to work [BUG #7447]

@@ -408,18 +408,13 @@ qx.Class.define("qx.ui.table.pane.Pane",
      */
     _updateRowStyles : function(onlyRow)
     {
-      var elem = this.getContentElement().getDomElement();
-
-      if (!elem || !elem.firstChild) {
-        this._updateAllRows();
-        return;
-      }
+      var elem = this.getContentElement();
 
       var table = this.getTable();
       var selectionModel = table.getSelectionModel();
       var tableModel = table.getTableModel();
       var rowRenderer = table.getDataRowRenderer();
-      var rowNodes = elem.firstChild.childNodes;
+      var rowNodes = elem.getChildren().getFirst().getChildren();
       var cellInfo = { table : table };
 
       // We don't want to execute the row loop below more than necessary. If
@@ -454,7 +449,7 @@ qx.Class.define("qx.ui.table.pane.Pane",
         cellInfo.focusedRow = (this.__focusedRow == row);
         cellInfo.rowData = tableModel.getRowData(row);
 
-        rowRenderer.updateDataRowElement(cellInfo, rowNodes[y]);
+        rowRenderer.updateDataRowElement(cellInfo, rowNodes[y][0]);
       };
     },
 
@@ -595,14 +590,10 @@ qx.Class.define("qx.ui.table.pane.Pane",
      */
     _scrollContent : function(rowOffset)
     {
-      var el = this.getContentElement().getDomElement();
-      if (!(el && el.firstChild)) {
-        this._updateAllRows();
-        return;
-      }
+      var el = this.getContentElement();
 
-      var tableBody = el.firstChild;
-      var tableChildNodes = tableBody.childNodes;
+      var tableBody = el.getChildren().getFirst();
+      var tableChildNodes = tableBody.getChildren();
       var rowCount = this.getVisibleRowCount();
       var firstRow = this.getFirstVisibleRow();
 
@@ -623,9 +614,9 @@ qx.Class.define("qx.ui.table.pane.Pane",
 
       for (var i=Math.abs(rowOffset)-1; i>=0; i--)
       {
-        var rowElem = tableChildNodes[removeRowBase];
+        var rowElem = tableChildNodes.eq(removeRowBase);
         try {
-          tableBody.removeChild(rowElem);
+          rowElem.remove();
         } catch(exp) {
           break;
         }
@@ -674,12 +665,7 @@ qx.Class.define("qx.ui.table.pane.Pane",
      */
     _updateAllRows : function()
     {
-      var elem = this.getContentElement().getDomElement();
-      if (!elem) {
-        // pane has not yet been rendered
-        this.addListenerOnce("appear", arguments.callee, this);
-        return;
-      }
+      var elem = this.getContentElement();
 
       var table = this.getTable();
 
@@ -725,7 +711,7 @@ qx.Class.define("qx.ui.table.pane.Pane",
       }
 
       var data = htmlArr.join("");
-      elem.innerHTML = data;
+      elem.setHtml(data);
       this.setWidth(rowWidth);
 
       this.__lastColCount = colCount;

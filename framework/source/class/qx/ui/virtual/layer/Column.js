@@ -94,14 +94,13 @@ qx.Class.define("qx.ui.virtual.layer.Column",
         column += 1;
       }
 
-      var el = this.getContentElement().getDomElement();
+      var el = this.getContentElement();
       // hide element before changing the child nodes to avoid
       // premature reflow calculations
-      el.style.display = "none";
-      window.affe = el;
-      el.innerHTML = html.join("");
+      el.setStyle("display", "none");
+      el.setHtml(html.join(""));
 
-      el.style.display = "block";
+      el.setStyle("display", "block");
 
       this._height = height;
     },

@@ -57,7 +57,7 @@ qx.Class.define("qx.ui.core.scroll.ScrollPane",
 
     // Fixed some browser quirks e.g. correcting scroll position
     // to the previous value on re-display of a pane
-    contentEl.addListener("appear", this._onAppear, this);
+    this.addListener("appear", this._onAppear, this);
   },
 
 
@@ -219,14 +219,14 @@ qx.Class.define("qx.ui.core.scroll.ScrollPane",
       var contentEl = this.getContentElement();
 
       var internalX = this.getScrollX();
-      var domX = contentEl.getScrollX();
+      var domX = contentEl.getProperty("scrollLeft");
 
       if (internalX != domX) {
         contentEl.setProperty("scrollLeft", internalX);
       }
 
       var internalY = this.getScrollY();
-      var domY = contentEl.getScrollY();
+      var domY = contentEl.getProperty("scrollTop");
 
       if (internalY != domY) {
         contentEl.setProperty("scrollTop", internalY);

@@ -30,7 +30,7 @@ qx.Class.define("qx.test.ui.virtual.layer.GridLinesHorizontal",
 
     _assertCells : function(firstRow, firstColumn, rowCount, columnCount, msg)
     {
-      var children = this.layer.getContentElement().getDomElement().childNodes;
+      var children = this.layer.getContentElement()[0].childNodes;
 
       this.assertEquals(rowCount-1, children.length);
     }

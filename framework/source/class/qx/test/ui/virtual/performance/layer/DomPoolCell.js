@@ -44,7 +44,7 @@ qx.Class.define("qx.test.ui.virtual.performance.layer.DomPoolCell",
     {
       qx.ui.core.queue.Manager.flush();
       var start = new Date();
-      var el = this.getContentElement().getDomElement();
+      var el = this.getContentElement()[0];
       if (!el) {
         return;
       }

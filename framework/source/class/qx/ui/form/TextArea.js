@@ -238,7 +238,7 @@ qx.Class.define("qx.ui.form.TextArea",
     */
     _getScrolledAreaHeight: function() {
       var clone = this.__getAreaClone();
-      var cloneDom = clone.getDomElement();
+      var cloneDom = clone[0];
 
       if (cloneDom) {
 
@@ -323,12 +323,12 @@ qx.Class.define("qx.ui.form.TextArea",
       orig = this.getContentElement();
 
       // An existing DOM element is required
-      if (!orig.getDomElement()) {
+      if (!orig[0]) {
         return null;
       }
 
       // Create DOM clone
-      cloneDom = qx.bom.Element.clone(orig.getDomElement());
+      cloneDom = qx.bom.Element.clone(orig[0]);
 
       // Convert to qx.html Element
       cloneHtml = new qx.html.Input("textarea");
@@ -369,7 +369,7 @@ qx.Class.define("qx.ui.form.TextArea",
     * @param clone {Element} The <code>TextArea</code> to scroll
     */
     __scrollCloneToBottom: function(clone) {
-      clone = clone.getDomElement();
+      clone = clone[0];
       if (clone) {
         clone.scrollTop = 10000;
       }
@@ -464,7 +464,7 @@ qx.Class.define("qx.ui.form.TextArea",
      */
     __forceRewrap : function() {
       var content = this.getContentElement();
-      var element = content.getDomElement();
+      var element = content[0];
 
       // Temporarily increase width
       var width = content.getStyle("width");

@@ -127,10 +127,8 @@ qx.Class.define("qx.ui.core.selection.Widget",
     */
 
     // overridden
-    _getLocation : function()
-    {
-      var elem = this.__widget.getContentElement().getDomElement();
-      return elem ? qx.bom.element.Location.get(elem) : null;
+    _getLocation : function() {
+      return this.__widget.getContentElement().getOffset();
     },
 
 
