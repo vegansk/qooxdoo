@@ -2126,7 +2126,7 @@ qx.Class.define("qx.ui.core.Widget",
      *   are not captured.
      */
     capture : function(capture) {
-      this.getContentElement().capture(capture);
+      qx.bom.Element.capture(this.getContentElement()[0], capture);
     },
 
 
@@ -2134,7 +2134,7 @@ qx.Class.define("qx.ui.core.Widget",
      * Disables mouse capture mode enabled by {@link #capture}.
      */
     releaseCapture : function() {
-      this.getContentElement().releaseCapture();
+      qx.bom.Element.releaseCapture(this.getContentElement()[0]);
     },
 
 

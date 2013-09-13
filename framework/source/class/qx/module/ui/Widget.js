@@ -220,16 +220,6 @@ qx.Bootstrap.define("qx.module.ui.Widget", {
         this.setScrollLeft(0);
         delete this.__inScroll;
       }
-    },
-
-
-    /*
-    ---------------------------------------------------------------------------
-      EVENT SUPPORT
-    ---------------------------------------------------------------------------
-    */
-
-    capture : function() {},
-    releaseCapture : function() {}
+    }
   }
 });
