@@ -68,11 +68,9 @@ qx.Class.define("qx.ui.embed.Iframe",
 
     this.__blockerElement = this._createBlockerElement();
 
-    if ((qx.core.Environment.get("engine.name") == "gecko"))
-    {
-      this.addListenerOnce("appear", function(e)
-      {
-        this.getContentElement().on("DOMNodeInserted", this._onDOMNodeInserted);
+    if ((qx.core.Environment.get("engine.name") == "gecko")) {
+      this.addListenerOnce("appear", function(e) {
+        qx.event.Registration.addListener(this.getContentElement()[0], "DOMNodeInserted", this._onDOMNodeInserted);
       });
       this._onDOMNodeInserted = qx.lang.Function.listener(this._syncSourceAfterDOMMove, this);
     }

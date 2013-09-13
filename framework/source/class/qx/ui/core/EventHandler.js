@@ -313,7 +313,7 @@ qx.Class.define("qx.ui.core.EventHandler",
       }
 
       if (elem) {
-        elem.addListener(type, this._dispatchEvent, this, capture);
+        qx.event.Registration.addListener(elem[0], type, this._dispatchEvent, this, capture);
       }
     },
 
@@ -330,7 +330,7 @@ qx.Class.define("qx.ui.core.EventHandler",
       }
 
       if (elem) {
-        elem.removeListener(type, this._dispatchEvent, this, capture);
+        qx.event.Registration.removeListener(elem[0], type, this._dispatchEvent, this, capture);
       }
     }
   },

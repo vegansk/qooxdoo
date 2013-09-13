@@ -90,8 +90,8 @@ qx.Class.define("qx.ui.form.AbstractField",
       this.setValue(value);
     }
 
-    this.getContentElement().addListener(
-      "change", this._onChangeContent, this
+    qx.event.Registration.addListener(
+      this.getContentElement()[0], "change", this._onChangeContent, this
     );
 
     // use qooxdoo placeholder if no native placeholder is supported
@@ -377,7 +377,7 @@ qx.Class.define("qx.ui.form.AbstractField",
       el.setEnabled(this.getEnabled());
 
       // Add listener for input event
-      el.addListener("input", this._onHtmlInput, this);
+      qx.event.Registration.addListener(el[0], "input", this._onHtmlInput, this);
 
       // Disable HTML5 spell checking
       el.setAttribute("spellcheck", "false");
@@ -1039,6 +1039,6 @@ qx.Class.define("qx.ui.form.AbstractField",
       this.__font.removeListenerById(this.__webfontListenerId);
     }
 
-    this.getContentElement().removeListener("input", this._onHtmlInput, this);
+    qx.event.Registration.addListener(this.getContentElement()[0], "input", this._onHtmlInput, this);
   }
 });

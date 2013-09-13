@@ -58,7 +58,7 @@ qx.Class.define("qx.ui.core.scroll.NativeScrollBar",
 
     this.addState("native");
 
-    this.getContentElement().addListener("scroll", this._onScroll, this);
+    qx.event.Registration.addListener(this.getContentElement()[0], "scroll", this._onScroll, this);
     this.addListener("mousedown", this._stopPropagation, this);
     this.addListener("mouseup", this._stopPropagation, this);
     this.addListener("mousemove", this._stopPropagation, this);

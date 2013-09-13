@@ -36,11 +36,12 @@ qx.Mixin.define("qx.ui.core.MResizable",
   {
     // Register listeners to the content
     var content = this.getContentElement();
-    content.addListener("mousedown", this.__onResizeMouseDown, this, true);
-    content.addListener("mouseup", this.__onResizeMouseUp, this);
-    content.addListener("mousemove", this.__onResizeMouseMove, this);
-    content.addListener("mouseout", this.__onResizeMouseOut, this);
-    content.addListener("losecapture", this.__onResizeLoseCapture, this);
+
+    qx.event.Registration.addListener(content[0], "mousedown", this.__onResizeMouseDown, this, true);
+    qx.event.Registration.addListener(content[0], "mouseup", this.__onResizeMouseUp, this);
+    qx.event.Registration.addListener(content[0], "mousemove", this.__onResizeMouseMove, this);
+    qx.event.Registration.addListener(content[0], "mouseout", this.__onResizeMouseOut, this);
+    qx.event.Registration.addListener(content[0], "losecapture", this.__onResizeLoseCapture, this);
 
     // Get a reference of the drag and drop handler
     var domElement = content[0];

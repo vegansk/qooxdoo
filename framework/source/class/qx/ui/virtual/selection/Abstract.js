@@ -99,11 +99,11 @@ qx.Class.define("qx.ui.virtual.selection.Abstract",
     attachMouseEvents : function()
     {
       var paneElement = this._pane.getContentElement();
-      paneElement.addListener("mousedown", this.handleMouseDown, this);
-      paneElement.addListener("mouseup", this.handleMouseUp, this);
-      paneElement.addListener("mouseover", this.handleMouseOver, this);
-      paneElement.addListener("mousemove", this.handleMouseMove, this);
-      paneElement.addListener("losecapture", this.handleLoseCapture, this);
+      qx.event.Registration.addListener(paneElement[0], "mousedown", this.handleMouseDown, this);
+      qx.event.Registration.addListener(paneElement[0], "mouseup", this.handleMouseUp, this);
+      qx.event.Registration.addListener(paneElement[0], "mouseover", this.handleMouseOver, this);
+      qx.event.Registration.addListener(paneElement[0], "mousemove", this.handleMouseMove, this);
+      qx.event.Registration.addListener(paneElement[0], "losecapture", this.handleLoseCapture, this);
     },
 
 
@@ -113,11 +113,11 @@ qx.Class.define("qx.ui.virtual.selection.Abstract",
     detatchMouseEvents : function()
     {
       var paneElement = this._pane.getContentElement();
-      paneElement.removeListener("mousedown", this.handleMouseDown, this);
-      paneElement.removeListener("mouseup", this.handleMouseUp, this);
-      paneElement.removeListener("mouseover", this.handleMouseOver, this);
-      paneElement.removeListener("mousemove", this.handleMouseMove, this);
-      paneElement.removeListener("losecapture", this.handleLoseCapture, this);
+      qx.event.Registration.removeListener(paneElement[0], "mousedown", this.handleMouseDown, this);
+      qx.event.Registration.removeListener(paneElement[0], "mouseup", this.handleMouseUp, this);
+      qx.event.Registration.removeListener(paneElement[0], "mouseover", this.handleMouseOver, this);
+      qx.event.Registration.removeListener(paneElement[0], "mousemove", this.handleMouseMove, this);
+      qx.event.Registration.removeListener(paneElement[0], "losecapture", this.handleLoseCapture, this);
     },
 
 

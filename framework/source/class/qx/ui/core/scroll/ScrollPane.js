@@ -53,7 +53,7 @@ qx.Class.define("qx.ui.core.scroll.ScrollPane",
     var contentEl = this.getContentElement();
 
     // Synchronizes the DOM scroll position with the properties
-    contentEl.addListener("scroll", this._onScroll, this);
+    contentEl.on("scroll", this._onScroll, this);
 
     // Fixed some browser quirks e.g. correcting scroll position
     // to the previous value on re-display of a pane
