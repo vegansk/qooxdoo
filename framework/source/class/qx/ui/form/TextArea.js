@@ -137,16 +137,16 @@ qx.Class.define("qx.ui.form.TextArea",
      */
     _onMousewheel : function(e) {
       var contentElement = this.getContentElement();
-      var scrollY = contentElement.getScrollY();
+      var scrollY = contentElement.getProperty("scrollTop");
 
       if (qx.event.handler.MouseEmulation.ON) {
-        contentElement.scrollToY(scrollY + e.getWheelDelta("y"));
+        contentElement.setProperty("scrollTop", scrollY + e.getWheelDelta("y"));
       } else {
-        contentElement.scrollToY(scrollY + e.getWheelDelta("y") * this.getSingleStep());
+        contentElement.setProperty("scrollTop", scrollY + e.getWheelDelta("y") * this.getSingleStep());
       }
 
 
-      var newScrollY = contentElement.getScrollY();
+      var newScrollY = contentElement.getProperty("scrollTop");
 
       if (newScrollY != scrollY) {
         e.stop();
@@ -254,10 +254,10 @@ qx.Class.define("qx.ui.form.TextArea",
         // disabled initially is incorrectly computed as if wrapping was enabled.
         if (qx.core.Environment.get("engine.name") === "webkit" ||
             (qx.core.Environment.get("engine.name") == "mshtml")) {
-          clone.setWrap(!this.getWrap(), true);
+          clone.setProperty("wrap", !this.getProperty("wrap"), true);
         }
 
-        clone.setWrap(this.getWrap(), true);
+        clone.setProperty("wrap", this.getProperty("wrap"), true);
 
         // Webkit needs overflow "hidden" in order to correctly compute height
         if (qx.core.Environment.get("engine.name") === "webkit" ||
@@ -331,8 +331,7 @@ qx.Class.define("qx.ui.form.TextArea",
       cloneDom = qx.bom.Element.clone(orig[0]);
 
       // Convert to qx.html Element
-      cloneHtml = new qx.html.Input("textarea");
-      cloneHtml.useElement(cloneDom);
+      cloneHtml = new qx.module.ui.Input(cloneDom);
       clone = cloneHtml;
 
       // Push out of view
@@ -382,9 +381,8 @@ qx.Class.define("qx.ui.form.TextArea",
     */
 
     // overridden
-    _createInputElement : function()
-    {
-      return new qx.html.Input("textarea", {
+    _createInputElement : function() {
+      return (new qx.module.ui.Input(qx.bom.Input.create("textarea"))).setStyles({
         overflowX: "auto",
         overflowY: "auto"
       });
@@ -399,7 +397,7 @@ qx.Class.define("qx.ui.form.TextArea",
 
     // property apply
     _applyWrap : function(value, old) {
-      this.getContentElement().setWrap(value);
+      this.getContentElement().setProperty("wrap", value);
       if (this._placeholder) {
         var whiteSpace = value ? "normal" : "nowrap";
         this._placeholder.setStyle("whiteSpace", whiteSpace);

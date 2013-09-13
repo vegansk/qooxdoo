@@ -29,7 +29,7 @@ qx.Class.define("qx.ui.form.PasswordField",
   {
     // overridden
     _createInputElement : function() {
-      return new qx.html.Input("password");
+      return new qx.module.ui.Input(qx.bom.Input.create("password"));
     }
   }
 });

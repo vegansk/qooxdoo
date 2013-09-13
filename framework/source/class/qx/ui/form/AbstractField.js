@@ -281,7 +281,7 @@ qx.Class.define("qx.ui.form.AbstractField",
      * @return {qx.html.Input} a new input element.
      */
     _createInputElement : function() {
-      return new qx.html.Input("text");
+      return new qx.module.ui.Input(qx.bom.Input.create("text"));
     },
 
 

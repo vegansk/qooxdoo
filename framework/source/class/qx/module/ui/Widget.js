@@ -64,8 +64,6 @@ qx.Bootstrap.define("qx.module.ui.Widget", {
     // ////////////
     // TODO cleanup!!!
     // ////////////
-    capture : function() {},
-    releaseCapture : function() {},
     activate : function() {},
 
 
@@ -230,6 +228,9 @@ qx.Bootstrap.define("qx.module.ui.Widget", {
       EVENT SUPPORT
     ---------------------------------------------------------------------------
     */
+
+    capture : function() {},
+    releaseCapture : function() {},
 
     /**
      * Adds an event listener to the element.
