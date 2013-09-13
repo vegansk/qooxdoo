@@ -168,6 +168,9 @@ qx.Class.define("qx.ui.core.queue.Visibility",
 
       // Recreate the array is cheaper compared to keep a sparse array over time
       this.__queue = [];
+
+      // fire appear / disappear events
+      qx.event.handler.Appear.refresh();
     }
   }
 });
