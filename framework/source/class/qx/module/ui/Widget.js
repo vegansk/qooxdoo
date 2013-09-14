@@ -131,7 +131,6 @@ qx.Bootstrap.define("qx.module.ui.Widget", {
         };
 
         qx.module.ui.Widget._scroll[this.$$hash] = this;
-        //qx.html.Element._scheduleFlush("element");
       }
 
       delete this.__lazyScrollX;
@@ -173,7 +172,6 @@ qx.Bootstrap.define("qx.module.ui.Widget", {
         };
 
         qx.module.ui.Widget._scroll[this.$$hash] = this;
-        //qx.html.Element._scheduleFlush("element");
       }
 
       delete this.__lazyScrollY;
