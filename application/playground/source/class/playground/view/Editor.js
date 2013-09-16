@@ -167,7 +167,7 @@ qx.Class.define("playground.view.Editor",
       // timout needed for chrome to not get the ACE layout wrong and show the
       // text on top of the gutter
       qx.event.Timer.once(function() {
-        var container = this.__editor.getContentElement().getDomElement();
+        var container = this.__editor.getContentElement()[0];
 
         // create the editor
         var editor = this.__ace = ace.edit(container);

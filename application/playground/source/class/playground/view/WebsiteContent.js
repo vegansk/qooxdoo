@@ -49,8 +49,6 @@ qx.Class.define("playground.view.WebsiteContent",
     this._setLayout(new qx.ui.layout.Canvas());
     this._add(container, {left: "50%", top: "50%"});
 
-
-
     this.addListener("appear", function() {
       // align in the center
       var bounds = container.getBounds();
@@ -60,8 +58,7 @@ qx.Class.define("playground.view.WebsiteContent",
       // no rotation for font rendering breaking gecko
       if (qx.core.Environment.get("engine.name") != "gecko") {
         // rotate a bit
-        var el = container.getContentElement().getDomElement();
-        qx.bom.element.Transform.rotate(el, "-2deg");
+        container.getContentElement().rotate("-2deg");
       }
     });
   }

@@ -101,7 +101,7 @@ qx.Class.define("playground.view.MobilePlayArea",
 
       qx.html.Element.flush();
 
-      var playRootEl = this._dummy.getContentElement().getDomElement();
+      var playRootEl = this._dummy.getContentElement()[0];
 
       // hotfix for chrome bug
       if (qx.core.Environment.get("browser.name") == "chrome") {

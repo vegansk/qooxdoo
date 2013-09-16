@@ -101,7 +101,7 @@ qx.Class.define("qx.ui.root.Page",
       var elem = this.__doc.createElement("div");
       this.__doc.body.appendChild(elem);
 
-      var root = new qx.html.Root(elem);
+      var root = qx.module.ui.Widget.create(elem);
       root.setStyles({
         position: "absolute",
         textAlign: "left"
