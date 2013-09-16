@@ -29,8 +29,8 @@ qx.Bootstrap.define("qx.module.event.Mouse", {
     /**
      * List of event types to be normalized
      */
-    TYPES : ["click", "dblclick", "mousedown", "mouseup", "mouseover", "mousemove",
-      "mouseout"],
+    TYPES : ["click", "dblclick", "mousedown", "mouseup", "mouseover", "mousemove", "mouseout", 
+      'pointerdown', 'pointerup', 'pointercancel', 'pointermove', 'pointerover', 'pointerout'],
 
 
     /**
