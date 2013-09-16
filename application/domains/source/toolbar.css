@@ -35,7 +35,7 @@
 
   .qx-toolbar .qx-button:active {
     border: 0px;
-    background-color: none;
+    background-color: transparent;
     background-image: none;
     border-top: 1px solid rgb(187, 187, 187);
   }
