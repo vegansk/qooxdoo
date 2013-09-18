@@ -351,11 +351,15 @@ qx.Bootstrap.define("qx.module.ui.Slider",
 
       if (this.__dragMode)
       {
+<<<<<<< HEAD
         if(!e.touches){
           e.touches = [e];
         }
         var dragPosition = e.getDocumentLeft ? e.getDocumentLeft() : e.touches[0].pageX;
 
+=======
+        var dragPosition = e.getDocumentLeft();
+>>>>>>> e8670d7... Minor.
         if (dragPosition >= this.__dragMin && dragPosition <= this.__dragMax)
         {
           this.setValue(this.__getCurrentValue(dragPosition));
