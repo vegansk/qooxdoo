@@ -161,7 +161,7 @@ qx.Class.define("domains.Application",
       q("#slider").setStyle("display", "block");
       q("#slider").slider(q("#knob"), [0,1,2,3,4,5,6,7,8,9], 30).on("changeValue", function(e) {
         q("#knob").setHtml(e + "");
-      });
+      }).setValue(5);
 
 
       q("#date").calendar(new Date(2013, 8, 3)).on("changeValue", function(e) {
