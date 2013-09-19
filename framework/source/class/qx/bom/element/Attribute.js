@@ -188,7 +188,8 @@ qx.Bootstrap.define("qx.bom.element.Attribute",
       {
         disabled: 1,
         multiple: 1,
-        maxLength: 1
+        maxLength: 1,
+        tabIndex: 1
       },
 
 

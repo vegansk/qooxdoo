@@ -1097,20 +1097,6 @@ qx.Class.define("qx.event.handler.Focus",
     // apply routine
     _applyFocus : function(value, old)
     {
-      /*
-      var id = "null";
-      if (value) {
-        id = (value.tagName||value) + "[" + (value.$$hash || "none") + "]";
-      }
-      this.debug("Property Focus: " + id);
-
-      id = "null";
-      if (old) {
-        id = (old.tagName||old) + "[" + (old.$$hash || "none") + "]";
-      }
-      this.debug("Property Blur: " + id);
-      */
-
       // Fire bubbling events
       if (old) {
         this.__fireEvent(old, value, "focusout", true);

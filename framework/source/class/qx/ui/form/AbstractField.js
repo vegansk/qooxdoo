@@ -505,7 +505,7 @@ qx.Class.define("qx.ui.form.AbstractField",
           "color", qx.theme.manager.Color.getInstance().resolve(value)
         );
       } else {
-        this.getContentElement().removeStyle("color");
+        this.getContentElement().setStyle("color", "");
       }
     },
 

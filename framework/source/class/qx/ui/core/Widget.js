@@ -2800,7 +2800,7 @@ qx.Class.define("qx.ui.core.Widget",
         if (target.isNativelyFocusable()) {
           target.setAttribute("tabIndex", -1);
         } else if (old) {
-          target.setAttribute("tabIndex", null);
+          target.removeAttribute("tabIndex");
         }
       }
     },
