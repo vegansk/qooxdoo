@@ -185,7 +185,7 @@ qx.Class.define("qx.ui.core.EventHandler",
 
       // don't activate anonymous widgets!
       if (widgetTarget && targetChanged && domEvent.getType() == "activate") {
-        widgetTarget.getContentElement().activate();
+        widgetTarget.activate();
       }
 
 

@@ -172,9 +172,9 @@ qx.Class.define("qx.ui.core.Blocker",
     {
       this._updateBlockerBounds(this._widget.getBounds());
       if (this._widget.isRootWidget()) {
-        this._widget.getContentElement().add(this.getBlockerElement());
+        this._widget.getContentElement().append(this.getBlockerElement());
       } else {
-        this._widget.getLayoutParent().getContentElement().add(this.getBlockerElement());
+        this._widget.getLayoutParent().getContentElement().append(this.getBlockerElement());
       }
     },
 
@@ -185,7 +185,7 @@ qx.Class.define("qx.ui.core.Blocker",
     __onWidgetDisappear : function()
     {
       if (this.isBlocked()) {
-        this.getBlockerElement().getParent().remove(this.getBlockerElement());
+        this.getBlockerElement().remove();
         this._widget.addListenerOnce("appear", this.__onWidgetAppear, this);
       }
     },
@@ -210,14 +210,13 @@ qx.Class.define("qx.ui.core.Blocker",
     _applyColor : function(value, old)
     {
       var color = qx.theme.manager.Color.getInstance().resolve(value);
-      this.__setBlockersStyle("backgroundColor", color);
+      this.getBlockerElement().setStyle("backgroundColor", color);
     },
 
 
     // property apply
-    _applyOpacity : function(value, old)
-    {
-      this.__setBlockersStyle("opacity", value);
+    _applyOpacity : function(value, old) {
+      this.getBlockerElement().setStyle("opacity", value);
     },
 
 
@@ -232,23 +231,6 @@ qx.Class.define("qx.ui.core.Blocker",
       },
       "false" : null
     }),
-
-
-    /**
-     * Set the style to all blockers (blocker and content blocker).
-     *
-     * @param key {String} The name of the style attribute.
-     * @param value {String} The value.
-     */
-    __setBlockersStyle : function(key, value)
-    {
-      var blockers = [];
-      this.__blocker && blockers.push(this.__blocker);
-
-      for (var i = 0; i < blockers.length; i++) {
-        blockers[i].setStyle(key, value);
-      }
-    },
 
 
     /**
@@ -300,12 +282,64 @@ qx.Class.define("qx.ui.core.Blocker",
 
 
     /**
+     * Stop the event propagation from the passed event.
+     *
+     * @param e {qx.event.type.Mouse} mouse event to stop propagation.
+     */
+    _stopPropagation : function(e) {
+      e.stopPropagation();
+    },
+
+
+    /**
+     * Refreshes the cursor by setting it to <code>null</code> and then to the
+     * old value.
+     */
+    __refreshCursor : function() {
+      var blocker = this.getBlockerElement();
+      var currentCursor = blocker.getStyle("cursor");
+      blocker.setStyle("cursor", null, true);
+      blocker.setStyle("cursor", currentCursor, true);
+    },
+
+
+    /**
      * Creates the blocker element.
      *
      * @return {qx.html.Element} The blocker element
      */
     __createBlockerElement : function() {
-      return new qx.html.Blocker(this.getColor(), this.getOpacity());
+      var blocker = qx.module.ui.Widget.create("<div>");
+
+      var styles = {
+        position: "absolute"
+      };
+
+      // IE needs some extra love here to convince it to block events.
+      if ((qx.core.Environment.get("engine.name") == "mshtml"))
+      {
+        styles.backgroundImage = "url(" + qx.util.ResourceManager.getInstance().toUri("qx/static/blank.gif") + ")";
+        styles.backgroundRepeat = "repeat";
+      }
+
+      blocker.setStyles(styles);
+
+      blocker.on("mousedown", this._stopPropagation, this);
+      blocker.on("mouseup", this._stopPropagation, this);
+      blocker.on("click", this._stopPropagation, this);
+      blocker.on("dblclick", this._stopPropagation, this);
+      blocker.on("mousemove", this._stopPropagation, this);
+      blocker.on("mouseover", this._stopPropagation, this);
+      blocker.on("mouseout", this._stopPropagation, this);
+      blocker.on("mousewheel", this._stopPropagation, this);
+      blocker.on("contextmenu", this._stopPropagation, this);
+      qx.event.Registration.addListener(blocker[0], "appear", this.__refreshCursor, this);
+      qx.event.Registration.addListener(blocker[0], "disappear", this.__refreshCursor, this);
+
+      this._applyColor(this.getColor());
+      this._applyOpacity(this.getOpacity());
+
+      return blocker;
     },
 
 
@@ -331,8 +365,8 @@ qx.Class.define("qx.ui.core.Blocker",
           }
         }
 
-        widget.getContentElement().add(this.__blocker);
-        this.__blocker.exclude();
+        widget.getContentElement().append(this.__blocker);
+        this.__blocker.setStyle("display", "none");
       }
       return this.__blocker;
     },
@@ -383,15 +417,15 @@ qx.Class.define("qx.ui.core.Blocker",
           this._updateBlockerBounds(bounds);
         }
 
-        blocker.include();
+        blocker.setStyle("display", "block");
         if (!blockContent) {
-          blocker.activate();
+          qx.bom.Element.activate(blocker[0]);
         }
 
-        blocker.addListener("deactivate", this.__activateBlockerElement, this);
-        blocker.addListener("keypress", this.__stopTabEvent, this);
-        blocker.addListener("keydown", this.__stopTabEvent, this);
-        blocker.addListener("keyup", this.__stopTabEvent, this);
+        qx.event.Registration.addListener(blocker[0], "deactivate", this.__activateBlockerElement, this);
+        blocker.on("keypress", this.__stopTabEvent, this);
+        blocker.on("keydown", this.__stopTabEvent, this);
+        blocker.on("keyup", this.__stopTabEvent, this);
 
         this.fireEvent("blocked", qx.event.type.Event);
       }
@@ -454,11 +488,11 @@ qx.Class.define("qx.ui.core.Blocker",
       this._restoreActiveWidget();
 
       var blocker = this.getBlockerElement();
-      blocker.removeListener("deactivate", this.__activateBlockerElement, this);
-      blocker.removeListener("keypress", this.__stopTabEvent, this);
-      blocker.removeListener("keydown", this.__stopTabEvent, this);
-      blocker.removeListener("keyup", this.__stopTabEvent, this);
-      blocker.exclude();
+      qx.event.Registration.removeListener(blocker[0], "deactivate", this.__activateBlockerElement, this);
+      blocker.off("keypress", this.__stopTabEvent, this);
+      blocker.off("keydown", this.__stopTabEvent, this);
+      blocker.off("keyup", this.__stopTabEvent, this);
+      blocker.setStyle("display", "none");
 
       this.fireEvent("unblocked", qx.event.type.Event);
     },
@@ -559,7 +593,7 @@ qx.Class.define("qx.ui.core.Blocker",
      */
     __activateBlockerElement : function() {
       if (this.getKeepBlockerActive()) {
-        this.getBlockerElement().activate();
+        qx.bom.Element.activate(this.getBlockerElement()[0]);
       }
     }
   },

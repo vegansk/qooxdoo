@@ -3302,7 +3302,7 @@ qx.Class.define("qx.ui.core.Widget",
      *
      */
     activate : function() {
-      this.getContentElement().activate();
+      qx.bom.Element.activate(this.getContentElement()[0]);
     },
 
 
@@ -3311,7 +3311,7 @@ qx.Class.define("qx.ui.core.Widget",
      *
      */
     deactivate : function() {
-      this.getContentElement().deactivate();
+      qx.bom.Element.deactivate(this.getContentElement()[0]);
     },
 
 
