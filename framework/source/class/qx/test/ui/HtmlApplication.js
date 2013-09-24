@@ -82,8 +82,6 @@ qx.Class.define("qx.test.ui.HtmlApplication",
 
     // Register as root
     qx.ui.core.FocusHandler.getInstance().connectTo(this);
-
-    this.getContentElement().disableScrolling();
   },
 
 

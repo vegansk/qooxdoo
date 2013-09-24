@@ -2797,7 +2797,7 @@ qx.Class.define("qx.ui.core.Widget",
       }
       else
       {
-        if (target.isNativelyFocusable()) {
+        if (this._isNativelyFocusable()) {
           target.setAttribute("tabIndex", -1);
         } else if (old) {
           target.removeAttribute("tabIndex");
@@ -3145,7 +3145,19 @@ qx.Class.define("qx.ui.core.Widget",
     },
 
 
-
+    /**
+     * Whether the element is natively focusable. This ignores the configured tabIndex.
+     *
+     * @return {Boolean} <code>true</code> when the focus element is focusable.
+     */
+    _isNativelyFocusable : function() {
+      var el = this.getFocusElement();
+      if (el && el[0]) {
+        var nodeName = qxWeb.getNodeName(el[0]);
+        return !!qx.event.handler.Focus.FOCUSABLE_ELEMENTS[nodeName];
+      }
+      return false;
+    },
 
 
 
@@ -3219,11 +3231,14 @@ qx.Class.define("qx.ui.core.Widget",
      *   <code>left</code> or <code>right</code>. Could also be null.
      *   Without a given alignment the method tries to scroll the widget
      *   with the minimum effort needed.
-     * @param direct {Boolean?true} Whether the execution should be made
-     *   directly when possible
      */
-    scrollChildIntoViewX : function(child, align, direct) {
-      this.getContentElement().scrollChildIntoViewX(child.getContentElement(), align, direct);
+    scrollChildIntoViewX : function(child, align) {
+      var thisEl = this.getContentElement()[0];
+      var childEl = child.getContentElement()[0];
+
+      if (thisEl.offsetWidth && childEl.offsetWidth) {
+        qx.bom.element.Scroll.intoViewX(childEl, thisEl, align);
+      }
     },
 
 
@@ -3235,11 +3250,14 @@ qx.Class.define("qx.ui.core.Widget",
      *   <code>top</code> or <code>bottom</code>. Could also be null.
      *   Without a given alignment the method tries to scroll the widget
      *   with the minimum effort needed.
-     * @param direct {Boolean?true} Whether the execution should be made
-     *   directly when possible
      */
-    scrollChildIntoViewY : function(child, align, direct) {
-      this.getContentElement().scrollChildIntoViewY(child.getContentElement(), align, direct);
+    scrollChildIntoViewY : function(child, align) {
+      var thisEl = this.getContentElement()[0];
+      var childEl = child.getContentElement()[0];
+
+      if (thisEl.offsetWidth && childEl.offsetWidth) {
+        qx.bom.element.Scroll.intoViewY(childEl, thisEl, align);
+      }
     },
 
 

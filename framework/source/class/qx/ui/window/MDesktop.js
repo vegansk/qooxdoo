@@ -56,6 +56,7 @@ qx.Mixin.define("qx.ui.window.MDesktop",
   {
     __windows : null,
     __manager: null,
+    __inScroll : null,
 
 
     /**
@@ -216,6 +217,45 @@ qx.Mixin.define("qx.ui.window.MDesktop",
         this.__windows = [];
       }
       return this.__windows;
+    },
+
+
+    /**
+     * Disables browser-native scrolling
+     */
+    disableScrolling : function()
+    {
+      var el = this.getContentElement();
+      this.enableScrolling();
+      el.setScrollLeft(0);
+      el.setScrollTop(0);
+      el.on("scroll", this.__onScroll, this);
+    },
+
+
+    /**
+     * Re-enables browser-native scrolling
+     */
+    enableScrolling : function() {
+      this.getContentElement().off("scroll", this.__onScroll, this);
+    },
+
+
+    /**
+     * Handler for the scroll-event
+     *
+     * @param e {Event} scroll-event
+     */
+    __onScroll : function(e)
+    {
+      if (!this.__inScroll)
+      {
+        var el = this.getContentElement();
+        this.__inScroll = true;
+        el.setScrollTop(0);
+        el.setScrollLeft(0);
+        delete this.__inScroll;
+      }
     }
   },
 
