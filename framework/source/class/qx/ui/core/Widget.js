@@ -36,7 +36,6 @@
  * @use(qx.event.handler.DragDrop)
  * @asset(qx/static/blank.gif)
  * @require(qx.module.Core)
- * @require(qx.module.Compat)
  *
  * @ignore(qx.ui.root.Inline)
  */
