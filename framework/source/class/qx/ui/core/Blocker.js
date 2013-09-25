@@ -336,9 +336,6 @@ qx.Class.define("qx.ui.core.Blocker",
       qx.event.Registration.addListener(blocker[0], "appear", this.__refreshCursor, this);
       qx.event.Registration.addListener(blocker[0], "disappear", this.__refreshCursor, this);
 
-      this._applyColor(this.getColor());
-      this._applyOpacity(this.getOpacity());
-
       return blocker;
     },
 
@@ -355,6 +352,9 @@ qx.Class.define("qx.ui.core.Blocker",
       if (!this.__blocker)
       {
         this.__blocker = this.__createBlockerElement();
+        this._applyColor(this.getColor());
+        this._applyOpacity(this.getOpacity());
+
         this.__blocker.setStyle("zIndex", 15);
 
         if (!widget) {
