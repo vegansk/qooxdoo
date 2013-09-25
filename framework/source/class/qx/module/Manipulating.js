@@ -74,7 +74,7 @@ qx.Bootstrap.define("qx.module.Manipulating", {
      */
     append : function(html) {
       var arr = qx.bom.Html.clean([html]);
-      var children = qxWeb.$init(arr, this.constructor);
+      var children = qxWeb.$init(arr, qxWeb);
 
       this._forEachElement(function(item, index) {
         for (var j=0, m=children.length; j < m; j++) {

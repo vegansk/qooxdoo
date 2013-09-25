@@ -52,6 +52,7 @@ qx.Bootstrap.define("qxWeb", {
      *   be initialized as {@link q}. All items in the array which are not
      *   either a window object, a DOM element node or a DOM document node will
      *   be ignored.
+     * @param clazz {Class} The class of the new collection.
      * @return {q} A new initialized collection.
      */
     $init : function(arg, clazz) {
