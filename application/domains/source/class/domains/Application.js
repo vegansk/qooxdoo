@@ -173,7 +173,7 @@ qx.Class.define("domains.Application",
         console.log("New Date:" + e);
       });
 
-      q("#date2").calendar().setTemplate("dayRow", q("#dayRow").getHtml());
+      q("#date2").calendar().setTemplate("dayRow", q("#dayRow").getHtml()).render();
 
       // TADA!!!
       toolbar.setStyle("display", "block");

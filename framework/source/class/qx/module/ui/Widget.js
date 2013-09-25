@@ -27,36 +27,51 @@ qx.Bootstrap.define("qx.module.ui.Widget", {
 
   members : {
     setTemplate : function(name, template) {
-      this.forEach(function(item) {
-        if (!item.templates) {
-          item.templates = {};
-        }
-        item.templates[name] = template;
-      });
+      return this._setData("templates", name, template);
+    },
 
-      this.render();
+
+    setConfig : function(name, config) {
+      return this._setData("config", name, config);
+    },
+
+
+    _setData : function(type, name, data) {
+      this.forEach(function(item) {
+        if (!item[type]) {
+          item[type] = {};
+        }
+        item[type][name] = data;
+      });
 
       return this;
     },
 
 
     getTemplate : function(name) {
-      var templates = this.getProperty("templates");
-      var template;
-
-      if (templates) {
-        template = templates[name];
-      }
-
-      if (!template && this.constructor._templates) {
-        return this.constructor._templates[name];
-      }
-
-      return template;
+      return this._getData("templates", name);
     },
 
-    render : function() {},
 
+    getConfig : function(name) {
+      return this._getData("config", name);
+    },
+
+
+    _getData : function(type, name) {
+      var storage = this.getProperty(type);
+      var item;
+
+      if (storage) {
+        item = storage[name];
+      }
+
+      if (!item && this.constructor["_" + type]) {
+        return this.constructor["_" + type][name];
+      }
+
+      return item;
+    },
 
 
     setSelectable : function(value) {

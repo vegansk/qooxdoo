@@ -18,8 +18,10 @@ qx.Bootstrap.define("qx.module.ui.Calendar", {
       row : "<tr>" +
               "{{#row}}<td class='{{cssClass}}'><button class='qx-calendar-day' value='{{date}}'>{{day}}</button></td>{{/row}}" +
             "</tr>",
-      table : "<table><thead>{{{thead}}}</thead><tbody>{{{tbody}}}</tbody></table>",
+      table : "<table><thead>{{{thead}}}</thead><tbody>{{{tbody}}}</tbody></table>"
+    },
 
+    _config : {
       monthNames : ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
       dayNames : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     }
@@ -45,12 +47,14 @@ qx.Bootstrap.define("qx.module.ui.Calendar", {
   members : {
     render : function() {
       this.showValue(this.getProperty("shownValue"));
+      return this;
     },
 
 
     setValue : function(value) {
       this.setProperty("value", value);
       this.showValue(value);
+      return this;
     },
 
 
@@ -85,6 +89,7 @@ qx.Bootstrap.define("qx.module.ui.Calendar", {
           item.emit("changeValue", newValue);
         }, this);
       }, this);
+      return this;
     },
 
 
@@ -104,14 +109,14 @@ qx.Bootstrap.define("qx.module.ui.Calendar", {
 
     _getControlsData : function(date) {
       return {
-        month: this.getTemplate("monthNames")[date.getMonth()],
+        month: this.getConfig("monthNames")[date.getMonth()],
         year: date.getFullYear()
       }
     },
 
     _getDayRowData : function(date) {
       return {
-        row: this.getTemplate("dayNames")
+        row: this.getConfig("dayNames")
       };
     },
 
