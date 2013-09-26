@@ -207,7 +207,8 @@
         "build-module-template",
         "build-module-textselection",
         "build-module-transform",
-        "build-module-util"
+        "build-module-util",
+        "build-module-ui"
       ]
     },
 
@@ -230,7 +231,8 @@
         "build-module-template-min",
         "build-module-textselection-min",
         "build-module-transform-min",
-        "build-module-util-min"
+        "build-module-util-min",
+        "build-module-ui-min"
       ]
     },
 
@@ -594,6 +596,30 @@
         ],
         "MODULE_FILENAME" : "util"
       }
-    }
+    },
+
+
+    "build-module-ui" :
+    {
+      "extend" : ["build-module"],
+      "let" : {
+        "Q_INCLUDES" : [
+          "qx.ui.website.*",
+        ],
+        "MODULE_FILENAME" : "ui"
+      }
+    },
+
+    "build-module-ui-min" :
+    {
+      "extend" : ["build-module-min"],
+      "let" : {
+        "Q_INCLUDES" : [
+          "qx.ui.website.*",
+        ],
+        "MODULE_FILENAME" : "ui"
+      }
+    },
+
   }
 }
