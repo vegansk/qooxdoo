@@ -251,12 +251,19 @@ qx.Class.define("qx.ui.basic.Image",
           left: this.getPaddingLeft() || 0
         });
       } else {
-        element.setPadding(
-          this.getPaddingLeft() || 0, this.getPaddingTop() || 0
-        );
+        var paddingLeft = this.getPaddingLeft() || 0;
+        var paddingTop = this.getPaddingTop() || 0;
+        if (qxWeb.getNodeName(this.__imageEl[0]) == "div") {
+          this._styleSource();
+        } else {
+          this.__imageEl.setStyles({
+            paddingTop : paddingTop + "px", 
+            paddingLeft : paddingLeft + "px"
+          });
+        }
       }
-
     },
+
 
     renderLayout : function(left, top, width, height) {
       this.base(arguments, left, top, width, height);
@@ -368,10 +375,11 @@ qx.Class.define("qx.ui.basic.Image",
         tagName = "img";
       }
 
-      //var element = new qx.html.Image(tagName);
-      var element = (new qx.module.ui.Image()).createImage(tagName);
+      var element = this.createImage(tagName);
       element.setAttribute("$$widget", this.toHashCode());
-      element.setScale(scale);
+      if (this.getScale() != scale) {
+        this._applyScale(scale);
+      }
       element.setStyles({
         "overflowX": "hidden",
         "overflowY": "hidden",
@@ -379,8 +387,7 @@ qx.Class.define("qx.ui.basic.Image",
       });
 
       if (qx.core.Environment.get("css.alphaimageloaderneeded")) {
-        //var wrapper = this.__wrapper = new qx.html.Element("div");\
-        var wrapper = this.__wrapper = qx.module.ui.Image().createImage("div");
+        var wrapper = this.__wrapper = this.createImage("div");
         wrapper.setAttribute("$$widget", this.toHashCode());
         wrapper.setStyle("position", "absolute");
         wrapper.add(element);
@@ -434,7 +441,7 @@ qx.Class.define("qx.ui.basic.Image",
 
       if (!source)
       {
-        element.resetSource();
+        this.__resetSource();
         return;
       }
 
@@ -576,6 +583,61 @@ qx.Class.define("qx.ui.basic.Image",
     },
 
 
+
+    createImage : function(tagNameHint)
+    {
+      var scale = this.getScale();
+      var repeat = scale ? "scale" : "no-repeat";
+
+      var source = this.getSource();
+      var tagName;
+
+      if ((qx.core.Environment.get("engine.name") == "mshtml")) {
+        if (tagNameHint) {
+          tagName = tagNameHint;
+        } else {
+          tagName = qx.bom.element.Decoration.getTagName(repeat, source);
+        }
+      } else {
+        tagName = qx.bom.element.Decoration.getTagName(repeat);
+      }
+
+      var styles = this.__getCurrentStyles();
+
+      if (!this.__imageEl || !this.__imageEl[0]) {
+        this.__imageEl = qx.module.ui.Widget.create("<" + tagName + ">");
+      }
+
+      if (tagName == "div" && this.__imageEl.getStyle("backgroundImage")) {
+        styles.backgroundRepeat = null;
+      }
+
+      qx.bom.element.Decoration.update(this.__imageEl[0], source, repeat, styles);
+
+      return this.__imageEl;
+    },
+
+
+
+    __getCurrentStyles : function() {
+      if (!this.__imageEl) {
+        return {};
+      }
+      var styles = this.__imageEl.getStyles([
+        "paddingTop", "paddingRight", "paddingBottom", "paddingLeft",
+        "clip", "backgroundPosition", "backgroundImage", "position", "zIndex", "boxSizing",
+        "left", "top", "width", "height"
+      ]);
+      for (var name in styles) {
+        if (name.indexOf("padding") == 0) {
+          styles[name] = this.get(name);
+        }
+      }
+      return styles;
+    },
+
+
+
     /**
      * Use the ResourceManager to set a managed image
      *
@@ -594,15 +656,13 @@ qx.Class.define("qx.ui.basic.Image",
         {
           source = disabled;
           this.addState("replacement");
-        }
-        else
-        {
+        } else {
           this.removeState("replacement");
         }
       }
 
       // Optimize case for enabled changes when no disabled image was found
-      if (el.getSource() === source) {
+      if (el.getAttribute("src") === source) {
         return;
       }
 
@@ -672,9 +732,7 @@ qx.Class.define("qx.ui.basic.Image",
       if(!ImageLoader.isFailed(source)) {
         ImageLoader.load(source, this.__loaderCallback, this);
       } else {
-        if (el != null) {
-          el.resetSource();
-        }
+        this.__resetSource();
       }
     },
 
@@ -687,7 +745,10 @@ qx.Class.define("qx.ui.basic.Image",
      * @param source {String} source path
      */
     __setSource : function(el, source) {
-      if (q.getNodeName (el[0]) == "div") {
+      var scale = this.getScale();
+      var repeat = scale ? "scale" : "no-repeat";
+
+      if (qxWeb.getNodeName(el[0]) == "div") {
         var dec = qx.theme.manager.Decoration.getInstance().resolve(this.getDecorator());
         // if the decorator defines any CSS background-image
         if (dec) {
@@ -726,11 +787,24 @@ qx.Class.define("qx.ui.basic.Image",
           }
         } else {
           // force re-apply to remove old decorator styles
-          el.setSource(null);
+          qx.bom.element.Decoration.update(el[0], null, repeat, this.__getCurrentStyles());
         }
       }
 
-      el.setSource(source);
+      qx.bom.element.Decoration.update(el[0], source, repeat, this.__getCurrentStyles());
+    },
+
+
+    __resetSource : function() {
+      if (this.__imageEl) {
+        var repeat = this.getScale() ? "scale" : "no-repeat";
+
+        if ((qx.core.Environment.get("engine.name") == "webkit")) {
+          qx.bom.element.Decoration.update(this.__imageEl[0], "qx/static/blank.gif", repeat, this.__getCurrentStyles());
+        } else {
+          qx.bom.element.Decoration.update(this.__imageEl[0], null, repeat, this.__getCurrentStyles());
+        }
+      }
     },
 
 
@@ -796,6 +870,5 @@ qx.Class.define("qx.ui.basic.Image",
 
   destruct : function() {
     delete this.__currentContentElement;
-    this._disposeMap("__contentElements");
   }
 });
