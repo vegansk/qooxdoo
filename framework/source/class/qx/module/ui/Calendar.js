@@ -97,7 +97,6 @@ qx.Bootstrap.define("qx.module.ui.Calendar", {
       var controls = qxWeb.template.render(this.getTemplate("controls"), this._getControlsData(date));
       var dayRow = qxWeb.template.render(this.getTemplate("dayRow"), this._getDayRowData(date));
 
-
       var data = {
         thead: controls + dayRow,
         tbody: this._getWeekRows(date)

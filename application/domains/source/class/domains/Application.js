@@ -175,6 +175,8 @@ qx.Class.define("domains.Application",
 
       q("#date2").calendar().setTemplate("dayRow", q("#dayRow").getHtml()).render();
 
+
+
       // TADA!!!
       toolbar.setStyle("display", "block");
       q("#domains").setStyle("display", "table");
