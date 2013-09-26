@@ -32,14 +32,5 @@ qx.Bootstrap.define("qx.ui.website.Label", {
     getValue : function() {
       return this.getHtml();
     }
-  },
-
-
-  defer : function() {
-    qxWeb.$attach({
-      label : function() {
-        return new qx.ui.website.Label(this);
-      }
-    });
   }
 });
