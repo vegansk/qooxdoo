@@ -3382,3 +3382,80 @@ testrunner.define({
     this.assertEquals(2, rr.getValue());
   }
 });
+
+testrunner.define({
+  classname: "ui.Calendar",
+
+  setUp : testrunner.globalSetup,
+  tearDown : testrunner.globalTeardown,
+
+  testSetGetValue : function() {
+    var now = new Date();
+    var cal = q("#sandbox").calendar(now);
+    this.assertEquals(now, cal.getValue());
+  },
+
+  testChangeEvent : function() {
+    var cal = q("#sandbox").calendar(now);
+    var now = new Date();
+    cal.on("changeValue", function() {
+      this.resume(function() {
+        this.assertEquals(now, cal.getValue());
+      }, this);
+    }.bind(this));
+
+    setTimeout(function() {
+      cal.setValue(now);
+    }, 100);
+
+    this.wait(250);
+  },
+
+  testConfig : function() {
+    var now = new Date();
+    var cal = q("#sandbox").calendar(now);
+    var monthNames = cal.getConfig("monthNames").map(function(month) {
+      return month.substr(0, 3).toUpperCase()
+    });
+    var dayNames = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+    cal.setConfig("monthNames", monthNames).setConfig("dayNames", dayNames).render();
+
+    var displayedMonth = cal.find("thead tr:nth-child(1) td:nth-child(2)").getHtml();
+    this.assertEquals(0, displayedMonth.indexOf(monthNames[now.getMonth()]));
+
+    var displayedDays = cal.find("thead tr:nth-child(2) td").toArray().map(function(cell) {
+      return qxWeb(cell).getHtml();
+    });
+    this.assertArrayEquals(dayNames, displayedDays);
+  },
+
+  testTemplates : function() {
+    var now = new Date();
+    var cal = q("#sandbox").calendar(now);
+
+    var newClass = "my-cool-calendar";
+    cal.setTemplate("table", cal.getTemplate("table")
+      .replace("<table>", "<table class='" + newClass + "'>"));
+
+    var newPrev = "prev";
+    cal.setTemplate("controls", cal.getTemplate("controls")
+      .replace("&lt;", newPrev));
+
+    cal.render();
+
+    this.assertEquals(1, q("." + newClass).length);
+
+    var displayedPrev = cal.find("thead tr:nth-child(1) td:nth-child(1) button").getHtml();
+    this.assertEquals(displayedPrev, newPrev);
+  },
+
+  testTwoCollections : function() {
+    var now = new Date();
+    var c0 = q("#sandbox").calendar();
+    var c1 = q("#sandbox").calendar();
+    c0.setValue(now);
+
+    this.assertEquals(now, c0.getValue());
+    this.assertEquals(now, c1.getValue());
+  }
+});
