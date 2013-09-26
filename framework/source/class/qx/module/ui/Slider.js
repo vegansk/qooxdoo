@@ -9,10 +9,6 @@ qx.Bootstrap.define("qx.module.ui.Slider",
   construct : function(selector, context) {
     this.base(arguments, selector, context)
 
-    if (qxWeb.env.get("event.mspointer")) {
-      knobElement.style["-ms-touch-action"] = "pan-x";
-    }
-
     var trs = qxWeb.env.get("css.transform");
     this.__canTransform = (trs !== null && typeof trs === "object");
     this.__canTransform3d = this.__canTransform ? trs["3d"] : false;
@@ -129,6 +125,10 @@ qx.Bootstrap.define("qx.module.ui.Slider",
 
     _setupElements : function(sliderElement, knobElement) {
       this.__knobElement = knobElement;
+
+      if (qxWeb.env.get("event.mspointer")) {
+        knobElement.setStyle("-ms-touch-action", "pan-x");
+      }
 
       this.__documentElement = this.__knobElement.getAncestors().find("html");
 
@@ -351,15 +351,7 @@ qx.Bootstrap.define("qx.module.ui.Slider",
 
       if (this.__dragMode)
       {
-<<<<<<< HEAD
-        if(!e.touches){
-          e.touches = [e];
-        }
-        var dragPosition = e.getDocumentLeft ? e.getDocumentLeft() : e.touches[0].pageX;
-
-=======
         var dragPosition = e.getDocumentLeft();
->>>>>>> e8670d7... Minor.
         if (dragPosition >= this.__dragMin && dragPosition <= this.__dragMax)
         {
           this.setValue(this.__getCurrentValue(dragPosition));

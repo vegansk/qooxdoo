@@ -48,7 +48,7 @@ qx.Class.define("domains.Application",
       var desktop = document.getElementById("desktop");
       var inlineIsle = new qx.ui.root.Inline(desktop, true, true);
       inlineIsle.setLayout(new qx.ui.layout.Canvas());
-      
+
       var toolbar = new qx.ui.toolbar.ToolBar();
       inlineIsle.add(toolbar, {left: 0, right: 0});
 
