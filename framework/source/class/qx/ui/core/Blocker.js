@@ -309,7 +309,7 @@ qx.Class.define("qx.ui.core.Blocker",
      * @return {qx.html.Element} The blocker element
      */
     __createBlockerElement : function() {
-      var blocker = qx.module.ui.Widget.create("<div>");
+      var blocker = qx.ui.website.Widget.create("<div>");
 
       var styles = {
         position: "absolute"

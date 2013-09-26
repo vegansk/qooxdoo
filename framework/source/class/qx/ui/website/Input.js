@@ -1,8 +1,8 @@
 /**
  * @require(qx.module.TextSelection)
  */
-qx.Bootstrap.define("qx.module.ui.Input", {
-  extend : qx.module.ui.Widget,
+qx.Bootstrap.define("qx.ui.website.Input", {
+  extend : qx.ui.website.Widget,
 
 
   construct : function(selector, context) {

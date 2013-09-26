@@ -1,5 +1,5 @@
-qx.Bootstrap.define("qx.module.ui.Rating", {
-  extend : qx.module.ui.Widget,
+qx.Bootstrap.define("qx.ui.website.Rating", {
+  extend : qx.ui.website.Widget,
 
 
   statics : {
@@ -76,7 +76,7 @@ qx.Bootstrap.define("qx.module.ui.Rating", {
   defer : function(statics) {
     qxWeb.$attach({
       rating : function(initValue, symbol, length) {
-        var rating =  new qx.module.ui.Rating(this);
+        var rating =  new qx.ui.website.Rating(this);
 
         var modified = false;
         if (length != undefined && length != rating.getConfig("length")) {

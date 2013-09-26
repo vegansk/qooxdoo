@@ -1,5 +1,5 @@
-qx.Bootstrap.define("qx.module.ui.Button", {
-  extend : qx.module.ui.Widget,
+qx.Bootstrap.define("qx.ui.website.Button", {
+  extend : qx.ui.website.Widget,
 
   construct : function(selector, context) {
     this.base(arguments, selector, context);
@@ -69,7 +69,7 @@ qx.Bootstrap.define("qx.module.ui.Button", {
   defer : function() {
     qxWeb.$attach({
       button : function(label, icon) {
-        var buttons = new qx.module.ui.Button(this);
+        var buttons = new qx.ui.website.Button(this);
         if (label != null) {
           buttons.setLabel(label);
         }

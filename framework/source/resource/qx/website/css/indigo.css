@@ -1,0 +1,411 @@
+/**
+* Creates a plain-colored, a linear gradient or a radial gradient background,
+* based on the first keyword of the $values list.
+*
+* If the first value is a color (or "transparent"), the mixin creates a plain colored background with it.
+* If multiple values are passed, the background mixins attempts to create a linear gradient through "linear-gradient" mixin.
+*/
+/*
+* See documentation:
+* http://bourbon.io/docs/#linear-gradient
+*
+* https://github.com/thoughtbot/bourbon/blob/master/app/assets/stylesheets/css3/_linear-gradient.scss
+*/
+/**
+* This function creates a linear-gradient string for the old webkit syntax, based
+* on parametes $values.
+*
+* The parameter $direction is assumed be one of these values:
+* ["to left","to right","to top","to bottom","45deg","-45deg"]
+*
+* If no direction is passed, or an invalid value occurs, the default gradient is created
+* from top to bottom direction.
+*
+* For the old webkit gradient syntax ("-webkit-gradient"), please have a look at:
+* https://www.webkit.org/blog/175/introducing-css-gradients/
+*
+*/
+/**
+* https://github.com/thoughtbot/bourbon/blob/master/app/assets/stylesheets/helpers/_linear-positions-parser.scss
+*/
+/*@import "theme/styles";*/
+.qx-widget {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  outline: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+
+.qx-widget[disabled],
+.qx-widget[disabled] * {
+  cursor: default;
+  pointer-events: none; }
+
+.qx-button[disabled] {
+  border: 1px solid #bbbbbb;
+  color: #a0a0a0; }
+
+.qx-button[disabled] img {
+  opacity: 0.4; }
+
+.qx-button {
+  display: inline-block;
+  padding: 8px 12px;
+  margin: 3px;
+  border: 1px solid #bbbbbb;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding-box;
+  background-clip: padding-box;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 14px;
+  outline: none;
+  background: white;
+  color: #619edf;
+  line-height: 1; }
+
+.qx-button:hover {
+  border: 1px solid #619edf; }
+
+.qx-button:active {
+  border: 1px solid #256bb5;
+  background: #e6e6e6; }
+
+.qx-button:focus {
+  border-color: #619edf; }
+
+.qx-button img {
+  margin-left: 10px; }
+
+.qx-button img, span {
+  vertical-align: middle; }
+
+.qx-calendar table {
+  border-width: 1px;
+  border-color: #bbbbbb;
+  border-collapse: collapse;
+  text-align: center;
+  border-spacing: 0; }
+
+.qx-calendar button {
+  cursor: pointer; }
+
+.qx-calendar button:focus {
+  -webkit-text-stroke: 1px #619edf;
+  color: #619edf; }
+
+.qx-calendar thead {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #bbbbbb;
+  font-weight: bold; }
+
+.qx-calendar .othermonth button {
+  color: #a0a0a0; }
+
+.qx-calendar .today {
+  background-color: #ededed; }
+
+.qx-calendar .selected {
+  background-color: #619edf; }
+
+.qx-calendar .selected button {
+  color: white; }
+
+.qx-calendar .selected button:focus {
+  -webkit-text-stroke: 0;
+  color: white; }
+
+.qx-calendar thead td {
+  padding: 2px 6px;
+  width: 14.3%; }
+
+.qx-calendar td {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #bbbbbb;
+  background-color: white; }
+
+.qx-calendar td button {
+  margin: 0;
+  width: 100%;
+  line-height: 2;
+  border: none;
+  background: none;
+  outline: none; }
+
+.qx-calendar thead tr:first-child td:first-child {
+  border-right: 0; }
+
+.qx-calendar thead tr:first-child td:nth-child(2) {
+  border-left: 0;
+  border-right: 0;
+  text-align: center; }
+
+.qx-calendar thead tr:first-child td:last-child {
+  border-left: 0;
+  text-align: right; }
+
+.qx-calendar table[disabled] {
+  color: #a0a0a0; }
+
+.qx-calendar[disabled] .selected {
+  background-color: #a0a0a0; }
+
+.qx-menu {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  z-index: 1000001;
+  position: absolute;
+  background-color: white;
+  border: 1px solid #bbbbbb;
+  padding: 0px;
+  margin: 0px; }
+
+.qx-menu li {
+  padding: 6px 10px;
+  list-style-type: none;
+  cursor: pointer; }
+
+.qx-menu li:hover {
+  color: white;
+  background-color: #619edf; }
+
+.qx-rating-item {
+  font-size: 22px;
+  background-image: -webkit-linear-gradient(270deg, #e3b64a, #d5771d);
+  color: #E3B64A;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px #BB6718;
+  margin-right: 10px;
+  cursor: pointer; }
+
+.qx-rating-item.qx-rating-item-off {
+  background-image: -webkit-linear-gradient(270deg, #eeeeee, #cfcfcf);
+  color: #cfcfcf;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px #cfcfcf; }
+
+.qx-rating-item[disabled] {
+  background-image: -webkit-linear-gradient(270deg, #979797, #797979);
+  -webkit-text-stroke: 1px #6a6a6a; }
+
+.qx-rating-item.qx-rating-item-off[disabled] {
+  background-image: -webkit-linear-gradient(270deg, #eeeeee, #cfcfcf);
+  -webkit-text-stroke: 1px #cfcfcf;
+  color: #cfcfcf; }
+
+.qx-slider {
+  overflow-y: visible;
+  overflow-x: visible;
+  cursor: pointer;
+  padding: 0 18px; }
+
+.qx-slider:before {
+  position: relative;
+  content: '';
+  width: 100%;
+  line-height: 0.3;
+  border: 1px solid #7b7b7b;
+  display: inline-block;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #8e8e8e;
+  background-image: -webkit-linear-gradient(#8e8e8e, #b7b7b7);
+  background-image: -moz-linear-gradient(#8e8e8e, #b7b7b7);
+  background-image: -ms-linear-gradient(#8e8e8e, #b7b7b7);
+  background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0, #8e8e8e), color-stop(1, #b7b7b7));
+  background-image: linear-gradient(#8e8e8e, #b7b7b7);
+  top: 26px;
+  height: 7px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }
+
+.qx-slider-knob {
+  cursor: pointer;
+  display: inline-block;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 36px;
+  height: 36px;
+  font-weight: bold;
+  text-align: center;
+  border: 1px solid #7b7b7b;
+  background-color: #f7f7f7;
+  background-image: -webkit-linear-gradient(#f7f7f7, #e8e8e8);
+  background-image: -moz-linear-gradient(#f7f7f7, #e8e8e8);
+  background-image: -ms-linear-gradient(#f7f7f7, #e8e8e8);
+  background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0, #f7f7f7), color-stop(1, #e8e8e8));
+  background-image: linear-gradient(#f7f7f7, #e8e8e8);
+  -webkit-border-radius: 60px;
+  -moz-border-radius: 60px;
+  border-radius: 60px;
+  line-height: 0; }
+
+.qx-slider-knob:active {
+  background-color: #b7b7b7;
+  background-image: -webkit-linear-gradient(#b7b7b7, #a8a8a8);
+  background-image: -moz-linear-gradient(#b7b7b7, #a8a8a8);
+  background-image: -ms-linear-gradient(#b7b7b7, #a8a8a8);
+  background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0, #b7b7b7), color-stop(1, #a8a8a8));
+  background-image: linear-gradient(#b7b7b7, #a8a8a8);
+  color: white; }
+
+.qx-slider[disabled]:before {
+  border: 1px solid #e1e1e1;
+  background-color: #f4f4f4;
+  background-image: -webkit-linear-gradient(#f4f4f4, #eaeaea);
+  background-image: -moz-linear-gradient(#f4f4f4, #eaeaea);
+  background-image: -ms-linear-gradient(#f4f4f4, #eaeaea);
+  background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0, #f4f4f4), color-stop(1, #eaeaea));
+  background-image: linear-gradient(#f4f4f4, #eaeaea); }
+
+.qx-slider-knob[disabled] {
+  border: 1px solid #c8c8c8;
+  background-color: #f7f7f7;
+  background-image: -webkit-linear-gradient(#f7f7f7, whitesmoke);
+  background-image: -moz-linear-gradient(#f7f7f7, whitesmoke);
+  background-image: -ms-linear-gradient(#f7f7f7, whitesmoke);
+  background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0, #f7f7f7), color-stop(1, whitesmoke));
+  background-image: linear-gradient(#f7f7f7, whitesmoke);
+  color: #bbbbbb; }
+
+.qx-slider-knob:focus {
+  outline: none; }
+
+.qx-toolbar {
+  overflow: hidden;
+  border-bottom: rem(1) solid #bbbbbb;
+  border-top: rem(1) solid #bbbbbb;
+  padding: rem(7);
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  background-color: #F7F7F7; }
+
+@media all and (max-width: rem(850)) {
+  .qx-toolbar {
+    padding: rem(0); }
+
+  .qx-toolbar .qx-button {
+    display: block;
+    width: 100%;
+    background: none;
+    border: rem(0);
+    border-top: rem(1) solid #bbbbbb; }
+
+  .qx-toolbar .qx-button-disabled {
+    display: block;
+    width: 100%;
+    border: rem(0) !important;
+    background-image: none !important;
+    border-top: rem(1) solid #bbbbbb !important; }
+
+  .qx-toolbar .qx-button:hover {
+    border: rem(0) solid #939393;
+    text-decoration: underline;
+    border-top: rem(1) solid #bbbbbb; }
+
+  .qx-toolbar .qx-button:active {
+    border: rem(0);
+    background-color: transparent;
+    background-image: none;
+    border-top: rem(1) solid #bbbbbb; }
+
+  .qx-toolbar .qx-button:focus {
+    border: rem(0); } }
+.qx-tabs > ul {
+  list-style: none;
+  margin-bottom: 0;
+  padding: 0; }
+
+.qx-tabs > ul:after {
+  content: " ";
+  display: block;
+  clear: both; }
+
+.qx-tab-button:first-child {
+  margin-left: 0px; }
+
+.qx-tab-button {
+  float: left;
+  margin-bottom: -1px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  margin-left: 3px; }
+
+.qx-tab-button > button {
+  background-color: transparent;
+  border: 0;
+  color: #619edf;
+  outline: none;
+  padding: 8px 12px; }
+
+.qx-tab-button > button[disabled] {
+  color: #a0a0a0; }
+
+.qx-tab-button > button:focus {
+  text-decoration: underline; }
+
+.qx-tab-button-active {
+  border: 1px solid #bbbbbb;
+  border-bottom: 1px solid white;
+  -webkit-border-radius: 2px 2px 0 0;
+  -moz-border-radius: 2px 2px 0 0;
+  border-radius: 2px 2px 0 0; }
+
+.qx-tab-button:hover {
+  border-bottom: 1px solid #bbbbbb;
+  -webkit-border-radius: 2px 2px 0 0;
+  -moz-border-radius: 2px 2px 0 0;
+  border-radius: 2px 2px 0 0;
+  background-color: #e6e6e6; }
+
+.qx-tab-button-active:hover {
+  border: 1px solid #bbbbbb;
+  border-bottom: 1px solid white;
+  background-color: transparent; }
+
+.qx-tab-button-active > button {
+  color: black; }
+
+.qx-tab-page {
+  border: 1px solid #bbbbbb;
+  padding: 10px;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text; }
+
+.qx-tab-button[disabled] {
+  color: #a0a0a0; }
+
+.qx-tabs-justify > li {
+  display: table-cell;
+  width: 1%;
+  text-align: center;
+  float: none;
+  border-bottom-color: transparent;
+  position: relative;
+  top: 1px; }
+
+.qx-tabs-justify > .qx-tab-button-active {
+  border-bottom: 1px solid white; }
+
+.qx-tabs-right > li {
+  float: right; }

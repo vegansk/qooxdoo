@@ -1,9 +1,9 @@
 /**
  * @require(qx.module.event.Mouse)
  */
-qx.Bootstrap.define("qx.module.ui.Slider",
+qx.Bootstrap.define("qx.ui.website.Slider",
 {
-  extend : qx.module.ui.Widget,
+  extend : qx.ui.website.Widget,
 
 
   construct : function(selector, context) {
@@ -438,7 +438,7 @@ qx.Bootstrap.define("qx.module.ui.Slider",
   defer : function(statics) {
     qxWeb.$attach({
       slider : function(knobElement, steps, offset) {
-        var slider = new qx.module.ui.Slider(this);
+        var slider = new qx.ui.website.Slider(this);
 
         slider._setOffset(offset);
         slider._setupElements(this, knobElement);

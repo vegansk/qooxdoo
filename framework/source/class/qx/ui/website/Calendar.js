@@ -2,8 +2,8 @@
  * @require(qx.module.Template)
  * @require(qx.module.event.Native)
  */
-qx.Bootstrap.define("qx.module.ui.Calendar", {
-  extend : qx.module.ui.Widget,
+qx.Bootstrap.define("qx.ui.website.Calendar", {
+  extend : qx.ui.website.Widget,
 
   statics : {
     _templates : {
@@ -164,7 +164,7 @@ qx.Bootstrap.define("qx.module.ui.Calendar", {
   defer : function(statics) {
     qxWeb.$attach({
       calendar : function(date) {
-        var calendar =  new qx.module.ui.Calendar(this);
+        var calendar =  new qx.ui.website.Calendar(this);
 
         if (date != undefined) {
           calendar.setValue(date);

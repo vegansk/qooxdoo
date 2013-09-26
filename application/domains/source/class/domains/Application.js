@@ -12,13 +12,13 @@
  * This is the main application class of your custom application "domains"
  *
  * @asset(domains/*)
- * @require(qx.module.ui.Button)
+ * @require(qx.ui.website.Button)
  * @require(qx.module.Placement)
  * @require(qx.module.Template)
- * @require(qx.module.ui.Rating)
- * @require(qx.module.ui.Slider)
+ * @require(qx.ui.website.Rating)
+ * @require(qx.ui.website.Slider)
  * @require(qx.module.util.Type)
- * @require(qx.module.ui.Calendar)
+ * @require(qx.ui.website.Calendar)
  */
 qx.Class.define("domains.Application",
 {

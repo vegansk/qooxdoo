@@ -1,5 +1,5 @@
-qx.Bootstrap.define("qx.module.ui.Label", {
-  extend : qx.module.ui.Widget,
+qx.Bootstrap.define("qx.ui.website.Label", {
+  extend : qx.ui.website.Widget,
 
 
   construct : function(selector, context) {
@@ -38,7 +38,7 @@ qx.Bootstrap.define("qx.module.ui.Label", {
   defer : function() {
     qxWeb.$attach({
       label : function() {
-        return new qx.module.ui.Label(this);
+        return new qx.ui.website.Label(this);
       }
     });
   }

@@ -165,7 +165,7 @@ qx.Class.define("qx.ui.root.Inline",
         rootEl = el;
       }
 
-      var root = new qx.module.ui.Widget(rootEl);
+      var root = new qx.ui.website.Widget(rootEl);
 
       // Make relative
       rootEl.style.position = "relative";

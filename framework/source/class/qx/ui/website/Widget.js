@@ -1,4 +1,4 @@
-qx.Bootstrap.define("qx.module.ui.Widget", {
+qx.Bootstrap.define("qx.ui.website.Widget", {
   extend : qxWeb,
 
   statics : {
@@ -11,7 +11,7 @@ qx.Bootstrap.define("qx.module.ui.Widget", {
      * @return {qxWeb} Collection of elements
      */
     create : function(html) {
-      return new qx.module.ui.Widget(qxWeb.create(html));
+      return new qx.ui.website.Widget(qxWeb.create(html));
     },
 
     _scroll : {}

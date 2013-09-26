@@ -605,7 +605,7 @@ qx.Class.define("qx.ui.basic.Image",
       var styles = this.__getCurrentStyles();
 
       if (!this.__imageEl || !this.__imageEl[0]) {
-        this.__imageEl = qx.module.ui.Widget.create("<" + tagName + ">");
+        this.__imageEl = qx.ui.website.Widget.create("<" + tagName + ">");
       }
 
       if (tagName == "div" && this.__imageEl.getStyle("backgroundImage")) {

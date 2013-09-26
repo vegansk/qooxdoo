@@ -331,7 +331,7 @@ qx.Class.define("qx.ui.form.TextArea",
       cloneDom = qx.bom.Element.clone(orig[0]);
 
       // Convert to qx.html Element
-      cloneHtml = new qx.module.ui.Input(cloneDom);
+      cloneHtml = new qx.ui.website.Input(cloneDom);
       clone = cloneHtml;
 
       // Push out of view
@@ -382,7 +382,7 @@ qx.Class.define("qx.ui.form.TextArea",
 
     // overridden
     _createInputElement : function() {
-      return (new qx.module.ui.Input(qx.bom.Input.create("textarea"))).setStyles({
+      return (new qx.ui.website.Input(qx.bom.Input.create("textarea"))).setStyles({
         overflowX: "auto",
         overflowY: "auto"
       });
