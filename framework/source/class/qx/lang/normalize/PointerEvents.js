@@ -77,7 +77,7 @@ qx.Bootstrap.define("qx.lang.normalize.PointerEvents", {
         if ( document.createEvent ) {
           createUIEvent = function ( type, bubbles ) {
             var pointerEvent = document.createEvent( 'UIEvents' );
-            pointerEvent.initUIEvent( type, bubbles, true, window );
+            pointerEvent.initUIEvent( type, bubbles, true, window, 0 );
 
             return pointerEvent;
           };
@@ -278,7 +278,7 @@ qx.Bootstrap.define("qx.lang.normalize.PointerEvents", {
         }
 
         else {
-          addListener( window, 'mouse' + type, function ( originalEvent ) {
+          addListener( document, 'mouse' + type, function ( originalEvent ) {
             var pointerEvent;
 
             if ( mouseEventIsSimulated( originalEvent ) ) {

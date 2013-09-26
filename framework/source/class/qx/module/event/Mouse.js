@@ -126,12 +126,12 @@ qx.Bootstrap.define("qx.module.event.Mouse", {
      */
     getDocumentLeft : function()
     {
-      if (this.pageX !== undefined) {
-        return this.pageX;
-      } else {
+      // if (this.pageX !== undefined) {
+      //   return this.pageX;
+      // } else {
         var win = qx.dom.Node.getWindow(this.srcElement);
         return this.clientX + qx.bom.Viewport.getScrollLeft(win);
-      }
+      // }
     },
 
 
@@ -144,12 +144,12 @@ qx.Bootstrap.define("qx.module.event.Mouse", {
      */
     getDocumentTop : function()
     {
-      if (this.pageY !== undefined) {
-        return this.pageY;
-      } else {
+      // if (this.pageY !== undefined) {
+      //   return this.pageY;
+      // } else {
         var win = qx.dom.Node.getWindow(this.srcElement);
         return this.clientY + qx.bom.Viewport.getScrollTop(win);
-      }
+      // }
     },
 
 

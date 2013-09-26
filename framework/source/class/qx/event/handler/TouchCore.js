@@ -122,6 +122,11 @@ qx.Bootstrap.define("qx.event.handler.TouchCore", {
       Event.addNativeListener(this.__target, "touchend", this.__onTouchEventWrapper);
       Event.addNativeListener(this.__target, "touchcancel", this.__onTouchEventWrapper);
 
+      Event.addNativeListener(this.__target, "pointerdown", this.__onTouchEventWrapper);
+      Event.addNativeListener(this.__target, "pointermove", this.__onTouchEventWrapper);
+      Event.addNativeListener(this.__target, "pointerup", this.__onTouchEventWrapper);
+      Event.addNativeListener(this.__target, "pointercancel", this.__onTouchEventWrapper);
+
       if (qx.core.Environment.get("event.mspointer")) {
         Event.addNativeListener(this.__target, "MSPointerDown", this.__onTouchEventWrapper);
         Event.addNativeListener(this.__target, "MSPointerMove", this.__onTouchEventWrapper);
@@ -149,6 +154,11 @@ qx.Bootstrap.define("qx.event.handler.TouchCore", {
       Event.removeNativeListener(this.__target, "touchmove", this.__onTouchEventWrapper);
       Event.removeNativeListener(this.__target, "touchend", this.__onTouchEventWrapper);
       Event.removeNativeListener(this.__target, "touchcancel", this.__onTouchEventWrapper);
+
+      Event.removeNativeListener(this.__target, "pointerdown", this.__onTouchEventWrapper);
+      Event.removeNativeListener(this.__target, "pointermove", this.__onTouchEventWrapper);
+      Event.removeNativeListener(this.__target, "pointerup", this.__onTouchEventWrapper);
+      Event.removeNativeListener(this.__target, "pointercancel", this.__onTouchEventWrapper);
 
       if (qx.core.Environment.get("event.mspointer")) {
         Event.removeNativeListener(this.__target, "MSPointerDown", this.__onTouchEventWrapper);
@@ -209,21 +219,22 @@ qx.Bootstrap.define("qx.event.handler.TouchCore", {
      */
     _commonTouchEventHandler : function(domEvent, type)
     {
+
       var type = type || domEvent.type;
-      if (qx.core.Environment.get("event.mspointer")) {
+      if (qx.core.Environment.get("event.mspointer") || type.indexOf("pointer") == 0) {
         domEvent.changedTouches = [domEvent];
         domEvent.targetTouches = [domEvent];
         domEvent.touches = [domEvent];
 
-        if(type == "MSPointerDown") {
+        if(type == "MSPointerDown" || type == "pointerdown") {
           type = "touchstart"
-        } else if (type == "MSPointerUp") {
+        } else if (type == "MSPointerUp" || type == "pointerup") {
           type = "touchend";
-        } else if(type == "MSPointerMove") {
+        } else if(type == "MSPointerMove" || type == "pointermove") {
           if (this.__onMove == true) {
             type = "touchmove";
           }
-        } else if(type == "MSPointerCancel") {
+        } else if(type == "MSPointerCancel" || type == "pointercancel") {
           type = "touchcancel";
         }
       }
