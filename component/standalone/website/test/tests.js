@@ -3289,3 +3289,96 @@ testrunner.define({
     coll.getTextSelection();
   }
 });
+
+
+
+/* **************
+ * WIDGETS
+ * ************ */
+
+
+testrunner.define({
+  classname: "ui.Widget",
+
+  setUp : testrunner.globalSetup,
+  tearDown : testrunner.globalTeardown,
+
+  testConstructor : function() {
+    var w = new qxWeb.$$qx.ui.website.Widget(qxWeb("#sandbox"));
+    this.assertEquals("qx.ui.website.Widget", w.getAttribute("qx-class"));
+  },
+
+  testIsCollection : function() {
+    var w = new qxWeb.$$qx.ui.website.Widget(qxWeb("#sandbox"));
+    this.assertTrue(w instanceof qxWeb);
+  },
+
+  testSetGetConfig : function() {
+    var w = new qxWeb.$$qx.ui.website.Widget(qxWeb("#sandbox"));
+    w.setConfig("a", 123);
+    this.assertEquals(123, w.getConfig("a"));
+  }
+});
+
+
+testrunner.define({
+  classname: "ui.Rating",
+
+  setUp : testrunner.globalSetup,
+  tearDown : testrunner.globalTeardown,
+
+  testPlainConstructor : function() {
+    var r = q("#sandbox").rating();
+    this.assertEquals(0, r.getValue());
+    this.assertEquals(5, r.getConfig("length"));
+    this.assertEquals("★", r.getTemplate("symbol"));
+  },
+
+  testFullConstructor : function() {
+    var r = q("#sandbox").rating(7, "X", 11);
+    this.assertEquals(7, r.getValue());
+    this.assertEquals(11, r.getConfig("length"));
+    this.assertEquals("X", r.getTemplate("symbol"));
+  },
+
+  testSetGetValue : function() {
+    var r = q("#sandbox").rating();
+    r.setValue(3);
+    this.assertEquals(3, r.getValue());
+  },
+
+  testChangeEvent : function() {
+    var r = q("#sandbox").rating();
+    var triggered = false;
+    r.on("changeValue", function(value) {
+      triggered = true;
+      this.assertEquals(3, value);
+    }, this);
+    r.setValue(3);
+    this.assertTrue(triggered);
+  },
+
+  testSetSymbol : function() {
+    var r = q("#sandbox").rating();
+    this.assertEquals("★", r.getChildren().getHtml());
+    r.setTemplate("symbol", "X").render();
+    this.assertEquals("X", r.getChildren().getHtml());
+  },
+
+  testSetLength : function() {
+    var r = q("#sandbox").rating();
+    this.assertEquals(5, r.getChildren().length);
+    r.setValue(2);
+    r.setConfig("length", 7).render();
+    this.assertEquals(7, r.getChildren().length);
+    this.assertEquals(2, r.getValue());
+  },
+
+  testTwoCollections : function() {
+    var r = q("#sandbox").rating();
+    var rr = q("#sandbox").rating();
+    r.setValue(2);
+    this.assertEquals(2, r.getValue());
+    this.assertEquals(2, rr.getValue());
+  }
+});
