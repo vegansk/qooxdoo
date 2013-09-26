@@ -32,7 +32,7 @@ qx.Bootstrap.define("qx.ui.website.Calendar", {
     this.base(arguments, selector, context);
 
     this.forEach(function(calendar) {
-      var calendar = qxWeb(calendar);
+      calendar = qxWeb(calendar);
 
       this.showValue(new Date());
 
@@ -54,6 +54,7 @@ qx.Bootstrap.define("qx.ui.website.Calendar", {
     setValue : function(value) {
       this.setProperty("value", value);
       this.showValue(value);
+      this.emit("changeValue", value);
       return this;
     },
 
@@ -68,17 +69,16 @@ qx.Bootstrap.define("qx.ui.website.Calendar", {
 
       this.setHtml(this._getTable(value));
 
-
       this.forEach(function(item) {
         item = qxWeb(item);
         item.find(".qx-calendar-prev").on("click", function() {
           var shownValue = item.getProperty("shownValue");
-          item.showValue(new Date(shownValue.getFullYear(), shownValue.getMonth() - 1))
+          item.showValue(new Date(shownValue.getFullYear(), shownValue.getMonth() - 1));
         }, this);
 
         item.find(".qx-calendar-next").on("click", function() {
           var shownValue = item.getProperty("shownValue");
-          item.showValue(new Date(shownValue.getFullYear(), shownValue.getMonth() + 1))
+          item.showValue(new Date(shownValue.getFullYear(), shownValue.getMonth() + 1));
         }, this);
 
         item.find(".qx-calendar-day").on("click", function(e) {
@@ -86,9 +86,9 @@ qx.Bootstrap.define("qx.ui.website.Calendar", {
           var value = item.getValue();
           var newValue = new Date(day.getAttribute("value"));
           item.setValue(newValue);
-          item.emit("changeValue", newValue);
         }, this);
       }, this);
+
       return this;
     },
 
@@ -110,7 +110,7 @@ qx.Bootstrap.define("qx.ui.website.Calendar", {
       return {
         month: this.getConfig("monthNames")[date.getMonth()],
         year: date.getFullYear()
-      }
+      };
     },
 
     _getDayRowData : function(date) {
@@ -156,7 +156,6 @@ qx.Bootstrap.define("qx.ui.website.Calendar", {
 
       return weeks.join("");
     }
-
 
   },
 
