@@ -3,12 +3,9 @@ qx.Bootstrap.define("qx.ui.website.Rating", {
 
 
   statics : {
-    _templates : {
-      symbol : "★"
-    },
-
     _config : {
-      length : 5
+      length : 5,
+      symbol : "★"
     }
   },
 
@@ -20,7 +17,7 @@ qx.Bootstrap.define("qx.ui.website.Rating", {
       rating = q(rating);
 
       for (var i = 0; i < this.getConfig("length"); i++) {
-        q.create("<span>" + this.getTemplate("symbol") + "</span>").appendTo(rating);
+        q.create("<span>" + this.getConfig("symbol") + "</span>").appendTo(rating);
       }
 
       rating.getChildren("span")
@@ -50,7 +47,7 @@ qx.Bootstrap.define("qx.ui.website.Rating", {
       this.forEach(function(el) {
         el = q(el);
         var children = el.getChildren();
-        children.setHtml(this.getTemplate("symbol"));
+        children.setHtml(this.getConfig("symbol"));
         var diff = length - children.length;
         if (diff > 0) {
           for (var i = 0; i < diff; i++) {
@@ -85,7 +82,7 @@ qx.Bootstrap.define("qx.ui.website.Rating", {
         }
 
         if (symbol != undefined) {
-          rating.setTemplate("symbol", symbol);
+          rating.setConfig("symbol", symbol);
           modified = true;
         }
 

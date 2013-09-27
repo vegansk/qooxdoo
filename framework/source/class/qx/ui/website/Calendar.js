@@ -22,8 +22,8 @@ qx.Bootstrap.define("qx.ui.website.Calendar", {
     },
 
     _config : {
-      monthNames : ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-      dayNames : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+      monthnames : ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+      daynames : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     }
   },
 
@@ -108,14 +108,14 @@ qx.Bootstrap.define("qx.ui.website.Calendar", {
 
     _getControlsData : function(date) {
       return {
-        month: this.getConfig("monthNames")[date.getMonth()],
+        month: this.getConfig("monthnames")[date.getMonth()],
         year: date.getFullYear()
       };
     },
 
     _getDayRowData : function(date) {
       return {
-        row: this.getConfig("dayNames")
+        row: this.getConfig("daynames")
       };
     },
 

@@ -22,3 +22,16 @@
   -webkit-text-fill-color: transparent;
   -webkit-text-stroke: 1px #C35287;
 }
+
+.qx-rating-skull {
+  font-size: 40px;
+  background: none;
+  -webkit-text-fill-color: black;
+  -webkit-text-stroke: 0;
+}
+
+.qx-rating-skull.qx-rating-off {
+  background: none;
+  -webkit-text-fill-color: #AEAEAE;
+  -webkit-text-stroke: 0;
+}

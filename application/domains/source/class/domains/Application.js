@@ -60,25 +60,25 @@ qx.Class.define("domains.Application",
       var newButton = new qx.ui.toolbar.MenuButton("Neu");
       newButton.setMenu(menu);
       toolbar.add(newButton);
-      
+
       var typeButton = new qx.ui.toolbar.MenuButton("Domain-Typ");
       toolbar.add(typeButton);
-      
+
       var dnsButton = new qx.ui.toolbar.MenuButton("DNS");
       toolbar.add(dnsButton);
-      
+
       var delButton = new qx.ui.toolbar.Button("Subdomain löschen");
       toolbar.add(delButton);
-      
+
       var moveButton = new qx.ui.toolbar.MenuButton("Domain-Umzüge");
       toolbar.add(moveButton);
-      
+
       var sitemapButton = new qx.ui.toolbar.MenuButton("Google Sitemaps");
       toolbar.add(sitemapButton);
-      
+
       var infoButton = new qx.ui.toolbar.Button("Info");
       toolbar.add(infoButton);
-      
+
       var filterButton = new qx.ui.toolbar.Button("Filter");
       toolbar.add(filterButton);
 
@@ -161,6 +161,7 @@ qx.Class.define("domains.Application",
       });
       q("#rating-cloud").rating(2, "☁", 10);
       q("#rating-heart").rating(3, "❤").getChildren().addClass("qx-rating-heart");
+      q("#rating-skull").rating().getChildren().addClass("qx-rating-skull");
 
       // slider
       q("#slider").setStyle("display", "block");
@@ -174,6 +175,8 @@ qx.Class.define("domains.Application",
       });
 
       q("#date2").calendar().setTemplate("dayRow", q("#dayRow").getHtml()).render();
+
+      q("#date3").calendar();
 
 
 

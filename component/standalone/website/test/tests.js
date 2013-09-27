@@ -3313,10 +3313,17 @@ testrunner.define({
     this.assertTrue(w instanceof qxWeb);
   },
 
-  testSetGetConfig : function() {
+  testSetGetConfigProperty : function() {
     var w = new qxWeb.$$qx.ui.website.Widget(qxWeb("#sandbox"));
     w.setConfig("a", 123);
     this.assertEquals(123, w.getConfig("a"));
+  },
+
+  testSetGetConfigAttribute : function() {
+    var value = ["bar", "baz"];
+    var coll = qxWeb.create("<div>").setAttribute("data-qx-config-foo", JSON.stringify(value));
+    var w = new qxWeb.$$qx.ui.website.Widget(coll);
+    this.assertArrayEquals(value, w.getConfig("foo"));
   }
 });
 
@@ -3331,14 +3338,14 @@ testrunner.define({
     var r = q("#sandbox").rating();
     this.assertEquals(0, r.getValue());
     this.assertEquals(5, r.getConfig("length"));
-    this.assertEquals("★", r.getTemplate("symbol"));
+    this.assertEquals("★", r.getConfig("symbol"));
   },
 
   testFullConstructor : function() {
     var r = q("#sandbox").rating(7, "X", 11);
     this.assertEquals(7, r.getValue());
     this.assertEquals(11, r.getConfig("length"));
-    this.assertEquals("X", r.getTemplate("symbol"));
+    this.assertEquals("X", r.getConfig("symbol"));
   },
 
   testSetGetValue : function() {
@@ -3361,7 +3368,7 @@ testrunner.define({
   testSetSymbol : function() {
     var r = q("#sandbox").rating();
     this.assertEquals("★", r.getChildren().getHtml());
-    r.setTemplate("symbol", "X").render();
+    r.setConfig("symbol", "X").render();
     this.assertEquals("X", r.getChildren().getHtml());
   },
 
@@ -3414,11 +3421,11 @@ testrunner.define({
   testConfig : function() {
     var now = new Date();
     var cal = q("#sandbox").calendar(now);
-    var monthNames = cal.getConfig("monthNames").map(function(month) {
+    var monthNames = cal.getConfig("monthnames").map(function(month) {
       return month.substr(0, 3).toUpperCase()
     });
     var dayNames = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
-    cal.setConfig("monthNames", monthNames).setConfig("dayNames", dayNames).render();
+    cal.setConfig("monthnames", monthNames).setConfig("daynames", dayNames).render();
 
     var displayedMonth = cal.find("thead tr:nth-child(1) td:nth-child(2)").getHtml();
     this.assertEquals(0, displayedMonth.indexOf(monthNames[now.getMonth()]));

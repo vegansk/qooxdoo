@@ -1,3 +1,7 @@
+/**
+ * @require(qx.module.Dataset)
+ * @require(qx.module.util.String)
+ */
 qx.Bootstrap.define("qx.ui.website.Widget", {
   extend : qxWeb,
 
@@ -64,6 +68,15 @@ qx.Bootstrap.define("qx.ui.website.Widget", {
 
       if (storage) {
         item = storage[name];
+      }
+
+      if (!item && type == "config") {
+        var attribName = "qx" + qxWeb.string.firstUp(type) +
+          qxWeb.string.firstUp(name);
+        item = this.getData(attribName);
+        try {
+          item = JSON.parse(item);
+        } catch(e) {}
       }
 
       if (!item && this.constructor["_" + type]) {
