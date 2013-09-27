@@ -3321,9 +3321,9 @@ testrunner.define({
 
   testSetGetConfigAttribute : function() {
     var value = ["bar", "baz"];
-    var coll = qxWeb.create("<div>").setAttribute("data-qx-config-foo", JSON.stringify(value));
+    var coll = qxWeb.create("<div>").setAttribute("data-qx-config-foo-bar", JSON.stringify(value));
     var w = new qxWeb.$$qx.ui.website.Widget(coll);
-    this.assertArrayEquals(value, w.getConfig("foo"));
+    this.assertArrayEquals(value, w.getConfig("fooBar"));
   }
 });
 
@@ -3421,11 +3421,11 @@ testrunner.define({
   testConfig : function() {
     var now = new Date();
     var cal = q("#sandbox").calendar(now);
-    var monthNames = cal.getConfig("monthnames").map(function(month) {
+    var monthNames = cal.getConfig("monthNames").map(function(month) {
       return month.substr(0, 3).toUpperCase()
     });
     var dayNames = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
-    cal.setConfig("monthnames", monthNames).setConfig("daynames", dayNames).render();
+    cal.setConfig("monthNames", monthNames).setConfig("dayNames", dayNames).render();
 
     var displayedMonth = cal.find("thead tr:nth-child(1) td:nth-child(2)").getHtml();
     this.assertEquals(0, displayedMonth.indexOf(monthNames[now.getMonth()]));
