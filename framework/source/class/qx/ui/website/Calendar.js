@@ -1,6 +1,5 @@
 /**
  * @require(qx.module.Template)
- * @require(qx.module.event.Native)
  */
 qx.Bootstrap.define("qx.ui.website.Calendar", {
   extend : qx.ui.website.Widget,
