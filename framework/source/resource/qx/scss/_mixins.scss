@@ -1,0 +1,18 @@
+@mixin background-clip($args) {
+  -webkit-background-clip: $args;
+  -moz-background-clip: $args;
+  background-clip: $args;
+}
+
+@mixin user-select($args) {
+  -webkit-user-select: $args;
+  -moz-user-select: $args;
+  -ms-user-select: $args;
+  user-select: $args;
+}
+
+@mixin border-radius($args) {
+  -webkit-border-radius: $args;
+  -moz-border-radius: $args;
+  border-radius: $args;
+}

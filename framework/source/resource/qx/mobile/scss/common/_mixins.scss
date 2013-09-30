@@ -1,3 +1,5 @@
+@import "../../../scss/mixins";
+
 @function rem($value, $factor: 1.0) {
   @if ($value != 0 and $value != auto) {
     @if (unitless($value)) {
@@ -18,13 +20,6 @@
   -webkit-tap-highlight-color: $args;
   -moz-tap-highlight-color: $args;
   tap-highlight-color: $args;
-}
-
-@mixin user-select($args) {
-  -webkit-user-select: $args;
-  -moz-user-select: $args;
-  -ms-user-select: $args;
-  user-select: $args;
 }
 
 @mixin text-size-adjust($args) {
@@ -152,7 +147,7 @@
 
 @mixin box-ordinal-group($args) {
   -moz-box-ordinal-group:$args;
-  -webkit-box-ordinal-group:$args; 
+  -webkit-box-ordinal-group:$args;
   box-ordinal-group:$args;
 }
 
@@ -162,16 +157,10 @@
   -ms-flex-direction: $args;
 }
 
-@mixin border-radius($args) {
-  -webkit-border-radius: $args;
-  -moz-border-radius: $args;
-  border-radius: $args;
-}
-
 @mixin border-radius-top($args) {
   -moz-border-radius-topleft:$args;
   -moz-border-radius-topright:$args;
-  
+
   -webkit-border-radius-topleft:$args;
   -webkit-border-radius-topright:$args;
 
@@ -182,7 +171,7 @@
 @mixin border-radius-right($args) {
   -moz-border-radius-bottomright:$args;
   -moz-border-radius-topright:$args;
-  
+
   -webkit-border-radius-bottomright:$args;
   -webkit-border-radius-topright:$args;
 
@@ -193,7 +182,7 @@
 @mixin border-radius-left($args) {
   -moz-border-radius-bottomleft:$args;
   -moz-border-radius-topleft:$args;
-  
+
   -webkit-border-radius-bottomleft:$args;
   -webkit-border-radius-topleft:$args;
 
@@ -204,7 +193,7 @@
 @mixin border-radius-bottom($args) {
   -moz-border-radius-bottomleft:$args;
   -moz-border-radius-bottomright:$args;
-  
+
   -webkit-border-radius-bottomleft:$args;
   -webkit-border-radius-bottomright:$args;
 
@@ -249,12 +238,6 @@
   box-shadow: inset $arg1, inset $arg2, inset $arg3, inset $arg4;
 }
 
-@mixin background-clip($args) {
-  -webkit-background-clip: $args;
-  -moz-background-clip: $args;
-  background-clip: $args;
-}
-
 @mixin appearance($args) {
   -webkit-appearance: $args;
   -moz-appearance: $args;
@@ -263,8 +246,8 @@
 
 @mixin triangle-up($size,$color) {
   display:block;
-  width: 0; 
-  height: 0; 
+  width: 0;
+  height: 0;
 
   border-left: $size solid transparent;
   border-right: $size solid transparent;
@@ -273,8 +256,8 @@
 
 @mixin triangle-down($size,$color) {
   display:block;
-  width: 0; 
-  height: 0; 
+  width: 0;
+  height: 0;
 
   border-left: $size solid transparent;
   border-right: $size solid transparent;
@@ -283,8 +266,8 @@
 
 @mixin triangle-left($size,$color) {
   display:block;
-  width: 0; 
-  height: 0; 
+  width: 0;
+  height: 0;
   border-top: $size solid transparent;
   border-bottom: $size solid transparent;
   border-right: $size solid $color;
@@ -292,8 +275,8 @@
 
 @mixin triangle-right($size,$color) {
   display:block;
-  width: 0; 
-  height: 0; 
+  width: 0;
+  height: 0;
   border-top: $size solid transparent;
   border-bottom: $size solid transparent;
   border-left: $size solid $color;
