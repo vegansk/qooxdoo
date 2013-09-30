@@ -64,8 +64,8 @@ qx.Bootstrap.define("qx.ui.website.Rating", {
 
 
     __onClick : function(e) {
-      var parents = q(e.target).getParents();
-      this.setValue(parents.getChildren().indexOf(e.target) + 1);
+      var parents = q(e.getTarget()).getParents();
+      this.setValue(parents.getChildren().indexOf(e.getTarget()) + 1);
     }
   },
 
