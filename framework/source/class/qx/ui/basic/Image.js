@@ -233,7 +233,7 @@ qx.Class.define("qx.ui.basic.Image",
       source = qx.util.AliasManager.getInstance().resolve(source);
       var el = this.getContentElement();
       if (this.__wrapper) {
-        el = el.getChild(0);
+        el = el.getChildren().eq(0);
       }
       this.__setSource(el, source);
     },
@@ -246,7 +246,7 @@ qx.Class.define("qx.ui.basic.Image",
 
       var element = this.getContentElement();
       if (this.__wrapper) {
-        element.getChild(0).setStyles({
+        element.getChildren().eq(0).setStyles({
           top: this.getPaddingTop() || 0,
           left: this.getPaddingLeft() || 0
         });
@@ -257,7 +257,7 @@ qx.Class.define("qx.ui.basic.Image",
           this._styleSource();
         } else {
           this.__imageEl.setStyles({
-            paddingTop : paddingTop + "px", 
+            paddingTop : paddingTop + "px",
             paddingLeft : paddingLeft + "px"
           });
         }
@@ -270,7 +270,7 @@ qx.Class.define("qx.ui.basic.Image",
 
       var element = this.getContentElement();
       if (this.__wrapper) {
-        element.getChild(0).setStyles({
+        element.getChildren().eq(0).setStyles({
           width: width - (this.getPaddingLeft() || 0) - (this.getPaddingRight() || 0),
           height: height - (this.getPaddingTop() || 0) - (this.getPaddingBottom() || 0),
           top: this.getPaddingTop() || 0,
@@ -387,10 +387,10 @@ qx.Class.define("qx.ui.basic.Image",
       });
 
       if (qx.core.Environment.get("css.alphaimageloaderneeded")) {
-        var wrapper = this.__wrapper = this.createImage("div");
+        var wrapper = this.__wrapper = qx.ui.website.Widget.create("<div>");
         wrapper.setAttribute("$$widget", this.toHashCode());
         wrapper.setStyle("position", "absolute");
-        wrapper.add(element);
+        wrapper.append(element);
         return wrapper;
       }
 
@@ -436,7 +436,7 @@ qx.Class.define("qx.ui.basic.Image",
 
       var element = this.getContentElement();
       if (this.__wrapper) {
-        element = element.getChild(0);
+        element = element.getChildren().eq(0);
       }
 
       if (!source)
@@ -457,7 +457,7 @@ qx.Class.define("qx.ui.basic.Image",
 
       var contentEl = this.__currentContentElement;
       if (this.__wrapper) {
-        contentEl = contentEl.getChild(0);
+        contentEl = contentEl.getChildren().eq(0);
       }
 
       // Detect if the image registry knows this image
@@ -547,7 +547,7 @@ qx.Class.define("qx.ui.basic.Image",
 
           styles.zIndex = 10;
 
-          var newEl = this.__wrapper ? elementToAdd.getChild(0) : elementToAdd;
+          var newEl = this.__wrapper ? elementToAdd.getChildren().eq(0) : elementToAdd;
           newEl.setStyles(styles, true);
           newEl.setSelectable(this.getSelectable());
 
@@ -561,7 +561,7 @@ qx.Class.define("qx.ui.basic.Image",
           // force re-application of source so __setSource is called again
           var hint = newEl.getNodeName();
           newEl.setSource(null);
-          var currentEl = this.__wrapper ? this.__currentContentElement.getChild(0) : this.__currentContentElement;
+          var currentEl = this.__wrapper ? this.__currentContentElement.getChildren().eq(0) : this.__currentContentElement;
           newEl.tagNameHint = hint;
           newEl.setAttribute("class", currentEl.getAttribute("class"));
 
