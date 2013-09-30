@@ -26,6 +26,9 @@ qx.Bootstrap.define("qx.ui.website.Widget", {
     var col = this.base(arguments, selector, context);
     Array.prototype.push.apply(this, Array.prototype.slice.call(col, 0, col.length));
     this.setAttribute("qx-class", this.classname);
+    if (!this.hasClass("qx-widget")) {
+      this.addClass("qx-widget");
+    }
   },
 
 

@@ -1,0 +1,7 @@
+.qx-widget {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  outline: none;
+  @include user-select(none);
+  cursor: pointer;
+}

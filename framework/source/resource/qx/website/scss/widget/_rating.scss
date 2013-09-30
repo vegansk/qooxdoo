@@ -1,0 +1,21 @@
+$rating-background: 270deg, #E3B64A, #D5771D;
+$rating-background-off: 270deg, #eee, #cfcfcf;
+
+.qx-rating {
+  font-size: 30px;
+  background-image: -webkit-linear-gradient($rating-background);
+  color: #E3B64A;
+  @include background-clip(text);
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px #BB6718;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.qx-rating.qx-rating-off {
+  background-image: -webkit-linear-gradient($rating-background-off);
+  color: #cfcfcf;
+  @include background-clip(text);
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px #cfcfcf;
+}
