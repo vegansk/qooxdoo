@@ -135,6 +135,11 @@ q.ready(function() {
     loadDemos(demoName);
   };
 
+  var version = q.$$qx.core.Environment.get("qx.version");
+  title = version ? "qx.Website " + version + " Widget Browser" : "qx.Website Widget Browser";
+  q("h1").setHtml(title);
+  document.title = title;
+
 
   qxWeb.initWidgets();
 
