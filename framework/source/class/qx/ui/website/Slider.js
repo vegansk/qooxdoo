@@ -65,6 +65,12 @@ qx.Bootstrap.define("qx.ui.website.Slider",
 
       this.addClass("qx-slider");
 
+      if (!this.getValue()) {
+        var step = this.getConfig("step");
+        var defaultVal= qx.Bootstrap.isArray(step) ? step[0] : this.getConfig("minimum");
+        this.setProperty("value", defaultVal);
+      }
+
       this._forEachElementWrapped(function(slider) {
         slider.onWidget("click", slider._onClick, slider)
         .onWidget("focus", slider._onSliderFocus, slider);
@@ -88,12 +94,6 @@ qx.Bootstrap.define("qx.ui.website.Slider",
         .onWidget("blur", slider._onKnobBlur, slider);
         slider.render();
       });
-
-      if (!this.getValue()) {
-        var step = this.getConfig("step");
-        var defaultVal= qx.Bootstrap.isArray(step) ? step[0] : this.getConfig("minimum");
-        this.setValue(defaultVal);
-      }
 
       return true;
     },
@@ -152,6 +152,8 @@ qx.Bootstrap.define("qx.ui.website.Slider",
         this._getPixels();
         if (step.indexOf(this.getValue()) == -1) {
           this.setValue(step[0]);
+        } else {
+          this.setValue(this.getValue());
         }
       } else if (qx.Bootstrap.getClass(step) == "Number") {
         this.setValue(Math.round(this.getValue() / step) * step);
