@@ -30,6 +30,7 @@ $slider-knob-background-active : darken(#F7F7F7, 25%), darken(#E8E8E8, 25%);
 .qx-slider-knob {
   cursor: pointer;
   display: inline-block;
+  position: relative;
 
   @include user-select(none);
 
