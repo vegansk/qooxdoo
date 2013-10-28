@@ -3,8 +3,10 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>qx.Website Widget Browser</title>
-  <!--<script type="text/javascript" src="script/q-3.1.min.js"></script>-->
-  <script type="text/javascript" src="script/q-source.js"></script>
+  <script type="text/javascript">
+  var script = location.search.indexOf("source") === -1 ? "q-3.1.min.js" : "q-source.js";
+  document.write('<scr' + 'ipt type="text/javascript" src="script/' + script + '"></scr' + 'ipt>');
+  </script>
   <script type="text/javascript" src="widgetbrowser.js"></script>
   <link href="http://resources.qooxdoo.org/stylesheets/base.css" rel="stylesheet" type="text/css">
   <link href="http://resources.qooxdoo.org/stylesheets/layout.css" rel="stylesheet" type="text/css">
