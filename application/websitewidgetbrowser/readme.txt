@@ -1,2 +1,0 @@
-qx.Website Widget Browser
-=========================
