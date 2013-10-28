@@ -95,11 +95,15 @@ qx.Bootstrap.define("qx.ui.website.Button", {
      */
     setMenu : function(menu) {
       this.on("click", function(e) {
-        menu.placeTo(this, "bottom-left");
-        menu.show();
-        qxWeb(document).once("click", function() {
+        if (menu.getStyle("display") === "none") {
+          menu.placeTo(this, "bottom-left");
+          menu.show();
+          qxWeb(document).once("click", function() {
+            menu.hide();
+          });
+        } else {
           menu.hide();
-        });
+        }
         e.stopPropagation();
       });
     }
