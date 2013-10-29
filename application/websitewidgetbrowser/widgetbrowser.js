@@ -4,7 +4,8 @@ q.ready(function() {
     calendar : ["Default", "Customized"],
     rating : ["Default", "Custom Length", "Custom Symbol", "Custom Styling"],
     slider : ["Default", "Customized"],
-    tabs : ["Default"]
+    tabs : ["Default"],
+    accordion : ["Default"]
   };
 
   /**
@@ -12,7 +13,7 @@ q.ready(function() {
    */
   var onDisable = function() {
     var enabled = !this.getAttribute("checked");
-    q("#content > ul > .qx-tab-button")._forEachElementWrapped(function(button) {
+    q("#content > ul > .qx-tabs-button")._forEachElementWrapped(function(button) {
       var selector = button.getData("qx-tab-page");
       var widgets = q(selector).find("*[data-qx-class]");
       if (widgets.length > 0) {
@@ -26,7 +27,7 @@ q.ready(function() {
    * @param title {String} Tab (button) title
    */
   var selectTab = function(title) {
-    var tabs = q("#content > ul > .qx-tab-button");
+    var tabs = q("#content > ul > .qx-tabs-button");
     var selectedTab = tabs.has("button:contains(" + title + ")");
     if (selectedTab.length > 0) {
       var index = tabs.indexOf(selectedTab);
@@ -74,7 +75,7 @@ q.ready(function() {
    * @param category {String} The category of the demos (see demos map)
    */
   var appendDemos = function(category) {
-    var pageSelector = q("#content").find("> ul > .qx-tab-button-active").getData("qxTabPage");
+    var pageSelector = q("#content").find("> ul > .qx-tabs-button-active").getData("qxTabPage");
 
     demos[category].forEach(function(title) {
       var demoCell = loadedDemos[title];
@@ -123,7 +124,7 @@ q.ready(function() {
    * @param index {Number} tab index
    */
   var onChangeSelected = function(index) {
-    var button = q("#content > ul > .qx-tab-button").eq(index);
+    var button = q("#content > ul > .qx-tabs-button").eq(index);
     var buttonText = button.getChildren("button").getHtml();
     location.hash = buttonText;
 
@@ -161,7 +162,7 @@ q.ready(function() {
     if (location.hash.length > 0) {
       selected = location.hash.substr(1);
     } else {
-      selected = q("#content").tabs().find(".qx-tab-button-active").getChildren("button").getHtml();
+      selected = q("#content").tabs().find(".qx-tabs-button-active").getChildren("button").getHtml();
     }
     selectTab(selected);
   }, 100);
