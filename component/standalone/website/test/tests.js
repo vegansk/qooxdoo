@@ -3639,7 +3639,7 @@ testrunner.define({
     var now = new Date();
     cal.on("changeValue", function() {
       this.resume(function() {
-        this.assertEquals(now, cal.getValue());
+        this.assertEquals(now.getTime(), cal.getValue().getTime());
       }, this);
     }.bind(this));
 
@@ -3694,8 +3694,8 @@ testrunner.define({
     var c1 = q("#sandbox").calendar();
     c0.setValue(now);
 
-    this.assertEquals(now, c0.getValue());
-    this.assertEquals(now, c1.getValue());
+    this.assertEquals(now.getTime(), c0.getValue().getTime());
+    this.assertEquals(now.getTime(), c1.getValue().getTime());
   }
 });
 
