@@ -3631,7 +3631,7 @@ testrunner.define({
   testSetGetValue : function() {
     var now = new Date();
     var cal = q("#sandbox").calendar(now);
-    this.assertEquals(now, cal.getValue());
+    this.assertEquals(now.getTime(), cal.getValue().getTime());
   },
 
   testChangeEvent : function() {
@@ -3853,8 +3853,8 @@ testrunner.define({
   testConstructorWithDom : function() {
     q("#sandbox").append(q.create("<ul><li data-qx-tab-page='#cont1'><button>Foo</button></li><li data-qx-tab-page='#cont0'><button>Foo</button></li></ul><div id='cont0'>Content0</div><div id='cont1'>Content1</div>"));
     var tabs = q("#sandbox").tabs();
-    this.assertTrue(tabs.find("ul li.qx-tab-button").length == 2);
-    this.assertTrue(tabs.find("ul li").getFirst().hasClass("qx-tab-button-active"));
+    this.assertTrue(tabs.find("ul li.qx-tabs-button").length == 2);
+    this.assertTrue(tabs.find("ul li").getFirst().hasClass("qx-tabs-button-active"));
     this.assertEquals("block", tabs.find("#cont1").getStyle("display"));
     this.assertEquals("none", tabs.find("#cont0").getStyle("display"));
   },
@@ -3877,17 +3877,17 @@ testrunner.define({
   testTwoTabs : function() {
     var tabs = q.create('<div/><div/>').appendTo("#sandbox").tabs();
     tabs.addButton("Foo");
-    this.assertEquals(2, tabs.find(".qx-tab-button").length);
+    this.assertEquals(2, tabs.find(".qx-tabs-button").length);
   },
 
   testSelectPage : function() {
     var tabs = q("#sandbox").tabs();
     tabs.addButton("Foo").addButton("Bar");
-    this.assertTrue(tabs.find("ul li").getFirst().hasClass("qx-tab-button-active"));
-    this.assertFalse(tabs.find("ul li").eq(1).hasClass("qx-tab-button-active"));
+    this.assertTrue(tabs.find("ul li").getFirst().hasClass("qx-tabs-button-active"));
+    this.assertFalse(tabs.find("ul li").eq(1).hasClass("qx-tabs-button-active"));
     tabs.select(1);
-    this.assertFalse(tabs.find("ul li").eq(0).hasClass("qx-tab-button-active"));
-    this.assertTrue(tabs.find("ul li").eq(1).hasClass("qx-tab-button-active"));
+    this.assertFalse(tabs.find("ul li").eq(0).hasClass("qx-tabs-button-active"));
+    this.assertTrue(tabs.find("ul li").eq(1).hasClass("qx-tabs-button-active"));
   },
 
   testChangePage : function() {

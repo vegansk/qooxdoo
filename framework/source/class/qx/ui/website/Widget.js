@@ -111,11 +111,16 @@ qx.Bootstrap.define("qx.ui.website.Widget", {
         return false;
       }
       this.setAttribute("data-qx-class", this.classname);
-      if (!this.hasClass("qx-widget")) {
-        this.addClass("qx-widget");
-      }
+      this.addClass("qx-widget");
+      this.addClass(this.getCssPrefix());
       this.setProperty("$$qx-widget-initialized", true);
       return true;
+    },
+
+
+    getCssPrefix : function() {
+      var split = this.classname.split(".");
+      return "qx-" + split[split.length - 1].toLowerCase();
     },
 
 
