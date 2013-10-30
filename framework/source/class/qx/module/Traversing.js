@@ -339,6 +339,10 @@ qx.Bootstrap.define("qx.module.Traversing", {
         return qxWeb();
       }
 
+      if (qx.dom.Node.isWindow(element)) {
+        element = element.document;
+      }
+
       return this.filter(function(el) {
         if (qx.dom.Node.isWindow(el)) {
           el = el.document;
