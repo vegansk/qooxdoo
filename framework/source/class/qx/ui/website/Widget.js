@@ -119,8 +119,11 @@ qx.Bootstrap.define("qx.ui.website.Widget", {
 
 
     getCssPrefix : function() {
-      var split = this.classname.split(".");
-      return "qx-" + split[split.length - 1].toLowerCase();
+      if (!this.__cssPrefix) {
+        var split = this.classname.split(".");
+        this.__cssPrefix = "qx-" + split[split.length - 1].toLowerCase();
+      }
+      return this.__cssPrefix;
     },
 
 
@@ -222,6 +225,7 @@ qx.Bootstrap.define("qx.ui.website.Widget", {
       this.setProperty(contextProperty, undefined);
       this.setProperty("$$qx-widget-initialized", undefined);
       this.removeClass("qx-widget");
+      this.removeClass(this.getCssPrefix());
 
       for (var name in this.constructor.$$events) {
         this.allOff(name);

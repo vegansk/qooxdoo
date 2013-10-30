@@ -34,10 +34,6 @@ qx.Bootstrap.define("qx.ui.website.Button", {
       }
 
       this._forEachElementWrapped(function(button) {
-        if (!button.hasClass("qx-button")) {
-          button.addClass("qx-button");
-        }
-
         if (button.getChildren("span") == 0) {
           qxWeb.create("<span>").appendTo(button);
         }

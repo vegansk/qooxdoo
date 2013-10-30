@@ -136,8 +136,8 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
           tabs.addButton(content, pages[i]);
           var page = tabs._getPage(tabs.find("> ul > ." + cssPrefix + "-button:last-child"));
           if (i == selected) {
-            tabs.find("> ul > .qx-tab-button:first-child").removeClass(cssPrefix + "-button-active");
-            tabs.find("> ul > .qx-tab-button:last-child").addClass(cssPrefix + "-button-active");
+            tabs.find("> ul > ." + cssPrefix + "-button:first-child").removeClass(cssPrefix + "-button-active");
+            tabs.find("> ul > ." + cssPrefix + "-button:last-child").addClass(cssPrefix + "-button-active");
             page.show();
           } else {
             page.hide();

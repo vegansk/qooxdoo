@@ -63,7 +63,7 @@ qx.Bootstrap.define("qx.ui.website.Slider",
         return false;
       }
 
-      this.addClass("qx-slider");
+      var cssPrefix = this.getCssPrefix();
 
       if (!this.getValue()) {
         var step = this.getConfig("step");
@@ -77,12 +77,12 @@ qx.Bootstrap.define("qx.ui.website.Slider",
         qxWeb(document.documentElement).on("mouseup", slider._onMouseUp, slider);
         qxWeb(window).onWidget("resize", slider._onWindowResize, slider);
 
-        if (slider.getChildren(".qx-slider-knob").length === 0) {
+        if (slider.getChildren("." + cssPrefix + "-knob").length === 0) {
           slider.append(qx.ui.website.Widget.create("<button>")
-          .addClass("qx-slider-knob"));
+          .addClass(cssPrefix + "-knob"));
         }
 
-        slider.getChildren(".qx-slider-knob")
+        slider.getChildren("." + cssPrefix + "-knob")
         .setAttributes({
           "draggable": "false",
           "unselectable": "true"
@@ -138,7 +138,8 @@ qx.Bootstrap.define("qx.ui.website.Slider",
 
       if (!qx.Bootstrap.isArray(step) || step.indexOf(value) != -1) {
         this.__valueToPosition(value);
-        this.getChildren(".qx-slider-knob").setHtml(this._getKnobContent());
+        this.getChildren("." + this.getCssPrefix() + "-knob")
+          .setHtml(this._getKnobContent());
         this.emit("changeValue", value);
       }
 
@@ -160,7 +161,8 @@ qx.Bootstrap.define("qx.ui.website.Slider",
       } else {
         this.setValue(this.getValue());
       }
-      this.getChildren(".qx-slider-knob").setHtml(this._getKnobContent());
+      this.getChildren("." + this.getCssPrefix() + "-knob")
+        .setHtml(this._getKnobContent());
 
       return this;
     },
@@ -174,7 +176,7 @@ qx.Bootstrap.define("qx.ui.website.Slider",
 
 
     _getHalfKnobWidth : function() {
-      var knobWidth = this.getChildren(".qx-slider-knob").getWidth();
+      var knobWidth = this.getChildren("." + this.getCssPrefix() + "-knob").getWidth();
       return parseInt(knobWidth / 2, 10);
     },
 
@@ -368,17 +370,19 @@ qx.Bootstrap.define("qx.ui.website.Slider",
 
 
     _onSliderFocus : function(e) {
-      this.getChildren(".qx-slider-knob").focus();
+      this.getChildren("." + this.getCssPrefix() + "-knob").focus();
     },
 
 
     _onKnobFocus : function(e) {
-      this.getChildren(".qx-slider-knob").onWidget("keydown", this._onKeyDown, this);
+      this.getChildren("." + this.getCssPrefix() + "-knob")
+        .onWidget("keydown", this._onKeyDown, this);
     },
 
 
     _onKnobBlur : function(e) {
-      this.getChildren(".qx-slider-knob").offWidget("keydown", this._onKeyDown, this);
+      this.getChildren("." + this.getCssPrefix() + "-knob")
+        .offWidget("keydown", this._onKeyDown, this);
     },
 
 
@@ -427,7 +431,7 @@ qx.Bootstrap.define("qx.ui.website.Slider",
     * @param x {Integer} the position to move to
     */
     _setKnobPosition : function(x) {
-      var knob = this.getChildren(".qx-slider-knob");
+      var knob = this.getChildren("." + this.getCssPrefix() + "-knob");
       if (qxWeb.env.get("css.transform")) {
         knob.translate([x + "px", 0, 0]);
       } else {
@@ -486,7 +490,7 @@ qx.Bootstrap.define("qx.ui.website.Slider",
         qxWeb(window).offWidget("resize", slider._onWindowResize, slider);
         slider.offWidget("click", slider._onClick, slider)
         .offWidget("focus", slider._onSliderFocus, slider);
-        slider.getChildren(".qx-slider-knob")
+        slider.getChildren("." + this.getCssPrefix() + "-knob")
         .offWidget("mousedown", slider._onMouseDown, slider)
         .offWidget("dragstart", slider._onDragStart, slider)
         .offWidget("focus", slider._onKnobFocus, slider)
@@ -494,7 +498,6 @@ qx.Bootstrap.define("qx.ui.website.Slider",
         .offWidget("keydown", slider._onKeyDown, slider);
       });
 
-      this.removeClass("qx-slider");
       this.setHtml("");
 
       return this.base(arguments);

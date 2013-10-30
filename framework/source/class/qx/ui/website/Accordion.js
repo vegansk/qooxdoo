@@ -71,8 +71,9 @@ qx.Bootstrap.define("qx.ui.website.Accordion", {
   members : {
 
     init : function() {
+      var cssPrefix = this.getCssPrefix();
       this._forEachElementWrapped(function(tabs) {
-        tabs.find("> ul > .qx-accordion-page")._forEachElementWrapped(function(page) {
+        tabs.find("> ul > ." + cssPrefix + "-page")._forEachElementWrapped(function(page) {
           page.setProperty("initialHeight", page.getHeight());
         });
       });
@@ -84,8 +85,9 @@ qx.Bootstrap.define("qx.ui.website.Accordion", {
 
 
     render : function() {
+      var cssPrefix = this.getCssPrefix();
       this._forEachElementWrapped(function(tabs) {
-        tabs.find("> ul > .qx-accordion-page")._forEachElementWrapped(function(page) {
+        tabs.find("> ul > ." + cssPrefix + "-page")._forEachElementWrapped(function(page) {
           var isHidden = page.getStyle("display") === "none";
           if (isHidden) {
             page.show();

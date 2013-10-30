@@ -3381,7 +3381,8 @@ testrunner.define({
 
   testConstructor : function() {
     var w = new qxWeb.$$qx.ui.website.Widget(qxWeb("#sandbox"));
-    this.assertEquals("qx.ui.website.Widget", w.getAttribute("qx-class"));
+    w.init();
+    this.assertEquals("qx.ui.website.Widget", w.getAttribute("data-qx-class"));
   },
 
   testIsCollection : function() {
@@ -3404,6 +3405,7 @@ testrunner.define({
 
   testDispose : function() {
     var w = new qxWeb.$$qx.ui.website.Widget(qxWeb("#sandbox"));
+    w.init();
     this.assertEquals("qx.ui.website.Widget", qxWeb("#sandbox").classname);
     this.assertInstance(w.dispose(), qxWeb);
     this.assertEquals("qxWeb", qxWeb("#sandbox").classname);

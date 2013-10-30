@@ -49,16 +49,16 @@ qx.Bootstrap.define("qx.ui.website.Rating", {
       }
 
       this._updateSymbolLength();
+      var cssPrefix = this.getCssPrefix();
 
       this._forEachElementWrapped(function(rating) {
         if (rating.getAttribute("tabindex") < 0) {
           rating.setAttribute("tabindex", 0);
         }
-        rating.addClass("qx-rating")
-        .onWidget("focus", this._onFocus, rating)
+        rating.onWidget("focus", this._onFocus, rating)
         .onWidget("blur", this._onBlur, rating)
         .getChildren("span")
-          .addClasses(["qx-rating-item", "qx-rating-item-off"])
+          .addClasses([cssPrefix + "-item", cssPrefix + "-item-off"])
           .onWidget("click", this._onClick, rating);
       }.bind(this));
 
@@ -70,10 +70,11 @@ qx.Bootstrap.define("qx.ui.website.Rating", {
       if (value < 0) {
         value = 0;
       }
+      var cssPrefix = this.getCssPrefix();
       this._forEachElementWrapped(function(rating) {
         var children = rating.getChildren("span");
-        children.removeClass("qx-rating-item-off");
-        children.slice(value, children.length).addClass("qx-rating-item-off");
+        children.removeClass(cssPrefix + "-item-off");
+        children.slice(value, children.length).addClass(cssPrefix + "-item-off");
         rating.emit("changeValue", rating.getValue());
       });
       return this;
@@ -81,7 +82,8 @@ qx.Bootstrap.define("qx.ui.website.Rating", {
 
 
     getValue : function() {
-      return this.eq(0).getChildren("span").not(".qx-rating-item-off").length;
+      var cssPrefix = this.getCssPrefix();
+      return this.eq(0).getChildren("span").not("." + cssPrefix + "-item-off").length;
     },
 
 
@@ -91,6 +93,7 @@ qx.Bootstrap.define("qx.ui.website.Rating", {
 
 
     _updateSymbolLength : function() {
+      var cssPrefix = this.getCssPrefix();
       var length = this.getConfig("length");
       this._forEachElementWrapped(function(el) {
         var children = el.getChildren();
@@ -100,7 +103,7 @@ qx.Bootstrap.define("qx.ui.website.Rating", {
           for (var i = 0; i < diff; i++) {
             qxWeb.create("<span>" + this.getConfig("symbol") + "</span>")
             .onWidget("click", el._onClick, el)
-            .addClass("qx-rating-item")
+            .addClasses([cssPrefix + "-item", cssPrefix + "-item-off"])
             .appendTo(el);
           }
         } else {
