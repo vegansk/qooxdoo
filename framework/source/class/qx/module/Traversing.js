@@ -331,7 +331,8 @@ qx.Bootstrap.define("qx.module.Traversing", {
      * @return {qxWeb} Collection with matching items
      */
     contains : function(element) {
-      if (element instanceof Array) {
+      // qxWeb does not inherit from Array in IE
+      if (element instanceof Array || element instanceof qxWeb) {
         element = element[0];
       }
 
