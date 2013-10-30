@@ -3633,7 +3633,7 @@ testrunner.define({
   testSetGetValue : function() {
     var now = new Date();
     var cal = q("#sandbox").calendar(now);
-    this.assertEquals(now.getTime(), cal.getValue().getTime());
+    this.assertEquals(now.toDateString(), cal.getValue().toDateString());
   },
 
   testChangeEvent : function() {
@@ -3641,7 +3641,7 @@ testrunner.define({
     var now = new Date();
     cal.on("changeValue", function() {
       this.resume(function() {
-        this.assertEquals(now.getTime(), cal.getValue().getTime());
+        this.assertEquals(now.toDateString(), cal.getValue().toDateString());
       }, this);
     }.bind(this));
 
@@ -3696,8 +3696,8 @@ testrunner.define({
     var c1 = q("#sandbox").calendar();
     c0.setValue(now);
 
-    this.assertEquals(now.getTime(), c0.getValue().getTime());
-    this.assertEquals(now.getTime(), c1.getValue().getTime());
+    this.assertEquals(now.toDateString(), c0.getValue().toDateString());
+    this.assertEquals(now.toDateString(), c1.getValue().toDateString());
   }
 });
 
