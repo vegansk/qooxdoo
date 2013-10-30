@@ -3793,7 +3793,9 @@ testrunner.define({
   testOffset : function() {
     var slider = q("#sandbox").slider().setConfig("offset", 20).render();
     var knob = slider.getChildren(".qx-slider-knob");
-    this.assertEquals(20, Math.floor(knob.getPosition().left + (knob.getWidth() / 2)));
+    this.assertEquals(20, knob.getPosition().left);
+    slider.setValue(100);
+    this.assertEquals(-20, knob.getPosition().right);
   },
 
   testDragBoundaries : function() {
