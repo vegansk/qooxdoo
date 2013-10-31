@@ -79,7 +79,13 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
         var cssPrefix = this.getCssPrefix();
 
         if (tabs.getChildren("ul").length === 0) {
-          tabs.append(qxWeb.create("<ul/>"));
+          var list = qxWeb.create("<ul/>");
+          var content = tabs.getChildren();
+          if (content.length > 0) {
+            list.insertBefore(content.eq(0));
+          } else {
+            tabs.append(list);
+          }
         }
 
         tabs.find("> ul").removeClasses([cssPrefix + "-justify", cssPrefix + "-right"]);
@@ -177,10 +183,10 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
      * Adds a new tab button
      *
      * @param label {String} The button's content. Can include markup.
-     * @param page {String} CSS Selector that identifies the associated page
+     * @param pageSelector {String} CSS Selector that identifies the associated page
      * @return {qxWeb} The collection for chaining
      */
-    addButton : function(label, page) {
+    addButton : function(label, pageSelector) {
       var cssPrefix = this.getCssPrefix();
       this._forEachElementWrapped(function(item) {
 
@@ -204,9 +210,13 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
           link.addClass(cssPrefix + "-button-active");
         }
 
-        if (page) {
-          link.setData("qx-tab-page", page);
-          this._getPage(link).hide();
+        if (pageSelector) {
+          link.setData("qx-tab-page", pageSelector);
+          var page = this._getPage(link);
+          page.addClass(cssPrefix + "-page");
+          if (!link.hasClass(cssPrefix + "-button-active")) {
+            page.hide();
+          }
         }
       }, this);
 
