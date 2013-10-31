@@ -318,7 +318,9 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
         return;
       }
 
-      this._switchPages(oldPage, newPage);
+      var showAnimation = this.getConfig("showAnimation");
+      var hideAnimation = this.getConfig("hideAnimation");
+      this._switchPages(oldPage, newPage, hideAnimation, showAnimation);
     },
 
 
