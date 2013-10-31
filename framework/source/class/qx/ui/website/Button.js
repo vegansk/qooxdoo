@@ -85,6 +85,16 @@ qx.Bootstrap.define("qx.ui.website.Button", {
 
 
     /**
+     * Returns the URI of the button's icon
+     *
+     * @return {String|null} Icon image URI
+     */
+    getIcon : function() {
+      return this.getChildren("img").getAttribute("src");
+    },
+
+
+    /**
      * Sets the menu to be shown when the button is clicked
      *
      * @param menu {qxWeb} menu element wrapped in a collection
