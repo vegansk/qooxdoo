@@ -33,10 +33,24 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
     _config : {
       align : "left", // "justify", "right"
 
+      /**
+       * Controls the page switching animation sequence:
+       * "sequential" means the animation to show the new page will
+       * only start after the animation to hide the old page is
+       * finished. "parallel" means the animations will be started
+       * (almost) simultaneously.
+       */
       animationTiming : "sequential",
 
+      /**
+       * The animation used to show a newly selected page
+       */
       showAnimation : null,
 
+      /**
+       * The animation used to hide the previous page when
+       * a new one is selected
+       */
       hideAnimation : null
     }
   },
@@ -80,7 +94,7 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
         var buttons = tabs.getChildren("ul").getFirst().getChildren("li");
         buttons.addClass(cssPrefix + "-button")._forEachElementWrapped(function(button) {
           tabs._getPage(button).hide();
-          button.onWidget("click", this.__onClick, tabs);
+          button.onWidget("click", this._onClick, tabs);
 
           var pageSelector = button.getData("qx-tab-page");
           if (pageSelector) {
@@ -114,7 +128,7 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
         var pages= [];
         var selected;
         tabs.find("> ul > ." + cssPrefix + "-button")._forEachElementWrapped(function(li) {
-          li.offWidget("click", tabs.__onClick, tabs);
+          li.offWidget("click", tabs._onClick, tabs);
           pages.push(li.getData("qx-tab-page"));
           content.push(li.find("> button").getHtml());
           if (li.hasClass(cssPrefix + "-button-active")) {
@@ -159,14 +173,21 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
     },
 
 
-    addButton : function(button, page) {
+    /**
+     * Adds a new tab button
+     *
+     * @param label {String} The button's content. Can include markup.
+     * @param page {String} CSS Selector that identifies the associated page
+     * @return {qxWeb} The collection for chaining
+     */
+    addButton : function(label, page) {
       var cssPrefix = this.getCssPrefix();
       this._forEachElementWrapped(function(item) {
 
         var link = qxWeb.create(
           qxWeb.template.render(
             item.getTemplate("button"),
-            {content: button}
+            {content: label}
           )
         ).addClass(cssPrefix + "-button");
         var list = item.find("> ul");
@@ -177,7 +198,7 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
           link.appendTo(list);
         }
 
-        link.onWidget("click", this.__onClick, item)
+        link.onWidget("click", this._onClick, item)
         .addClass(cssPrefix + "-button");
         if (item.find("> ul ." + cssPrefix + "-button").length === 1) {
           link.addClass(cssPrefix + "-button-active");
@@ -193,6 +214,12 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
     },
 
 
+    /**
+     * Selects a tab button
+     *
+     * @param index {Integer} index of the button to select
+     * @return {qxWeb} The collection for chaining
+     */
     select : function(index) {
       var cssPrefix = this.getCssPrefix();
       this._forEachElementWrapped(function(tabs) {
@@ -210,7 +237,12 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
     },
 
 
-    __onClick : function(e) {
+    /**
+     * Initiates the page switch when a button was clicked
+     *
+     * @param e {Event} Click event
+     */
+    _onClick : function(e) {
       var cssPrefix = this.getCssPrefix();
       this._forEachElementWrapped(function(tabs) {
         var oldButton = tabs.find("> ul > ." + cssPrefix + "-button-active")
@@ -235,6 +267,7 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
 
     /**
      * Allows tab selection using the left and right arrow keys
+     *
      * @param e {Event} keydown event
      */
     _onKeyDown : function(e) {
@@ -272,6 +305,12 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
     },
 
 
+    /**
+     * Initiates the page switch if a tab button is selected
+     *
+     * @param newButton {qxWeb} clicked button
+     * @param oldButton {qxWeb} previously active button
+     */
     _showPage : function(newButton, oldButton) {
       var oldPage = this._getPage(oldButton);
       var newPage = this._getPage(newButton);
@@ -279,45 +318,91 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
         return;
       }
 
-      var showAnimation = this.getConfig("showAnimation");
-      var hideAnimation = this.getConfig("hideAnimation");
-
-      this._switchPages(oldPage, newPage, hideAnimation, showAnimation);
+      this._switchPages(oldPage, newPage);
     },
 
 
+    /**
+     * Executes a page switch
+     *
+     * @param oldPage {qxWeb} the previously selected page
+     * @param newPage {qxWeb} the newly selected page
+     * @param hideAnimation {Map} animation description used to hide the old page
+     * @param showAnimation {Map} animation description used to show the new page
+     */
     _switchPages : function(oldPage, newPage, hideAnimation, showAnimation) {
       var timing = this.getConfig("animationTiming");
+      var oldOverflow = oldPage.getStyle("overflow");
 
       if (hideAnimation) {
+        if (oldOverflow == "visible") {
+          oldPage.setStyle("overflow", "hidden");
+        }
         oldPage.once("animationEnd", function() {
           oldPage.hide();
-          if (timing == "sequential") {
-            newPage.show();
-            if (showAnimation) {
-              newPage.animate(showAnimation);
-            }
+          if (oldOverflow == "visible") {
+            oldPage.setStyle("overflow", oldOverflow);
           }
-        }).animate(hideAnimation);
+          if (timing == "sequential") {
+            this._showNewPage(newPage, showAnimation);
+          }
+        }, this).animate(hideAnimation);
       } else {
         oldPage.hide();
         if (timing == "sequential") {
-          newPage.show();
-          if (showAnimation) {
-            newPage.animate(showAnimation);
-          }
+          this._showNewPage(newPage, showAnimation);
         }
       }
 
       if (timing == "parallel") {
-        newPage.show();
-        if (showAnimation) {
-          newPage.animate(showAnimation);
-        }
+        this._showNewPage(newPage, showAnimation);
       }
     },
 
 
+    /**
+     * Shows a newly selected tab page
+     *
+     * @param newPage {qxWeb} the newly selected page
+     * @param showAnimation {Map} animation description used to show the new pag
+     */
+    _showNewPage : function(newPage, showAnimation) {
+      if (!showAnimation) {
+        newPage.show();
+        return;
+      }
+
+      // apply the first frame of the animation before showing the
+      // page to prevent an ugly visible "jump"
+      if (showAnimation.keyFrames &&
+            showAnimation.keyFrames["0"])
+      {
+        newPage.setStyles(showAnimation.keyFrames["0"]);
+      }
+
+      newPage.show();
+
+      // set overflow to hidden so that the content won't show
+      // outside of the page as it grows
+      var newOverflow = newPage.getStyle("overflow");
+      if (newOverflow == "visible") {
+        newPage.setStyle("overflow", "hidden");
+      }
+      newPage.once("animationEnd", function() {
+        if (newOverflow == "visible") {
+          newPage.setStyle("overflow", newOverflow);
+        }
+      })
+      .animate(showAnimation);
+    },
+
+
+    /**
+     * Returns the tab page associated with the given button
+     *
+     * @param button {qxWeb} Tab button
+     * @return {qxWeb} Tab page
+     */
     _getPage : function(button) {
       var pageSelector;
       if (button) {
@@ -330,7 +415,7 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
     dispose : function() {
       var cssPrefix = this.getCssPrefix();
       this._forEachElementWrapped(function(tabs) {
-        tabs.find("." + cssPrefix + "-button").offWidget("click", tabs.__onClick, tabs);
+        tabs.find("." + cssPrefix + "-button").offWidget("click", tabs._onClick, tabs);
         tabs.getChildren("ul").getFirst().offWidget("keydown", tabs._onKeyDown, tabs)
         .setHtml("");
       });

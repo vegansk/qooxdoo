@@ -27,8 +27,26 @@ qx.Bootstrap.define("qx.ui.website.Accordion", {
     },
 
     _config : {
-      animationTiming : "parallel",
+      /**
+       * Controls the page switching animation sequence:
+       * "sequential" means the animation to show the new page will
+       * only start after the animation to hide the old page is
+       * finished. "parallel" means the animations will be started
+       * (almost) simultaneously.
+       */
+      animationTiming : "parallel", // "sequential"
 
+
+      /**
+       * Style properties used to animate page switching.
+       */
+      animationStyles : ["height", "paddingTop", "paddingBottom"],
+
+
+      /**
+       * The animation used to hide the previous page when
+       * a new one is selected
+       */
       hideAnimation : {
         duration: 200,
         delay: 0,
@@ -36,14 +54,22 @@ qx.Bootstrap.define("qx.ui.website.Accordion", {
         timing: "linear",
         keyFrames: {
           0: {
-            height : "{{height}}px"
+            height : "{{height}}",
+            paddingTop : "{{paddingTop}}",
+            paddingBottom : "{{paddingBottom}}"
           },
           100: {
-            height : "0px"
+            height : "0px",
+            paddingTop: "0px",
+            paddingBottom: "0px"
           }
         }
       },
 
+
+      /**
+       * The animation used to show a newly selected page
+       */
       showAnimation : {
         duration: 200,
         delay: 0,
@@ -51,10 +77,14 @@ qx.Bootstrap.define("qx.ui.website.Accordion", {
         timing: "linear",
         keyFrames: {
           0: {
-            height : "0px"
+            height : "0px",
+            paddingTop: "0px",
+            paddingBottom: "0px"
           },
           100 : {
-            height :  "{{height}}px"
+            height :  "{{height}}",
+            paddingTop : "{{paddingTop}}",
+            paddingBottom : "{{paddingBottom}}"
           }
         }
       }
@@ -71,16 +101,18 @@ qx.Bootstrap.define("qx.ui.website.Accordion", {
   members : {
 
     init : function() {
-      var cssPrefix = this.getCssPrefix();
-      this._forEachElementWrapped(function(tabs) {
-        tabs.find("> ul > ." + cssPrefix + "-page")._forEachElementWrapped(function(page) {
-          page.setProperty("initialHeight", page.getHeight());
-        });
-      });
-
       if (!this.base(arguments)) {
         return false;
       }
+
+      var cssPrefix = this.getCssPrefix();
+      this._forEachElementWrapped(function(tabs) {
+        tabs.find("> ul > ." + cssPrefix + "-page")._forEachElementWrapped(function(page) {
+
+          tabs._storeInitialStyles(page);
+        }.bind(tabs));
+      });
+
     },
 
 
@@ -88,34 +120,40 @@ qx.Bootstrap.define("qx.ui.website.Accordion", {
       var cssPrefix = this.getCssPrefix();
       this._forEachElementWrapped(function(tabs) {
         tabs.find("> ul > ." + cssPrefix + "-page")._forEachElementWrapped(function(page) {
-          var isHidden = page.getStyle("display") === "none";
-          if (isHidden) {
-            page.show();
-          }
-
           var showAnim = tabs.getConfig("showAnimation");
           if (showAnim) {
             //TODO: q.object.clone
             showAnim = qx.lang.Object.clone(showAnim, true);
             showAnim.duration = 1;
             page.once("animationEnd",  function() {
-              page.setProperty("initialHeight", page.getHeight());
-              if (isHidden) {
-                page.hide();
-              }
-            })
+              this._storeInitialStyles(page);
+            }, this)
             .animate(showAnim);
           } else {
-            page.setProperty("initialHeight", page.getHeight());
-            if (isHidden) {
-              page.hide();
-            }
+            this._storeInitialStyles(page);
           }
         });
       }.bind(this));
     },
 
 
+    /**
+     * Stores the page's styles for the switching animations
+     * @param page {qxWeb} Accordion page
+     */
+    _storeInitialStyles : function(page) {
+      var isHidden = page.getStyle("display") === "none";
+      if (isHidden) {
+        page.show();
+      }
+      page.setProperty("initialStyles", page.getStyles(this.getConfig("animationStyles")));
+      if (isHidden) {
+        page.hide();
+      }
+    },
+
+
+    // overridden
     _showPage : function(newButton, oldButton) {
       var oldPage = this._getPage(oldButton);
       var newPage = this._getPage(newButton);
@@ -127,7 +165,7 @@ qx.Bootstrap.define("qx.ui.website.Accordion", {
       if (showAnimation) {
         showAnimation = JSON.parse(qxWeb.template.render(
           JSON.stringify(showAnimation),
-          {height: newPage.getProperty("initialHeight")}
+          newPage.getProperty("initialStyles")
         ));
       }
 
