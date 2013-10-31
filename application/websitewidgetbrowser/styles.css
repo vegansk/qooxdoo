@@ -118,6 +118,7 @@ label, p, button, td, code, li {
 .disable {
   float: right;
   margin: 0 5px;
+  padding-top: 10px;
 }
 
 .disable label,
