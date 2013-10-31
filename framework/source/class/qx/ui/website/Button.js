@@ -98,6 +98,7 @@ qx.Bootstrap.define("qx.ui.website.Button", {
      * Sets the menu to be shown when the button is clicked
      *
      * @param menu {qxWeb} menu element wrapped in a collection
+     * @return {qxWeb} The collection for chaining
      */
     setMenu : function(menu) {
       this.on("click", function(e) {
@@ -112,7 +113,10 @@ qx.Bootstrap.define("qx.ui.website.Button", {
         }
         e.stopPropagation();
       });
+
+      return this;
     }
+
   },
 
 
