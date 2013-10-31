@@ -3536,6 +3536,56 @@ testrunner.define({
 
 
 testrunner.define({
+  classname: "ui.Button",
+
+  setUp : testrunner.globalSetup,
+  tearDown : testrunner.globalTeardown,
+
+  testPlainConstructor : function() {
+    var b = q("#sandbox").button();
+    this.assertTrue(b.hasClass("qx-button"));
+    this.assertEquals(1, b.find("span").length);
+    this.assertEquals(1, b.find("img").length);
+    this.assertEquals("none", b.find("img").getStyle("display"));
+  },
+
+  testFullConstructor : function() {
+    var label = "Label";
+    var img = "http://qooxdoo.org/_media/website.png";
+    var b = q("#sandbox").button(label, img);
+    this.assertEquals(label, b.find("span").getHtml());
+    this.assertEquals(img, b.find("img").getAttribute("src"));
+    this.assertEquals("inline", b.find("img").getStyle("display"));
+  },
+
+  testGetSetLabel : function() {
+    var b = q("#sandbox").button();
+    this.assertNull(b.getLabel());
+    b.setLabel("Foo");
+    this.assertEquals("Foo", b.getLabel())
+  },
+
+  testGetSetIcon : function() {
+    var img = "http://qooxdoo.org/_media/website.png";
+    var b = q("#sandbox").button();
+    this.assertNull(b.getIcon());
+    b.setIcon(img);
+    this.assertEquals(img, b.getIcon());
+  },
+
+  testSetMenu : function() {
+    var menu = q.create("<div>").setStyle("display", "none").appendTo("#sandbox");
+    var b = q.create("<button>").appendTo("#sandbox").button().setMenu(menu);
+    var ev = {stopPropagation : function() {}};
+    b.emit("click", ev);
+    this.assertEquals("block", menu.getStyle("display"));
+    this.assertEquals("absolute", menu.getStyle("position"));
+    b.emit("click", ev);
+    this.assertEquals("none", menu.getStyle("display"));
+  }
+});
+
+testrunner.define({
   classname: "ui.Rating",
 
   setUp : testrunner.globalSetup,
