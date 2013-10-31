@@ -25,6 +25,7 @@ $rating-color-off: #cfcfcf;
 .qx-rating-item[disabled] {
   background-image: -webkit-linear-gradient($rating-background-disabled);
   -webkit-text-stroke: rem(1) desaturate(#BB6718, 100%);
+  color: desaturate(#D5771D, 100%);
 }
 
 .qx-rating-item.qx-rating-item-off[disabled] {
