@@ -106,6 +106,8 @@ qx.Bootstrap.define("qx.ui.website.Widget", {
 
 
   members : {
+    __cssPrefix : null,
+
     init : function() {
       if (this.getProperty("$$qx-widget-initialized")) {
         return false;
