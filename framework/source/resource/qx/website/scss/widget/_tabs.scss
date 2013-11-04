@@ -62,8 +62,11 @@
   color: black;
 }
 
-.qx-tabs-page {
+.qx-tabs-container {
   border: rem(1) solid $border-color;
+}
+
+.qx-tabs-page {
   padding: rem(10);
   @include user-select(text);
 }
