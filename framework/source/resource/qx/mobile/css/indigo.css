@@ -851,6 +851,12 @@ input, select, .text-area {
 .form .form-row.error + .form-row.error {
   border-top: 0; }
 
+.form .form-row.vbox input {
+  width: 100%; }
+
+.form .form-row.vbox * + * {
+  margin-top: 10px; }
+
 .form .form-row * {
   white-space: normal;
   text-overflow: ellipsis; }
@@ -1546,9 +1552,6 @@ input, select, .text-area {
   background-image: -webkit-gradient(linear, center top, center bottom,  color-stop(0,#8dacdf),color-stop(1,#3d72c9));
   background-image: linear-gradient(to ,#8dacdf, #3d72c9);
   color: white !important; }
-
-.ios .slider {
-  -webkit-backface-visibility: hidden; }
 
 .slider {
   -webkit-border-radius: 1.25rem;
