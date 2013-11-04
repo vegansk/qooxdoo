@@ -111,7 +111,6 @@ qx.Bootstrap.define("qx.ui.website.Accordion", {
       var cssPrefix = this.getCssPrefix();
       this._forEachElementWrapped(function(tabs) {
         tabs.find("> ul > ." + cssPrefix + "-page")._forEachElementWrapped(function(page) {
-
           tabs._storeInitialStyles(page);
         }.bind(tabs));
       });

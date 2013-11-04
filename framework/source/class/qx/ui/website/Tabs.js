@@ -97,7 +97,8 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
           tabs.find("> ul").addClass(cssPrefix + "-right");
         }
 
-        var buttons = tabs.getChildren("ul").getFirst().getChildren("li");
+        var buttons = tabs.getChildren("ul").getFirst()
+          .getChildren("li").not("." + cssPrefix + "-page");
         buttons.addClass(cssPrefix + "-button")._forEachElementWrapped(function(button) {
           tabs._getPage(button).hide();
           button.onWidget("click", this._onClick, tabs);
