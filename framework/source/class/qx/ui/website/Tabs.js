@@ -154,6 +154,8 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
           selected = content.length - 1 - selected;
         }
 
+        tabs.find("> ul").removeClasses([cssPrefix + "-justify", cssPrefix + "-right"]);
+
         content.forEach(function(content, i) {
           tabs.addButton(content, pages[i]);
           var page = tabs._getPage(tabs.find("> ul > ." + cssPrefix + "-button:last-child"));
@@ -165,8 +167,6 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
             page.hide();
           }
         });
-
-        tabs.find("> ul").removeClasses([cssPrefix + "-justify", cssPrefix + "-right"]);
 
         var align = tabs.getConfig("align");
         if (align == "justify") {
@@ -200,7 +200,7 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
         ).addClass(cssPrefix + "-button");
         var list = item.find("> ul");
         var links = list.getChildren("li");
-        if (this.getConfig("align") == "right" && links.length > 0) {
+        if (list.hasClass(cssPrefix + "-right") && links.length > 0) {
           link.insertBefore(links.getFirst());
         } else {
           link.appendTo(list);
