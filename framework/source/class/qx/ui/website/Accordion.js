@@ -144,12 +144,23 @@ qx.Bootstrap.define("qx.ui.website.Accordion", {
      */
     _storeInitialStyles : function(page) {
       var isHidden = page.getStyle("display") === "none";
+      var accordion = page.getAncestors(".qx-accordion");
+      var accHeight;
+      if (!accordion[0].style.height) {
+        accHeight = accordion.getHeight();
+      }
       if (isHidden) {
+        if (accHeight) {
+          accordion.setStyle("height", accHeight + "px");
+        }
         page.show();
       }
       page.setProperty("initialStyles", page.getStyles(this.getConfig("animationStyles")));
       if (isHidden) {
         page.hide();
+        if (accHeight) {
+          accordion.setStyle("height", "");
+        }
       }
     },
 

@@ -20,6 +20,7 @@
 
 /**
  * @require(qx.module.Template)
+ * @require(qx.module.Animation)
  */
 qx.Bootstrap.define("qx.ui.website.Tabs", {
   extend : qx.ui.website.Widget,
@@ -359,15 +360,16 @@ qx.Bootstrap.define("qx.ui.website.Tabs", {
           if (timing == "sequential") {
             this._showNewPage(newPage, showAnimation);
           }
-        }, this).animate(hideAnimation);
+        }, this);
+        qx.bom.AnimationFrame.request(function() {
+          if (timing == "parallel") {
+            this._showNewPage(newPage, showAnimation);
+          }
+          oldPage.animate(hideAnimation);
+        }, this);
+
       } else {
         oldPage.hide();
-        if (timing == "sequential") {
-          this._showNewPage(newPage, showAnimation);
-        }
-      }
-
-      if (timing == "parallel") {
         this._showNewPage(newPage, showAnimation);
       }
     },
