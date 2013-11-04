@@ -17,6 +17,9 @@
 
 ************************************************************************ */
 
+/**
+ * @require(qx.module.util.Object)
+ */
 qx.Bootstrap.define("qx.ui.website.Accordion", {
   extend : qx.ui.website.Tabs,
 
@@ -122,8 +125,7 @@ qx.Bootstrap.define("qx.ui.website.Accordion", {
         tabs.find("> ul > ." + cssPrefix + "-page")._forEachElementWrapped(function(page) {
           var showAnim = tabs.getConfig("showAnimation");
           if (showAnim) {
-            //TODO: q.object.clone
-            showAnim = qx.lang.Object.clone(showAnim, true);
+            showAnim = qxWeb.object.clone(showAnim, true);
             showAnim.duration = 1;
             page.once("animationEnd",  function() {
               this._storeInitialStyles(page);
