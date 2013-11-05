@@ -119,6 +119,33 @@ qx.Bootstrap.define("qx.module.Traversing", {
 
 
     /**
+    * Checks if any element of the current collection is child of any element of a given 
+    * parent collection.
+    *
+    * @attach{qxWeb}
+    * @param parent {qxWeb | String} Collection or selector of the parent collection to check.
+    * @return {Boolean} Returns true if at least one element of the current collection is child of the parent collection
+    *
+    */
+    isChildOf : function(parent){      
+      if(this.length == 0){
+        return false;
+      }      
+      var ancestors = null, parentCollection = qxWeb(parent), isChildOf = false;      
+      for(var i = 0, l = this.length; i < l && !isChildOf; i++){
+        ancestors = qxWeb(this[i]).getAncestors();       
+        for(var j = 0, len = parentCollection.length; j < len; j++){
+          if(ancestors.indexOf(parentCollection[j]) != -1){
+            isChildOf = true;
+            break;
+          }
+        };
+      }
+      return isChildOf;  
+    },
+
+
+    /**
      * Gets a set of elements containing all ancestors of each element in the
      * collection.
      * This set can be filtered with an optional expression that will cause only
@@ -194,7 +221,7 @@ qx.Bootstrap.define("qx.module.Traversing", {
     getClosest : function(selector) {
       var closest = [];
 
-      var findClosest = function findClosest(current) {
+      var findClosest = function(current) {
         var found = qx.bom.Selector.matches(selector, current);
         if (found.length) {
           closest.push(found[0]);
@@ -527,6 +554,7 @@ qx.Bootstrap.define("qx.module.Traversing", {
      * Whether the first element in the collection is inserted into
      * the document for which it was created.
      *
+     * @attach {qxWeb}
      * @return {Boolean} <code>true</code> when the element is inserted
      *    into the document.
      */
@@ -733,6 +761,7 @@ qx.Bootstrap.define("qx.module.Traversing", {
       "not" : statics.not,
       "getOffsetParent" : statics.getOffsetParent,
       "isRendered" : statics.isRendered,
+      "isChildOf" : statics.isChildOf,
       "contains" : statics.contains
     });
 

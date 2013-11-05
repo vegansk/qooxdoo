@@ -421,15 +421,13 @@ qx.Bootstrap.define("qx.module.Event", {
      * @return {qxWeb} The collection for chaining
      */
     hover : function(callbackIn, callbackOut) {
-      var collection;
-      for (var j=0; j < this.length; j++) {
-        collection = qxWeb(this[j]);
-        collection.on("mouseover", callbackIn, collection);
 
-        if (qx.lang.Type.isFunction(callbackOut)) {
-          collection.on("mouseout", callbackOut, collection);
-        }
+      this.on("mouseover", callbackIn, this);
+
+      if (qx.lang.Type.isFunction(callbackOut)) {
+        this.on("mouseout", callbackOut, this);
       }
+
       return this;
     },
 

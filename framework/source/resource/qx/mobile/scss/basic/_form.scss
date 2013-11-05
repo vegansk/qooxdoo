@@ -17,7 +17,6 @@
 
 .form-row {
   list-style-type: none;
-  padding: rem(10) rem(24) rem(10) rem(10);
 }
 
 .form .form-row.form-separation-row:last-child {
@@ -64,6 +63,10 @@
 //
 // RENDERING
 //
+
+.form-row-group-title {
+  padding: 10px 25px 10px 10px;
+}
 
 .form-row-group-first, .form-row-group-last {
   height: 0px;
