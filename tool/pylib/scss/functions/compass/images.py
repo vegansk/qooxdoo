@@ -36,6 +36,12 @@ register = COMPASS_IMAGES_LIBRARY.register
 
 # ------------------------------------------------------------------------------
 
+<<<<<<< HEAD
+=======
+def _images_root():
+    return config.STATIC_ROOT if config.IMAGES_ROOT is None else config.IMAGES_ROOT
+
+>>>>>>> resolution
 
 def _image_url(path, only_path=False, cache_buster=True, dst_color=None, src_color=None, inline=False, mime_type=None, spacing=None, collapse_x=None, collapse_y=None):
     """
@@ -47,11 +53,26 @@ def _image_url(path, only_path=False, cache_buster=True, dst_color=None, src_col
         if not Image:
             raise Exception("Images manipulation require PIL")
     filepath = String.unquoted(path).value
+<<<<<<< HEAD
     mime_type = inline and (String.unquoted(mime_type).value if mime_type else mimetypes.guess_type(filepath)[0])
     path = None
     if callable(config.STATIC_ROOT):
         try:
             _file, _storage = list(config.STATIC_ROOT(filepath))[0]
+=======
+    fileext = os.path.splitext(filepath)[1].lstrip('.').lower()
+    if mime_type:
+        mime_type = String.unquoted(mime_type).value
+    if not mime_type:
+        mime_type = mimetypes.guess_type(filepath)[0]
+    if not mime_type:
+        mime_type = 'image/%s' % fileext
+    path = None
+    IMAGES_ROOT = _images_root()
+    if callable(IMAGES_ROOT):
+        try:
+            _file, _storage = list(IMAGES_ROOT(filepath))[0]
+>>>>>>> resolution
             d_obj = _storage.modified_time(_file)
             filetime = int(time.mktime(d_obj.timetuple()))
             if inline or dst_color or spacing:
@@ -59,14 +80,23 @@ def _image_url(path, only_path=False, cache_buster=True, dst_color=None, src_col
         except:
             filetime = 'NA'
     else:
+<<<<<<< HEAD
         _path = os.path.join(config.STATIC_ROOT, filepath.strip('/'))
+=======
+        _path = os.path.join(IMAGES_ROOT.rstrip('/'), filepath.strip('/'))
+>>>>>>> resolution
         if os.path.exists(_path):
             filetime = int(os.path.getmtime(_path))
             if inline or dst_color or spacing:
                 path = open(_path, 'rb')
         else:
             filetime = 'NA'
+<<<<<<< HEAD
     BASE_URL = config.STATIC_URL
+=======
+
+    BASE_URL = config.IMAGES_URL or config.STATIC_URL
+>>>>>>> resolution
     if path:
         dst_colors = [list(Color(v).value[:3]) for v in List.from_maybe(dst_color) if v]
 
@@ -100,6 +130,7 @@ def _image_url(path, only_path=False, cache_buster=True, dst_color=None, src_col
                     filetime = int(os.path.getmtime(asset_path))
                     url = add_cache_buster(url, filetime)
         else:
+<<<<<<< HEAD
             image = Image.open(path)
             width, height = collapse_x or image.size[0], collapse_y or image.size[1]
             new_image = Image.new(
@@ -150,6 +181,78 @@ def _image_url(path, only_path=False, cache_buster=True, dst_color=None, src_col
     else:
         url = '%s%s' % (BASE_URL, filepath)
         if cache_buster:
+=======
+            simply_process = False
+            image = None
+
+            if fileext in ('cur',):
+                simply_process = True
+            else:
+                try:
+                    image = Image.open(path)
+                except IOError:
+                    if not collapse_x and not collapse_y and not dst_colors:
+                        simply_process = True
+
+            if simply_process:
+                if inline:
+                    url = 'data:' + mime_type + ';base64,' + base64.b64encode(path.read())
+                else:
+                    url = '%s%s' % (BASE_URL, filepath)
+                    if cache_buster:
+                        filetime = int(os.path.getmtime(asset_path))
+                        url = add_cache_buster(url, filetime)
+            else:
+                width, height = collapse_x or image.size[0], collapse_y or image.size[1]
+                new_image = Image.new(
+                    mode='RGBA',
+                    size=(width + spacing[1] + spacing[3], height + spacing[0] + spacing[2]),
+                    color=(0, 0, 0, 0)
+                )
+                for i, dst_color in enumerate(dst_colors):
+                    src_color = src_colors[i]
+                    pixdata = image.load()
+                    for _y in xrange(image.size[1]):
+                        for _x in xrange(image.size[0]):
+                            pixel = pixdata[_x, _y]
+                            if pixel[:3] == src_color:
+                                pixdata[_x, _y] = tuple([int(c) for c in dst_color] + [pixel[3] if len(pixel) == 4 else 255])
+                iwidth, iheight = image.size
+                if iwidth != width or iheight != height:
+                    cy = 0
+                    while cy < iheight:
+                        cx = 0
+                        while cx < iwidth:
+                            cropped_image = image.crop((cx, cy, cx + width, cy + height))
+                            new_image.paste(cropped_image, (int(spacing[3]), int(spacing[0])), cropped_image)
+                            cx += width
+                        cy += height
+                else:
+                    new_image.paste(image, (int(spacing[3]), int(spacing[0])))
+
+                if not inline:
+                    try:
+                        new_image.save(asset_path)
+                        filepath = asset_file
+                        BASE_URL = config.ASSETS_URL
+                        if cache_buster:
+                            filetime = int(os.path.getmtime(asset_path))
+                    except IOError:
+                        log.exception("Error while saving image")
+                        inline = True  # Retry inline version
+                    url = os.path.join(config.ASSETS_URL.rstrip('/'), asset_file.lstrip('/'))
+                    if cache_buster:
+                        url = add_cache_buster(url, filetime)
+                if inline:
+                    output = six.BytesIO()
+                    new_image.save(output, format='PNG')
+                    contents = output.getvalue()
+                    output.close()
+                    url = 'data:' + mime_type + ';base64,' + base64.b64encode(contents)
+    else:
+        url = os.path.join(BASE_URL.rstrip('/'), filepath.lstrip('/'))
+        if cache_buster and filetime != 'NA':
+>>>>>>> resolution
             url = add_cache_buster(url, filetime)
 
     if not only_path:
@@ -202,14 +305,25 @@ def image_width(image):
         width = _image_size_cache[filepath][0]
     except KeyError:
         width = 0
+<<<<<<< HEAD
         if callable(config.STATIC_ROOT):
             try:
                 _file, _storage = list(config.STATIC_ROOT(filepath))[0]
+=======
+        IMAGES_ROOT = _images_root()
+        if callable(IMAGES_ROOT):
+            try:
+                _file, _storage = list(IMAGES_ROOT(filepath))[0]
+>>>>>>> resolution
                 path = _storage.open(_file)
             except:
                 pass
         else:
+<<<<<<< HEAD
             _path = os.path.join(config.STATIC_ROOT, filepath.strip('/'))
+=======
+            _path = os.path.join(IMAGES_ROOT, filepath.strip('/'))
+>>>>>>> resolution
             if os.path.exists(_path):
                 path = open(_path, 'rb')
         if path:
@@ -234,14 +348,25 @@ def image_height(image):
         height = _image_size_cache[filepath][1]
     except KeyError:
         height = 0
+<<<<<<< HEAD
         if callable(config.STATIC_ROOT):
             try:
                 _file, _storage = list(config.STATIC_ROOT(filepath))[0]
+=======
+        IMAGES_ROOT = _images_root()
+        if callable(IMAGES_ROOT):
+            try:
+                _file, _storage = list(IMAGES_ROOT(filepath))[0]
+>>>>>>> resolution
                 path = _storage.open(_file)
             except:
                 pass
         else:
+<<<<<<< HEAD
             _path = os.path.join(config.STATIC_ROOT, filepath.strip('/'))
+=======
+            _path = os.path.join(IMAGES_ROOT, filepath.strip('/'))
+>>>>>>> resolution
             if os.path.exists(_path):
                 path = open(_path, 'rb')
         if path:

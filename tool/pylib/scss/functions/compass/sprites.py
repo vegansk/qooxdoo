@@ -152,6 +152,10 @@ def sprite_map(g, **kwargs):
         inline = Boolean(kwargs.get('inline', False))
 
         sprite_map = None
+<<<<<<< HEAD
+=======
+        asset = None
+>>>>>>> resolution
         file_asset = None
         inline_asset = None
         if os.path.exists(asset_path) or inline:
@@ -386,6 +390,10 @@ def sprite_map(g, **kwargs):
             sprite_maps[asset.render()] = sprite_map
         for file_, size in sizes:
             _image_size_cache[file_] = size
+<<<<<<< HEAD
+=======
+    # TODO this sometimes returns an empty list, or is never assigned to
+>>>>>>> resolution
     return asset
 
 
@@ -503,7 +511,11 @@ def sprite_position(map, sprite, offset_x=None, offset_y=None):
         x = None
         if offset_x is not None and not isinstance(offset_x, Number):
             x = offset_x
+<<<<<<< HEAD
         if x not in ('left', 'right', 'center'):
+=======
+        if not x or x.value not in ('left', 'right', 'center'):
+>>>>>>> resolution
             if x:
                 offset_x = None
             x = Number(offset_x or 0, 'px')
@@ -512,7 +524,11 @@ def sprite_position(map, sprite, offset_x=None, offset_y=None):
         y = None
         if offset_y is not None and not isinstance(offset_y, Number):
             y = offset_y
+<<<<<<< HEAD
         if y not in ('top', 'bottom', 'center'):
+=======
+        if not y or y.value not in ('top', 'bottom', 'center'):
+>>>>>>> resolution
             if y:
                 offset_y = None
             y = Number(offset_y or 0, 'px')

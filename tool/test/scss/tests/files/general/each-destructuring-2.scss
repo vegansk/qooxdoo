@@ -1,10 +1,23 @@
+<<<<<<< HEAD
+=======
+@option style:legacy;
+
+>>>>>>> resolution
 a {
   @each $name, $number in (foo: 1px, bar: 2px, baz: 3px) {
     #{$name}: $number;
   }
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> resolution
 c {
   @each $key, $value in (foo bar) (bar, baz) bang {
     #{$key}: "Value is #{$value}";
   }
+<<<<<<< HEAD
 } 
+=======
+}
+>>>>>>> resolution

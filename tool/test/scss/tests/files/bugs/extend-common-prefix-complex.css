@@ -28,6 +28,7 @@
 #one #two #four s, #one #two #three #four t, #one #three #two #four t {
   key: value;
 }
+<<<<<<< HEAD
 #one #three #five u, #one #two #three #five #four v, #one #two #three
 #four #five v, #two #one #three #five #four v, #two #one #three #four
 #five v {
@@ -40,6 +41,21 @@
 one two one three one four one y, one two five one three one four one
 six z, one two five one three one six four one z, five one two one
 three one four one six z, five one two one three one six four one z {
+=======
+#one #three #five u, #one #two #three #five #four v,
+#one #two #three #four #five v, #two #one #three #five #four v,
+#two #one #three #four #five v {
+  key: value;
+}
+#one #two #four #five w, #one #two #three #four #five x,
+#one #three #two #four #five x {
+  key: value;
+}
+one two one three one four one y, one two five one three one four one six z,
+one two five one three one six four one z,
+five one two one three one four one six z,
+five one two one three one six four one z {
+>>>>>>> resolution
   key: value;
 }
 five one three one six aa, five one two one three one four one six bb,

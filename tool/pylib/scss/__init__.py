@@ -46,14 +46,21 @@ __author__ = AUTHOR + ' <' + AUTHOR_EMAIL + '>'
 __license__ = LICENSE
 
 
+<<<<<<< HEAD
 from collections import defaultdict, deque
+=======
+from collections import defaultdict
+>>>>>>> resolution
 import glob
 from itertools import product
 import logging
 import os.path
 import re
 import sys
+<<<<<<< HEAD
 import textwrap
+=======
+>>>>>>> resolution
 
 from scss.six import six
 
@@ -81,7 +88,15 @@ locate_blocks = None
 try:
     from scss._speedups import locate_blocks
 except ImportError:
+<<<<<<< HEAD
     # sys.stderr.write("Scanning acceleration disabled (_speedups not found)!\n")
+=======
+    # import warnings
+    # warnings.warn(
+    #     "Scanning acceleration disabled (_speedups not found)!",
+    #     RuntimeWarning
+    #     )
+>>>>>>> resolution
     from scss._native import locate_blocks
 
 ################################################################################
@@ -124,14 +139,44 @@ _default_scss_vars = {
     'bgc:': String.unquoted('background-color:'),
 }
 
+<<<<<<< HEAD
 _default_scss_opts = {
     'verbosity': config.VERBOSITY,
     'compress': 1,
 }
 
 _default_search_paths = ['.']
+=======
+
+################################################################################
 
 
+class SourceFile(object):
+    def __init__(self, filename, contents, parent_dir='.', is_string=False, is_sass=None, line_numbers=True, line_strip=True):
+        self.filename = filename
+        self.sass = filename.endswith('.sass') if is_sass is None else is_sass
+        self.line_numbers = line_numbers
+        self.line_strip = line_strip
+        self.contents = self.prepare_source(contents)
+        self.parent_dir = os.path.realpath(parent_dir)
+        self.is_string = is_string
+
+    def __repr__(self):
+        return "<SourceFile '%s' at 0x%x>" % (
+            self.filename,
+            id(self),
+        )
+>>>>>>> resolution
+
+    @classmethod
+    def from_filename(cls, fn, filename=None, is_sass=None, line_numbers=True):
+        if filename is None:
+            _, filename = os.path.split(fn)
+
+        with open(fn) as f:
+            contents = f.read()
+
+<<<<<<< HEAD
 ################################################################################
 
 
@@ -153,6 +198,8 @@ class SourceFile(object):
         with open(fn) as f:
             contents = f.read()
 
+=======
+>>>>>>> resolution
         return cls(filename, contents, is_sass=is_sass, line_numbers=line_numbers)
 
     @classmethod
@@ -269,6 +316,8 @@ class SourceFile(object):
 
         # protects codestr: "..." strings
         codestr = _strings_re.sub(lambda m: _reverse_safe_strings_re.sub(lambda n: _reverse_safe_strings[n.group(0)], m.group(0)), codestr)
+<<<<<<< HEAD
+=======
 
         # removes multiple line comments
         codestr = _ml_comment_re.sub('', codestr)
@@ -285,10 +334,35 @@ class SourceFile(object):
         codestr = _collapse_properties_space_re.sub(r'\1{', codestr)
 
         return codestr
+>>>>>>> resolution
+
+        # removes multiple line comments
+        codestr = _ml_comment_re.sub('', codestr)
+
+<<<<<<< HEAD
+        # removes inline comments, but not :// (protocol)
+        codestr = _sl_comment_re.sub('', codestr)
+
+        codestr = _safe_strings_re.sub(lambda m: _safe_strings[m.group(0)], codestr)
+
+        # expand the space in rules
+        codestr = _expand_rules_space_re.sub(' {', codestr)
+
+        # collapse the space in properties blocks
+        codestr = _collapse_properties_space_re.sub(r'\1{', codestr)
+
+        return codestr
 
 
 class Scss(object):
     def __init__(self, scss_vars=None, scss_opts=None, scss_files=None, super_selector=None, library=ALL_BUILTINS_LIBRARY, func_registry=None, search_paths=None):
+=======
+class Scss(object):
+    def __init__(self,
+            scss_vars=None, scss_opts=None, scss_files=None, super_selector=None,
+            live_errors=False, library=ALL_BUILTINS_LIBRARY, func_registry=None, search_paths=None):
+
+>>>>>>> resolution
         if super_selector:
             self.super_selector = super_selector + ' '
         else:
@@ -314,30 +388,38 @@ class Scss(object):
         self._library = func_registry or library
         self._search_paths = search_paths
 
+<<<<<<< HEAD
+=======
+        # If true, swallow compile errors and embed them in the output instead
+        self.live_errors = live_errors
+
+>>>>>>> resolution
         self.reset()
 
     def get_scss_constants(self):
-        scss_vars = self.scss_vars or {}
+        scss_vars = self.root_namespace.variables
         return dict((k, v) for k, v in scss_vars.items() if k and (not k.startswith('$') or k.startswith('$') and k[1].isupper()))
 
     def get_scss_vars(self):
-        scss_vars = self.scss_vars or {}
+        scss_vars = self.root_namespace.variables
         return dict((k, v) for k, v in scss_vars.items() if k and not (not k.startswith('$') or k.startswith('$') and k[1].isupper()))
 
+<<<<<<< HEAD
     @property
     def root_namespace(self):
         return Namespace(variables=self.scss_vars, functions=self._library)
 
+=======
+>>>>>>> resolution
     def reset(self, input_scss=None):
         # Initialize
         self.scss_vars = _default_scss_vars.copy()
         if self._scss_vars is not None:
             self.scss_vars.update(self._scss_vars)
 
-        self.scss_opts = _default_scss_opts.copy()
-        if self._scss_opts is not None:
-            self.scss_opts.update(self._scss_opts)
+        self.scss_opts = self._scss_opts.copy() if self._scss_opts else {}
 
+<<<<<<< HEAD
         # Figure out search paths.  Fall back from provided explicitly to
         # defined globally to just searching the current directory
         self.search_paths = list(_default_search_paths)
@@ -355,6 +437,27 @@ class Scss(object):
 
             self.search_paths.extend(self.scss_opts.get('load_paths', []))
 
+=======
+        self.root_namespace = Namespace(variables=self.scss_vars, functions=self._library)
+
+        # Figure out search paths.  Fall back from provided explicitly to
+        # defined globally to just searching the current directory
+        self.search_paths = ['.']
+        if self._search_paths is not None:
+            assert not isinstance(self._search_paths, six.string_types), \
+                "`search_paths` should be an iterable, not a string"
+            self.search_paths.extend(self._search_paths)
+        else:
+            if config.LOAD_PATHS:
+                if isinstance(config.LOAD_PATHS, six.string_types):
+                    # Back-compat: allow comma-delimited
+                    self.search_paths.extend(config.LOAD_PATHS.split(','))
+                else:
+                    self.search_paths.extend(config.LOAD_PATHS)
+
+            self.search_paths.extend(self.scss_opts.get('load_paths', []))
+
+>>>>>>> resolution
         self.source_files = []
         self.source_file_index = {}
         if self._scss_files is not None:
@@ -384,6 +487,7 @@ class Scss(object):
             # Clear the existing list of files
             self.source_files = []
             self.source_file_index = dict()
+<<<<<<< HEAD
 
             self.source_files.append(source_file)
             self.source_file_index[source_file.filename] = source_file
@@ -408,6 +512,18 @@ class Scss(object):
         # this will manage @extends
         self.apply_extends(self.rules)
 
+=======
+
+            self.source_files.append(source_file)
+            self.source_file_index[source_file.filename] = source_file
+
+        # this will compile and manage rule: child objects inside of a node
+        self.parse_children()
+
+        # this will manage @extends
+        self.apply_extends()
+
+>>>>>>> resolution
         rules_by_file, css_files = self.parse_properties()
 
         all_rules = 0
@@ -443,6 +559,7 @@ class Scss(object):
 
         return final_cont
 
+<<<<<<< HEAD
     compile = Compilation
 
     def longest_common_prefix(self, seq1, seq2):
@@ -487,6 +604,31 @@ class Scss(object):
 
         from scss.selector import Selector
 
+=======
+    def compile(self, *args, **kwargs):
+        try:
+            return self.Compilation(*args, **kwargs)
+        except SassError as e:
+            if self.live_errors:
+                # TODO should this setting also capture and display warnings?
+                return e.to_css()
+            else:
+                raise
+
+    def parse_selectors(self, raw_selectors):
+        """
+        Parses out the old xCSS "foo extends bar" syntax.
+
+        Returns a 2-tuple: a set of selectors, and a set of extended selectors.
+        """
+        # Fix tabs and spaces in selectors
+        raw_selectors = _spaces_re.sub(' ', raw_selectors)
+
+        import re
+
+        from scss.selector import Selector
+
+>>>>>>> resolution
         parts = re.split(r'\s+extends\s+', raw_selectors, 1)
         if len(parts) > 1:
             unparsed_selectors, unsplit_parents = parts
@@ -502,6 +644,7 @@ class Scss(object):
         return selectors, parents
 
     @print_timing(3)
+<<<<<<< HEAD
     def parse_children(self, children, scope=None):
         children = deque(children)
         while children:
@@ -518,17 +661,50 @@ class Scss(object):
     def manage_children(self, rule, p_children, scope):
         try:
             return self._manage_children_impl(rule, p_children, scope)
+=======
+    def parse_children(self, scope=None):
+        children = []
+        root_namespace = self.root_namespace
+        for source_file in self.source_files:
+            rule = SassRule(
+                source_file=source_file,
+
+                unparsed_contents=source_file.contents,
+                namespace=root_namespace,
+                options=self.scss_opts,
+            )
+            self.rules.append(rule)
+            children.append(rule)
+
+        for rule in children:
+            self.manage_children(rule, scope)
+
+        if self.scss_opts.get('warn_unused'):
+            for name, file_and_line in root_namespace.unused_imports():
+                log.warn("Unused @import: '%s' (%s)", name, file_and_line)
+
+    @print_timing(4)
+    def manage_children(self, rule, scope):
+        try:
+            self._manage_children_impl(rule, scope)
+        except SassReturn:
+            raise
+>>>>>>> resolution
         except SassError as e:
             e.add_rule(rule)
             raise
         except Exception as e:
             raise SassError(e, rule=rule)
 
+<<<<<<< HEAD
 
     def _manage_children_impl(self, rule, p_children, scope):
         # A rule that has already returned should not end up here
         assert rule.retval is None
 
+=======
+    def _manage_children_impl(self, rule, scope):
+>>>>>>> resolution
         calculator = Calculator(rule.namespace)
 
         for c_lineno, c_property, c_codestr in locate_blocks(rule.unparsed_contents):
@@ -542,17 +718,31 @@ class Scss(object):
                     log.warn(repr(value))
                 elif code == '@print':
                     value = calculator.calculate(block.argument)
+<<<<<<< HEAD
                     sys.stderr.write("%s\n" % repr(value))
+=======
+                    sys.stderr.write("%s\n" % value)
+>>>>>>> resolution
                 elif code == '@raw':
                     value = calculator.calculate(block.argument)
                     sys.stderr.write("%s\n" % repr(value))
                 elif code == '@dump_context':
                     sys.stderr.write("%s\n" % repr(rule.namespace._variables))
+<<<<<<< HEAD
+=======
+                elif code == '@dump_functions':
+                    sys.stderr.write("%s\n" % repr(rule.namespace._functions))
+                elif code == '@dump_mixins':
+                    sys.stderr.write("%s\n" % repr(rule.namespace._mixins))
+                elif code == '@dump_imports':
+                    sys.stderr.write("%s\n" % repr(rule.namespace._imports))
+>>>>>>> resolution
                 elif code == '@dump_options':
                     sys.stderr.write("%s\n" % repr(rule.options))
                 elif code == '@debug':
                     setting = block.argument.strip()
                     if setting.lower() in ('1', 'true', 't', 'yes', 'y', 'on'):
+<<<<<<< HEAD
                         setting = 1
                     elif setting.lower() in ('0', 'false', 'f', 'no', 'n', 'off', 'undefined'):
                         setting = 0
@@ -564,6 +754,19 @@ class Scss(object):
                     self._do_content(rule, p_children, scope, block)
                 elif code == '@import':
                     self._do_import(rule, p_children, scope, block)
+=======
+                        setting = True
+                    elif setting.lower() in ('0', 'false', 'f', 'no', 'n', 'off', 'undefined'):
+                        setting = False
+                    config.DEBUG = setting
+                    log.info("Debug mode is %s", 'On' if config.DEBUG else 'Off')
+                elif code == '@option':
+                    self._settle_options(rule, scope, block)
+                elif code == '@content':
+                    self._do_content(rule, scope, block)
+                elif code == '@import':
+                    self._do_import(rule, scope, block)
+>>>>>>> resolution
                 elif code == '@extend':
                     from scss.selector import Selector
                     selectors = calculator.apply_vars(block.argument)
@@ -572,6 +775,7 @@ class Scss(object):
                     #rule.extends_selectors.update(p.strip() for p in selectors.replace(',', '&').split('&'))
                     #rule.extends_selectors.discard('')
                 elif code == '@return':
+<<<<<<< HEAD
                     ret = calculator.calculate(block.argument)
                     rule.retval = ret
                     return
@@ -599,10 +803,40 @@ class Scss(object):
             # Properties
             elif block.unparsed_contents is None:
                 self._get_properties(rule, p_children, scope, block)
+=======
+                    # TODO should assert this only happens within a @function
+                    ret = calculator.calculate(block.argument)
+                    raise SassReturn(ret)
+                elif code == '@include':
+                    self._do_include(rule, scope, block)
+                elif code in ('@mixin', '@function'):
+                    self._do_functions(rule, scope, block)
+                elif code in ('@if', '@else if'):
+                    self._do_if(rule, scope, block)
+                elif code == '@else':
+                    self._do_else(rule, scope, block)
+                elif code == '@for':
+                    self._do_for(rule, scope, block)
+                elif code == '@each':
+                    self._do_each(rule, scope, block)
+                elif code == '@while':
+                    self._do_while(rule, scope, block)
+                elif code in ('@variables', '@vars'):
+                    self._get_variables(rule, scope, block)
+                elif block.unparsed_contents is None:
+                    rule.properties.append((block.prop, None))
+                elif scope is None:  # needs to have no scope to crawl down the nested rules
+                    self._nest_at_rules(rule, scope, block)
+            ####################################################################
+            # Properties
+            elif block.unparsed_contents is None:
+                self._get_properties(rule, scope, block)
+>>>>>>> resolution
             # Nested properties
             elif block.is_scope:
                 if block.header.unscoped_value:
                     # Possibly deal with default unscoped value
+<<<<<<< HEAD
                     self._get_properties(rule, p_children, scope, block)
 
                 rule.unparsed_contents = block.unparsed_contents
@@ -615,16 +849,39 @@ class Scss(object):
 
     @print_timing(10)
     def _settle_options(self, rule, p_children, scope, block):
+=======
+                    self._get_properties(rule, scope, block)
+
+                rule.unparsed_contents = block.unparsed_contents
+                subscope = (scope or '') + block.header.scope + '-'
+                self.manage_children(rule, subscope)
+            ####################################################################
+            # Nested rules
+            elif scope is None:  # needs to have no scope to crawl down the nested rules
+                self._nest_rules(rule, scope, block)
+
+    @print_timing(10)
+    def _settle_options(self, rule, scope, block):
+>>>>>>> resolution
         for option in block.argument.split(','):
             option, value = (option.split(':', 1) + [''])[:2]
             option = option.strip().lower()
             value = value.strip()
             if option:
                 if value.lower() in ('1', 'true', 't', 'yes', 'y', 'on'):
-                    value = 1
+                    value = True
                 elif value.lower() in ('0', 'false', 'f', 'no', 'n', 'off', 'undefined'):
+<<<<<<< HEAD
                     value = 0
                 rule.options[option.replace('-', '_')] = value
+=======
+                    value = False
+                option = option.replace('-', '_')
+                if option == 'compress':
+                    option = 'style'
+                    log.warn("The option 'compress' is deprecated. Please use 'style' instead.")
+                rule.options[option] = value
+>>>>>>> resolution
 
     def _get_funct_def(self, rule, calculator, argument):
         funct, lpar, argstr = argument.partition('(')
@@ -641,11 +898,76 @@ class Scss(object):
             # Whoops, no parens at all.  That's like calling with no arguments.
             argstr = ''
 
+<<<<<<< HEAD
         argspec_node = calculator.parse_expression(argstr, target='goal_argspec')
         return funct, argspec_node
 
     @print_timing(10)
     def _do_functions(self, rule, p_children, scope, block):
+=======
+        argstr = calculator.do_glob_math(argstr)
+        argspec_node = calculator.parse_expression(argstr, target='goal_argspec')
+        return funct, argspec_node
+
+    def _populate_namespace_from_call(self, name, callee_namespace, mixin, args, kwargs):
+        # Mutation protection
+        args = list(args)
+        kwargs = dict(kwargs)
+
+        #m_params = mixin[0]
+        #m_defaults = mixin[1]
+        #m_codestr = mixin[2]
+        pristine_callee_namespace = mixin[3]
+        callee_argspec = mixin[4]
+        import_key = mixin[5]
+
+        callee_calculator = Calculator(callee_namespace)
+
+        # Populate the mixin/function's namespace with its arguments
+        for var_name, node in callee_argspec.iter_def_argspec():
+            if args:
+                # If there are positional arguments left, use the first
+                value = args.pop(0)
+            elif var_name in kwargs:
+                # Try keyword arguments
+                value = kwargs.pop(var_name)
+            elif node is not None:
+                # OK, there's a default argument; try that
+                # DEVIATION: this allows argument defaults to refer to earlier
+                # argument values
+                value = node.evaluate(callee_calculator, divide=True)
+            else:
+                # TODO this should raise
+                value = Undefined()
+
+            callee_namespace.set_variable(var_name, value, local_only=True)
+
+        if callee_argspec.slurp:
+            # Slurpy var gets whatever is left
+            callee_namespace.set_variable(
+                callee_argspec.slurp.name,
+                List(args, use_comma=True))
+            args = []
+        elif callee_argspec.inject:
+            # Callee namespace gets all the extra kwargs whether declared or
+            # not
+            for var_name, value in kwargs.items():
+                callee_namespace.set_variable(var_name, value, local_only=True)
+            kwargs = {}
+
+        # TODO would be nice to say where the mixin/function came from
+        if kwargs:
+            raise NameError("%s has no such argument %s" % (name, kwargs.keys()[0]))
+
+        if args:
+            raise NameError("%s received extra arguments: %r" % (name, args))
+
+        pristine_callee_namespace.use_import(import_key)
+        return callee_namespace
+
+    @print_timing(10)
+    def _do_functions(self, rule, scope, block):
+>>>>>>> resolution
         """
         Implements @mixin and @function
         """
@@ -663,6 +985,7 @@ class Scss(object):
             if default is not None:
                 defaults[var_name] = default
 
+<<<<<<< HEAD
         mixin = [list(new_params), defaults, block.unparsed_contents, rule.namespace, argspec_node]
         if block.directive == '@function':
             def _call(mixin):
@@ -724,6 +1047,49 @@ class Scss(object):
                     if ret is None:
                         ret = Null()
                     return ret
+=======
+        mixin = [rule.source_file, block.lineno, block.unparsed_contents, rule.namespace, argspec_node, rule.import_key]
+        if block.directive == '@function':
+            def _call(mixin):
+                def __call(namespace, *args, **kwargs):
+                    source_file = mixin[0]
+                    lineno = mixin[1]
+                    m_codestr = mixin[2]
+                    pristine_callee_namespace = mixin[3]
+                    callee_namespace = pristine_callee_namespace.derive()
+
+                    # TODO CallOp converts Sass names to Python names, so we
+                    # have to convert them back to Sass names.  would be nice
+                    # to avoid this back-and-forth somehow
+                    kwargs = dict(
+                        (normalize_var('$' + key), value)
+                        for (key, value) in kwargs.items())
+
+                    self._populate_namespace_from_call(
+                        "Function {0}".format(funct),
+                        callee_namespace, mixin, args, kwargs)
+
+                    _rule = SassRule(
+                        source_file=source_file,
+                        lineno=lineno,
+                        unparsed_contents=m_codestr,
+                        namespace=callee_namespace,
+
+                        # rule
+                        import_key=rule.import_key,
+                        options=rule.options,
+                        properties=rule.properties,
+                        extends_selectors=rule.extends_selectors,
+                        ancestry=rule.ancestry,
+                        nested=rule.nested,
+                    )
+                    try:
+                        self.manage_children(_rule, scope)
+                    except SassReturn as e:
+                        return e.retval
+                    else:
+                        return Null()
+>>>>>>> resolution
                 return __call
             _mixin = _call(mixin)
             _mixin.mixin = mixin
@@ -735,7 +1101,11 @@ class Scss(object):
             add = rule.namespace.set_function
 
         # Register the mixin for every possible arity it takes
+<<<<<<< HEAD
         if argspec_node.slurp:
+=======
+        if argspec_node.slurp or argspec_node.inject:
+>>>>>>> resolution
             add(funct, None, mixin)
         else:
             while len(new_params):
@@ -747,7 +1117,11 @@ class Scss(object):
                 add(funct, 0, mixin)
 
     @print_timing(10)
+<<<<<<< HEAD
     def _do_include(self, rule, p_children, scope, block):
+=======
+    def _do_include(self, rule, scope, block):
+>>>>>>> resolution
         """
         Implements @include, for @mixins
         """
@@ -767,12 +1141,17 @@ class Scss(object):
                 # Fallback to single parameter:
                 mixin = caller_namespace.mixin(funct, 1)
             except KeyError:
+<<<<<<< HEAD
                 log.error("Required mixin not found: %s:%d (%s)", funct, argc, rule.file_and_line, extra={'stack': True})
+=======
+                log.error("Mixin not found: %s:%d (%s)", funct, argc, rule.file_and_line, extra={'stack': True})
+>>>>>>> resolution
                 return
             else:
                 args = [List(args, use_comma=True)]
                 # TODO what happens to kwargs?
 
+<<<<<<< HEAD
         # TODO share this code with the @function boilerplate above
         m_params = mixin[0]
         m_defaults = mixin[1]
@@ -823,16 +1202,62 @@ class Scss(object):
 
     @print_timing(10)
     def _do_content(self, rule, p_children, scope, block):
+=======
+        source_file = mixin[0]
+        lineno = mixin[1]
+        m_codestr = mixin[2]
+        pristine_callee_namespace = mixin[3]
+        callee_argspec = mixin[4]
+        if caller_argspec.inject and callee_argspec.inject:
+            # DEVIATION: Pass the ENTIRE local namespace to the mixin (yikes)
+            callee_namespace = Namespace.derive_from(
+                caller_namespace,
+                pristine_callee_namespace)
+        else:
+            callee_namespace = pristine_callee_namespace.derive()
+
+        self._populate_namespace_from_call(
+            "Mixin {0}".format(funct),
+            callee_namespace, mixin, args, kwargs)
+
+        _rule = SassRule(
+            source_file=source_file,
+            lineno=lineno,
+            unparsed_contents=m_codestr,
+            namespace=callee_namespace,
+
+            # rule
+            import_key=rule.import_key,
+            options=rule.options,
+            properties=rule.properties,
+            extends_selectors=rule.extends_selectors,
+            ancestry=rule.ancestry,
+            nested=rule.nested,
+        )
+
+        _rule.options['@content'] = block.unparsed_contents
+        self.manage_children(_rule, scope)
+
+    @print_timing(10)
+    def _do_content(self, rule, scope, block):
+>>>>>>> resolution
         """
         Implements @content
         """
         if '@content' not in rule.options:
             log.error("Content string not found for @content (%s)", rule.file_and_line)
         rule.unparsed_contents = rule.options.pop('@content', '')
+<<<<<<< HEAD
         self.manage_children(rule, p_children, scope)
 
     @print_timing(10)
     def _do_import(self, rule, p_children, scope, block):
+=======
+        self.manage_children(rule, scope)
+
+    @print_timing(10)
+    def _do_import(self, rule, scope, block):
+>>>>>>> resolution
         """
         Implements @import
         Load and import mixins and functions and rules
@@ -846,16 +1271,23 @@ class Scss(object):
         names = block.argument.split(',')
         for name in names:
             name = dequote(name.strip())
+<<<<<<< HEAD
             import_key = ('@import', name, rule.source_file.parent_dir)
             if import_key in rule.options:
                 # If already imported in this scope, skip
                 continue
+=======
+>>>>>>> resolution
 
             source_file = None
             full_filename, seen_paths = self._find_import(rule, name)
 
             if full_filename is None:
+<<<<<<< HEAD
                 i_codestr = self._do_magic_import(rule, p_children, scope, block)
+=======
+                i_codestr = self._do_magic_import(rule, scope, block)
+>>>>>>> resolution
 
                 if i_codestr is not None:
                     source_file = SourceFile.from_string(i_codestr)
@@ -869,7 +1301,11 @@ class Scss(object):
                 source_file = SourceFile(
                     full_filename,
                     source,
+<<<<<<< HEAD
                     parent_dir=os.path.dirname(full_filename),
+=======
+                    parent_dir=os.path.realpath(os.path.dirname(full_filename)),
+>>>>>>> resolution
                 )
 
                 self.source_files.append(source_file)
@@ -880,9 +1316,21 @@ class Scss(object):
                 log.warn("File to import not found or unreadable: '%s' (%s)%s", name, rule.file_and_line, load_paths_msg)
                 continue
 
+<<<<<<< HEAD
             _rule = SassRule(
                 source_file=source_file,
                 lineno=block.lineno,
+=======
+            import_key = (name, source_file.parent_dir)
+            if rule.namespace.has_import(import_key):
+                # If already imported in this scope, skip
+                continue
+
+            _rule = SassRule(
+                source_file=source_file,
+                lineno=block.lineno,
+                import_key=import_key,
+>>>>>>> resolution
                 unparsed_contents=source_file.contents,
 
                 # rule
@@ -892,8 +1340,13 @@ class Scss(object):
                 ancestry=rule.ancestry,
                 namespace=rule.namespace,
             )
+<<<<<<< HEAD
             self.manage_children(_rule, p_children, scope)
             rule.options[import_key] = True
+=======
+            rule.namespace.add_import(import_key, rule.import_key, rule.file_and_line)
+            self.manage_children(_rule, scope)
+>>>>>>> resolution
 
     def _find_import(self, rule, name):
         """Find the file referred to by an @import.
@@ -926,7 +1379,11 @@ class Scss(object):
         return None, seen_paths
 
     @print_timing(10)
+<<<<<<< HEAD
     def _do_magic_import(self, rule, p_children, scope, block):
+=======
+    def _do_magic_import(self, rule, scope, block):
+>>>>>>> resolution
         """
         Implements @import for sprite-maps
         Imports magic sprite map directories
@@ -937,6 +1394,7 @@ class Scss(object):
             glob_path = os.path.join(config.STATIC_ROOT, block.argument)
             files = glob.glob(glob_path)
             files = sorted((file[len(config.STATIC_ROOT):], None) for file in files)
+<<<<<<< HEAD
 
         if not files:
             return
@@ -945,6 +1403,16 @@ class Scss(object):
         map_name = os.path.normpath(os.path.dirname(block.argument)).replace('\\', '_').replace('/', '_')
         kwargs = {}
 
+=======
+
+        if not files:
+            return
+
+        # Build magic context
+        map_name = os.path.normpath(os.path.dirname(block.argument)).replace('\\', '_').replace('/', '_')
+        kwargs = {}
+
+>>>>>>> resolution
         calculator = Calculator(rule.namespace)
 
         def setdefault(var, val):
@@ -1006,7 +1474,11 @@ class Scss(object):
         return ret
 
     @print_timing(10)
+<<<<<<< HEAD
     def _do_if(self, rule, p_children, scope, block):
+=======
+    def _do_if(self, rule, scope, block):
+>>>>>>> resolution
         """
         Implements @if and @else if
         """
@@ -1022,12 +1494,25 @@ class Scss(object):
         calculator = Calculator(rule.namespace)
         condition = calculator.calculate(block.argument)
         if condition:
+<<<<<<< HEAD
             rule.unparsed_contents = block.unparsed_contents
             self.manage_children(rule, p_children, scope)
         rule.options['@if'] = condition
 
     @print_timing(10)
     def _do_else(self, rule, p_children, scope, block):
+=======
+            inner_rule = rule.copy()
+            inner_rule.unparsed_contents = block.unparsed_contents
+            if not rule.options.get('control_scoping', config.CONTROL_SCOPING):  # TODO: maybe make this scoping mode for contol structures as the default as a default deviation
+                # DEVIATION: Allow not creating a new namespace
+                inner_rule.namespace = rule.namespace
+            self.manage_children(inner_rule, scope)
+        rule.options['@if'] = condition
+
+    @print_timing(10)
+    def _do_else(self, rule, scope, block):
+>>>>>>> resolution
         """
         Implements @else
         """
@@ -1035,11 +1520,22 @@ class Scss(object):
             log.error("@else with no @if (%s)", rule.file_and_line)
         val = rule.options.pop('@if', True)
         if not val:
+<<<<<<< HEAD
             rule.unparsed_contents = block.unparsed_contents
             self.manage_children(rule, p_children, scope)
 
     @print_timing(10)
     def _do_for(self, rule, p_children, scope, block):
+=======
+            inner_rule = rule.copy()
+            inner_rule.unparsed_contents = block.unparsed_contents
+            inner_rule.namespace = rule.namespace  # DEVIATION: Commenting this line gives the Sass bahavior
+            inner_rule.unparsed_contents = block.unparsed_contents
+            self.manage_children(inner_rule, scope)
+
+    @print_timing(10)
+    def _do_for(self, rule, scope, block):
+>>>>>>> resolution
         """
         Implements @for
         """
@@ -1057,6 +1553,10 @@ class Scss(object):
             return
 
         if frm > through:
+<<<<<<< HEAD
+=======
+            # DEVIATION: allow reversed '@for .. from .. through' (same as enumerate() and range())
+>>>>>>> resolution
             frm, through = through, frm
             rev = reversed
         else:
@@ -1065,6 +1565,7 @@ class Scss(object):
         var = calculator.do_glob_math(var)
         var = normalize_var(var)
 
+<<<<<<< HEAD
         for i in rev(range(frm, through + 1)):
             rule.unparsed_contents = block.unparsed_contents
             rule.namespace.set_variable(var, Number(i))
@@ -1072,6 +1573,20 @@ class Scss(object):
 
     @print_timing(10)
     def _do_each(self, rule, p_children, scope, block):
+=======
+        inner_rule = rule.copy()
+        inner_rule.unparsed_contents = block.unparsed_contents
+        if not rule.options.get('control_scoping', config.CONTROL_SCOPING):  # TODO: maybe make this scoping mode for contol structures as the default as a default deviation
+            # DEVIATION: Allow not creating a new namespace
+            inner_rule.namespace = rule.namespace
+
+        for i in rev(range(frm, through + 1)):
+            inner_rule.namespace.set_variable(var, Number(i))
+            self.manage_children(inner_rule, scope)
+
+    @print_timing(10)
+    def _do_each(self, rule, scope, block):
+>>>>>>> resolution
         """
         Implements @each
         """
@@ -1087,11 +1602,21 @@ class Scss(object):
             for var in varlist
         ]
 
+<<<<<<< HEAD
         for v in List.from_maybe(values):
             inner_rule = rule.copy()
             inner_rule.unparsed_contents = block.unparsed_contents
             inner_rule.namespace = inner_rule.namespace.derive()
 
+=======
+        inner_rule = rule.copy()
+        inner_rule.unparsed_contents = block.unparsed_contents
+        if not rule.options.get('control_scoping', config.CONTROL_SCOPING):  # TODO: maybe make this scoping mode for contol structures as the default as a default deviation
+            # DEVIATION: Allow not creating a new namespace
+            inner_rule.namespace = rule.namespace
+
+        for v in List.from_maybe(values):
+>>>>>>> resolution
             v = List.from_maybe(v)
             for i, var in enumerate(varlist):
                 if i >= len(v):
@@ -1099,6 +1624,7 @@ class Scss(object):
                 else:
                     value = v[i]
                 inner_rule.namespace.set_variable(var, value)
+<<<<<<< HEAD
 
             self.manage_children(inner_rule, p_children, scope)
 
@@ -1122,6 +1648,29 @@ class Scss(object):
 
     @print_timing(10)
     def _get_variables(self, rule, p_children, scope, block):
+=======
+            self.manage_children(inner_rule, scope)
+
+    @print_timing(10)
+    def _do_while(self, rule, scope, block):
+        """
+        Implements @while
+        """
+        calculator = Calculator(rule.namespace)
+        first_condition = condition = calculator.calculate(block.argument)
+        while condition:
+            inner_rule = rule.copy()
+            inner_rule.unparsed_contents = block.unparsed_contents
+            if not rule.options.get('control_scoping', config.CONTROL_SCOPING):  # TODO: maybe make this scoping mode for contol structures as the default as a default deviation
+                # DEVIATION: Allow not creating a new namespace
+                inner_rule.namespace = rule.namespace
+            self.manage_children(inner_rule, scope)
+            condition = calculator.calculate(block.argument)
+        rule.options['@if'] = first_condition
+
+    @print_timing(10)
+    def _get_variables(self, rule, scope, block):
+>>>>>>> resolution
         """
         Implements @variables and @vars
         """
@@ -1129,12 +1678,20 @@ class Scss(object):
         _rule.unparsed_contents = block.unparsed_contents
         _rule.namespace = rule.namespace
         _rule.properties = {}
+<<<<<<< HEAD
         self.manage_children(_rule, p_children, scope)
+=======
+        self.manage_children(_rule, scope)
+>>>>>>> resolution
         for name, value in _rule.properties.items():
             rule.namespace.set_variable(name, value)
 
     @print_timing(10)
+<<<<<<< HEAD
     def _get_properties(self, rule, p_children, scope, block):
+=======
+    def _get_properties(self, rule, scope, block):
+>>>>>>> resolution
         """
         Implements properties and variables extraction and assignment
         """
@@ -1170,6 +1727,7 @@ class Scss(object):
             is_defined = existing_value is not None and not existing_value.is_null
             if is_default and is_defined:
                 pass
+<<<<<<< HEAD
             else:
                 # if is_defined and prop.startswith('$') and prop[1].isupper():
                 #    log.warn("Constant %r redefined", prop)
@@ -1255,11 +1813,77 @@ class Scss(object):
 
         _rule = SassRule(
             source_file=rule.source_file,
+=======
+            else:
+                # if is_defined and prop.startswith('$') and prop[1].isupper():
+                #    log.warn("Constant %r redefined", prop)
+
+                # Variable assignment is an expression, so it always performs
+                # real division
+                value = calculator.calculate(raw_value, divide=True)
+                rule.namespace.set_variable(_prop, value)
+        else:
+            # Regular property destined for output
+            _prop = calculator.apply_vars(_prop)
+            if raw_value is None:
+                value = None
+            else:
+                value = calculator.calculate(raw_value)
+
+            if value is None:
+                pass
+            elif isinstance(value, six.string_types):
+                # TODO kill this branch
+                pass
+            else:
+                style = self.scss_opts.get('style', config.STYLE)
+                compress = style in (True, 'compressed')
+                value = value.render(compress=compress)
+
+            rule.properties.append((_prop, value))
+
+    @print_timing(10)
+    def _nest_at_rules(self, rule, scope, block):
+        """
+        Implements @-blocks
+        """
+        # Interpolate the current block
+        # TODO this seems like it should be done in the block header.  and more
+        # generally?
+        calculator = Calculator(rule.namespace)
+        block.header.argument = calculator.apply_vars(block.header.argument)
+
+        # TODO merge into RuleAncestry
+        new_ancestry = list(rule.ancestry.headers)
+        if block.directive == '@media' and new_ancestry:
+            for i, header in reversed(list(enumerate(new_ancestry))):
+                if header.is_selector:
+                    continue
+                elif header.directive == '@media':
+                    from scss.rule import BlockAtRuleHeader
+                    new_ancestry[i] = BlockAtRuleHeader(
+                        '@media',
+                        "%s and %s" % (header.argument, block.argument))
+                    break
+                else:
+                    new_ancestry.insert(i, block.header)
+            else:
+                new_ancestry.insert(0, block.header)
+        else:
+            new_ancestry.append(block.header)
+
+        from scss.rule import RuleAncestry
+        rule.descendants += 1
+        new_rule = SassRule(
+            source_file=rule.source_file,
+            import_key=rule.import_key,
+>>>>>>> resolution
             lineno=block.lineno,
             unparsed_contents=block.unparsed_contents,
 
             options=rule.options.copy(),
             #properties
+<<<<<<< HEAD
             extends_selectors=c_parents,
             ancestry=new_ancestry,
 
@@ -1318,6 +1942,108 @@ class Scss(object):
                         % selector.render())
                     continue
 
+=======
+            #extends_selectors
+            ancestry=RuleAncestry(new_ancestry),
+
+            namespace=rule.namespace.derive(),
+            nested=rule.nested + 1,
+        )
+        self.rules.append(new_rule)
+        rule.namespace.use_import(rule.import_key)
+        self.manage_children(new_rule, scope)
+
+        if new_rule.options.get('warn_unused'):
+            for name, file_and_line in new_rule.namespace.unused_imports():
+                log.warn("Unused @import: '%s' (%s)", name, file_and_line)
+
+    @print_timing(10)
+    def _nest_rules(self, rule, scope, block):
+        """
+        Implements Nested CSS rules
+        """
+        calculator = Calculator(rule.namespace)
+        raw_selectors = calculator.do_glob_math(block.prop)
+        # DEVIATION: ruby sass doesn't support bare variables in selectors
+        raw_selectors = calculator.apply_vars(raw_selectors)
+        c_selectors, c_parents = self.parse_selectors(raw_selectors)
+
+        new_ancestry = rule.ancestry.with_nested_selectors(c_selectors)
+
+        rule.descendants += 1
+        new_rule = SassRule(
+            source_file=rule.source_file,
+            import_key=rule.import_key,
+            lineno=block.lineno,
+            unparsed_contents=block.unparsed_contents,
+
+            options=rule.options.copy(),
+            #properties
+            extends_selectors=c_parents,
+            ancestry=new_ancestry,
+
+            namespace=rule.namespace.derive(),
+            nested=rule.nested + 1,
+        )
+        self.rules.append(new_rule)
+        rule.namespace.use_import(rule.import_key)
+        self.manage_children(new_rule, scope)
+
+        if new_rule.options.get('warn_unused'):
+            for name, file_and_line in new_rule.namespace.unused_imports():
+                log.warn("Unused @import: '%s' (%s)", name, file_and_line)
+
+    @print_timing(3)
+    def apply_extends(self):
+        """Run through the given rules and translate all the pending @extends
+        declarations into real selectors on parent rules.
+
+        The list is modified in-place and also sorted in dependency order.
+        """
+        # Game plan: for each rule that has an @extend, add its selectors to
+        # every rule that matches that @extend.
+        # First, rig a way to find arbitrary selectors quickly.  Most selectors
+        # revolve around elements, classes, and IDs, so parse those out and use
+        # them as a rough key.  Ignore order and duplication for now.
+        key_to_selectors = defaultdict(set)
+        selector_to_rules = defaultdict(list)
+        # DEVIATION: These are used to rearrange rules in dependency order, so
+        # an @extended parent appears in the output before a child.  Sass does
+        # not do this, and the results may be unexpected.  Pending removal.
+        rule_order = dict()
+        rule_dependencies = dict()
+        order = 0
+        for rule in self.rules:
+            rule_order[rule] = order
+            # Rules are ultimately sorted by the earliest rule they must
+            # *precede*, so every rule should "depend" on the next one
+            rule_dependencies[rule] = [order + 1]
+            order += 1
+
+            for selector in rule.selectors:
+                for key in selector.lookup_key():
+                    key_to_selectors[key].add(selector)
+                selector_to_rules[selector].append(rule)
+
+        # Now go through all the rules with an @extends and find their parent
+        # rules.
+        for rule in self.rules:
+            for selector in rule.extends_selectors:
+                # This is a little dirty.  intersection isn't a class method.
+                # Don't think about it too much.
+                candidates = set.intersection(*(
+                    key_to_selectors[key] for key in selector.lookup_key()))
+                extendable_selectors = [
+                    candidate for candidate in candidates
+                    if candidate.is_superset_of(selector)]
+
+                if not extendable_selectors:
+                    log.warn(
+                        "Can't find any matching rules to extend: %s"
+                        % selector.render())
+                    continue
+
+>>>>>>> resolution
                 # Armed with a set of selectors that this rule can extend, do
                 # some substitution and modify the appropriate parent rules
                 for extendable_selector in extendable_selectors:
@@ -1350,7 +2076,11 @@ class Scss(object):
                                 more_parent_selectors))
                         rule_dependencies[parent_rule].append(rule_order[rule])
 
+<<<<<<< HEAD
         rules.sort(key=lambda rule: min(rule_dependencies[rule]))
+=======
+        self.rules.sort(key=lambda rule: min(rule_dependencies[rule]))
+>>>>>>> resolution
 
     @print_timing(3)
     def parse_properties(self):
@@ -1359,12 +2089,21 @@ class Scss(object):
         rules_by_file = {}
 
         for rule in self.rules:
+<<<<<<< HEAD
             if not rule.properties:
                 continue
 
             source_file = rule.source_file
             rules_by_file.setdefault(source_file, []).append(rule)
 
+=======
+            source_file = rule.source_file
+            rules_by_file.setdefault(source_file, []).append(rule)
+
+            if rule.is_empty:
+                continue
+
+>>>>>>> resolution
             if source_file not in seen_files:
                 seen_files.add(source_file)
                 css_files.append(source_file)
@@ -1376,6 +2115,7 @@ class Scss(object):
         """
         Generate the final CSS string
         """
+<<<<<<< HEAD
         compress = self.scss_opts.get('compress', True)
         if compress:
             sc, sp, tb, nl = False, '', '', ''
@@ -1386,9 +2126,74 @@ class Scss(object):
 
     def _create_css(self, rules, sc=True, sp=' ', tb='  ', nl='\n', debug_info=False):
         skip_selectors = False
+=======
+        style = self.scss_opts.get('style', config.STYLE)
+        debug_info = self.scss_opts.get('debug_info', False)
+
+        if style == 'legacy' or style is False:
+            sc, sp, tb, nst, srnl, nl, rnl, lnl, dbg = True, ' ', '  ', False, '', '\n', '\n', '\n', debug_info
+        elif style == 'compressed' or style is True:
+            sc, sp, tb, nst, srnl, nl, rnl, lnl, dbg = False, '', '', False, '', '', '', '', False
+        elif style == 'compact':
+            sc, sp, tb, nst, srnl, nl, rnl, lnl, dbg = True, ' ', '', False, '\n', ' ', '\n', ' ', debug_info
+        elif style == 'expanded':
+            sc, sp, tb, nst, srnl, nl, rnl, lnl, dbg = True, ' ', '  ', False, '\n', '\n', '\n', '\n', debug_info
+        else:  # if style == 'nested':
+            sc, sp, tb, nst, srnl, nl, rnl, lnl, dbg = True, ' ', '  ', True, '\n', '\n', '\n', ' ', debug_info
+
+        return self._create_css(rules, sc, sp, tb, nst, srnl, nl, rnl, lnl, dbg)
+
+    def _textwrap(self, txt, width=70):
+        if not hasattr(self, '_textwrap_wordsep_re'):
+            self._textwrap_wordsep_re = re.compile(r'(?<=,)\s+')
+            self._textwrap_strings_re = re.compile(r'''(["'])(?:(?!\1)[^\\]|\\.)*\1''')
+
+        # First, remove commas from anything within strings (marking commas as \0):
+        def _repl(m):
+            ori = m.group(0)
+            fin = ori.replace(',', '\0')
+            if ori != fin:
+                subs[fin] = ori
+            return fin
+        subs = {}
+        txt = self._textwrap_strings_re.sub(_repl, txt)
+
+        # Mark split points for word separators using (marking spaces with \1):
+        txt = self._textwrap_wordsep_re.sub('\1', txt)
+
+        # Replace all the strings back:
+        for fin, ori in subs.items():
+            txt = txt.replace(fin, ori)
+
+        # Split in chunks:
+        chunks = txt.split('\1')
+
+        # Break in lines of at most long_width width appending chunks:
+        ln = ''
+        lines = []
+        long_width = int(width * 1.2)
+        for chunk in chunks:
+            _ln = ln + ' ' if ln else ''
+            _ln += chunk
+            if len(ln) >= width or len(_ln) >= long_width:
+                if ln:
+                    lines.append(ln)
+                _ln = chunk
+            ln = _ln
+        if ln:
+            lines.append(ln)
+
+        return lines
+
+    def _create_css(self, rules, sc=True, sp=' ', tb='  ', nst=True, srnl='\n', nl='\n', rnl='\n', lnl='', debug_info=False):
+        skip_selectors = False
+
+        prev_ancestry_headers = []
+>>>>>>> resolution
 
         prev_ancestry_headers = []
 
+<<<<<<< HEAD
         textwrap.TextWrapper.wordsep_re = re.compile(r'(?<=,)(\s*)')
         if hasattr(textwrap.TextWrapper, 'wordsep_simple_re'):
             wrap = textwrap.TextWrapper(break_long_words=False, break_on_hyphens=False)
@@ -1406,6 +2211,37 @@ class Scss(object):
                 continue
 
             ancestry = rule.ancestry
+=======
+        result = ''
+        dangling_property = False
+        separate = False
+        nesting = current_nesting = last_nesting = -1 if nst else 0
+        nesting_stack = []
+        for rule in rules:
+            nested = rule.nested
+            if nested <= 1:
+                separate = True
+
+            if nst:
+                last_nesting = current_nesting
+                current_nesting = nested
+
+                delta_nesting = current_nesting - last_nesting
+                if delta_nesting > 0:
+                    nesting_stack += [nesting] * delta_nesting
+                elif delta_nesting < 0:
+                    nesting_stack = nesting_stack[:delta_nesting]
+                    nesting = nesting_stack[-1]
+
+            if rule.is_empty:
+                continue
+
+            if nst:
+                nesting += 1
+
+            ancestry = rule.ancestry
+            ancestry_len = len(ancestry)
+>>>>>>> resolution
 
             first_mismatch = 0
             for i, (old_header, new_header) in enumerate(zip(prev_ancestry_headers, ancestry.headers)):
@@ -1422,33 +2258,61 @@ class Scss(object):
 
             # Close blocks and outdent as necessary
             for i in range(len(prev_ancestry_headers), first_mismatch, -1):
+<<<<<<< HEAD
                 result += tb * (i - 1) + '}' + nl
 
             # Open new blocks as necessary
             for i in range(first_mismatch, len(ancestry)):
                 header = ancestry.headers[i]
 
+=======
+                result += tb * (i - 1) + '}' + rnl
+
+            # Open new blocks as necessary
+            for i in range(first_mismatch, ancestry_len):
+                header = ancestry.headers[i]
+
+                if separate:
+                    if result:
+                        result += srnl
+                    separate = False
+>>>>>>> resolution
                 if debug_info:
                     if not rule.source_file.is_string:
                         filename = rule.source_file.filename
                         lineno = str(rule.lineno)
                         if debug_info == 'comments':
+<<<<<<< HEAD
                             result += '/* file: %s, line: %s */' % (filename, lineno) + nl
                         else:
                             filename = _escape_chars_re.sub(r'\\\1', filename)
                             result += "@media -sass-debug-info{filename{font-family:file\:\/\/%s}line{font-family:\\00003%s}}" % (filename, lineno) + nl
+=======
+                            result += tb * (i + nesting) + "/* file: %s, line: %s */" % (filename, lineno) + nl
+                        else:
+                            filename = _escape_chars_re.sub(r'\\\1', filename)
+                            result += tb * (i + nesting) + "@media -sass-debug-info{filename{font-family:file\:\/\/%s}line{font-family:\\00003%s}}" % (filename, lineno) + nl
+>>>>>>> resolution
 
                 if header.is_selector:
                     header_string = header.render(sep=',' + sp, super_selector=self.super_selector)
                     if nl:
+<<<<<<< HEAD
                         header_string = nl.join(wrap(header_string))
                 else:
                     header_string = header.render()
                 result += tb * i + header_string + sp + '{' + nl
+=======
+                        header_string = (nl + tb * (i + nesting)).join(self._textwrap(header_string))
+                else:
+                    header_string = header.render()
+                result += tb * (i + nesting) + header_string + sp + '{' + nl
+>>>>>>> resolution
 
                 total_rules += 1
                 if header.is_selector:
                     total_selectors += 1
+<<<<<<< HEAD
 
             prev_ancestry_headers = ancestry.headers
             dangling_property = False
@@ -1487,3 +2351,57 @@ class Scss(object):
             else:
                 result += _tb + prop + ';' + nl
         return result
+=======
+
+            prev_ancestry_headers = ancestry.headers
+            dangling_property = False
+
+            if not skip_selectors:
+                result += self._print_properties(rule.properties, sc, sp, tb * (ancestry_len + nesting), nl, lnl)
+                dangling_property = True
+
+        # Close all remaining blocks
+        for i in reversed(range(len(prev_ancestry_headers))):
+            result += tb * i + '}' + rnl
+
+        return (result, total_rules, total_selectors)
+
+    def _print_properties(self, properties, sc=True, sp=' ', tb='', nl='\n', lnl=' '):
+        result = ''
+        last_prop_index = len(properties) - 1
+        for i, (name, value) in enumerate(properties):
+            if value is None:
+                prop = name
+            elif value:
+                if nl:
+                    value = (nl + tb + tb).join(self._textwrap(value))
+                prop = name + ':' + sp + value
+            else:
+                # Empty string means there's supposed to be a value but it
+                # evaluated to nothing; skip this
+                # TODO interacts poorly with last_prop_index
+                continue
+
+            if i == last_prop_index:
+                if sc:
+                    result += tb + prop + ';' + lnl
+                else:
+                    result += tb + prop + lnl
+            else:
+                result += tb + prop + ';' + nl
+        return result
+
+
+# TODO: this should inherit from SassError, but can't, because that assumes
+# it's wrapping another error.  fix this with the exception hierarchy
+class SassReturn(Exception):
+    """Special control-flow exception used to hop up the stack from a Sass
+    function's ``@return``.
+    """
+    def __init__(self, retval):
+        self.retval = retval
+        Exception.__init__(self)
+
+    def __str__(self):
+        return "Returning {0!r}".format(self.retval)
+>>>>>>> resolution

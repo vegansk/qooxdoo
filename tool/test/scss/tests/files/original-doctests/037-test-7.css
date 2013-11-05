@@ -1,6 +1,10 @@
 a, #fake-links .link {
   color: blue;
 }
+<<<<<<< HEAD
 a:hover, #fake-links .link:hover {
+=======
+a:hover, #fake-links :hover.link {
+>>>>>>> resolution
   text-decoration: underline;
 }

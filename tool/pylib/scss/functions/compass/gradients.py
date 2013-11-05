@@ -110,7 +110,11 @@ def _render_standard_color_stops(color_stops):
 def grad_color_stops(*args):
     args = List.from_maybe_starargs(args)
     color_stops = __color_stops(True, *args)
+<<<<<<< HEAD
     ret = ', '.join(['color-stop(%s, %s)' % (to_str(s), c) for s, c in color_stops])
+=======
+    ret = ', '.join(['color-stop(%s, %s)' % (s.render(), c.render()) for s, c in color_stops])
+>>>>>>> resolution
     return String.unquoted(ret)
 
 
@@ -155,7 +159,11 @@ def grad_end_position(*color_stops):
 def color_stops(*args):
     args = List.from_maybe_starargs(args)
     color_stops = __color_stops(False, *args)
+<<<<<<< HEAD
     ret = ', '.join(['%s %s' % (c, to_str(s)) for s, c in color_stops])
+=======
+    ret = ', '.join(['%s %s' % (c.render(), s.render()) for s, c in color_stops])
+>>>>>>> resolution
     return String.unquoted(ret)
 
 
@@ -163,7 +171,11 @@ def color_stops(*args):
 def color_stops_in_percentages(*args):
     args = List.from_maybe_starargs(args)
     color_stops = __color_stops(True, *args)
+<<<<<<< HEAD
     ret = ', '.join(['%s %s' % (c, to_str(s)) for s, c in color_stops])
+=======
+    ret = ', '.join(['%s %s' % (c.render(), s.render()) for s, c in color_stops])
+>>>>>>> resolution
     return String.unquoted(ret)
 
 
@@ -259,7 +271,11 @@ def radial_gradient(*args):
             grad_point(position_and_angle) if position_and_angle is not None else 'center',
             __grad_end_position(True, color_stops),
         ]
+<<<<<<< HEAD
         args.extend('color-stop(%s, %s)' % (to_str(s), c) for s, c in color_stops)
+=======
+        args.extend('color-stop(%s, %s)' % (s.render(), c.render()) for s, c in color_stops)
+>>>>>>> resolution
         ret = '-webkit-gradient(' + ', '.join(to_str(a) for a in args or [] if a is not None) + ')'
         return String.unquoted(ret)
     ret.to__owg = to__owg
@@ -319,8 +335,13 @@ def linear_gradient(*args):
             position(position_and_angle or None),
             opposite_position(position_and_angle or None),
         ]
+<<<<<<< HEAD
         args.extend('color-stop(%s, %s)' % (to_str(s), c) for s, c in color_stops)
         ret = '-webkit-gradient(' + ', '.join(to_str(a) for a in args or [] if a is not None) + ')'
+=======
+        args.extend('color-stop(%s, %s)' % (s.render(), c.render()) for s, c in color_stops)
+        ret = '-webkit-gradient(' + ', '.join(to_str(a) for a in args if a is not None) + ')'
+>>>>>>> resolution
         return String.unquoted(ret)
     ret.to__owg = to__owg
 

@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 @option compress:no;
 
 @mixin col($color, $background: $color, $border: undefined) {
+=======
+@option style:legacy;
+
+@mixin col($color, $background: $color, $border: null) {
+>>>>>>> resolution
   a {
     display: block;
     color: $color;

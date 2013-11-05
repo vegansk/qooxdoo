@@ -10,7 +10,10 @@ from __future__ import absolute_import
 import base64
 import logging
 import math
+<<<<<<< HEAD
 import mimetypes
+=======
+>>>>>>> resolution
 import os.path
 import time
 
@@ -20,12 +23,33 @@ from scss import config
 from scss.functions.library import FunctionLibrary
 from scss.types import Boolean, List, Null, Number, String
 from scss.util import escape, to_str
+<<<<<<< HEAD
 
 log = logging.getLogger(__name__)
 
 COMPASS_HELPERS_LIBRARY = FunctionLibrary()
 register = COMPASS_HELPERS_LIBRARY.register
 
+=======
+import re
+
+log = logging.getLogger(__name__)
+
+
+COMPASS_HELPERS_LIBRARY = FunctionLibrary()
+register = COMPASS_HELPERS_LIBRARY.register
+
+FONT_TYPES = {
+    'woff': 'woff',
+    'otf': 'opentype',
+    'opentype': 'opentype',
+    'ttf': 'truetype',
+    'truetype': 'truetype',
+    'svg': 'svg',
+    'eot': 'embedded-opentype'
+}
+
+>>>>>>> resolution
 
 def add_cache_buster(url, mtime):
     fragment = url.split('#')
@@ -277,6 +301,10 @@ def enumerate_(prefix, frm, through, separator='-'):
     except ValueError:
         through = frm
     if frm > through:
+<<<<<<< HEAD
+=======
+        # DEVIATION: allow reversed enumerations (and ranges as range() uses enumerate, like '@for .. from .. through')
+>>>>>>> resolution
         frm, through = through, frm
         rev = reversed
     else:
@@ -284,7 +312,11 @@ def enumerate_(prefix, frm, through, separator='-'):
 
     ret = []
     for i in rev(range(frm, through + 1)):
+<<<<<<< HEAD
         if prefix.value:
+=======
+        if prefix and prefix.value:
+>>>>>>> resolution
             ret.append(String.unquoted(prefix.value + separator + str(i)))
         else:
             ret.append(Number(i))
@@ -324,9 +356,35 @@ def headers(frm=None, to=None):
 
 @register('nest')
 def nest(*arguments):
+<<<<<<< HEAD
     ret = ['']  # Hackery for initial value
 
     for arg in arguments:
+=======
+    if isinstance(arguments[0], List):
+        lst = arguments[0]
+    elif isinstance(arguments[0], String):
+        lst = arguments[0].value.split(',')
+    else:
+        raise TypeError("Expected list or string, got %r" % (arguments[0],))
+
+    ret = []
+    for s in lst:
+        if isinstance(s, String):
+            s = s.value
+        elif isinstance(s, six.string_types):
+            s = s
+        else:
+            raise TypeError("Expected string, got %r" % (s,))
+
+        s = s.strip()
+        if not s:
+            continue
+
+        ret.append(s)
+
+    for arg in arguments[1:]:
+>>>>>>> resolution
         if isinstance(arg, List):
             lst = arg
         elif isinstance(arg, String):
@@ -362,6 +420,10 @@ def nest(*arguments):
 
 
 # This isn't actually from Compass, but it's just a shortcut for enumerate().
+<<<<<<< HEAD
+=======
+# DEVIATION: allow reversed ranges (range() uses enumerate() which allows reversed values, like '@for .. from .. through')
+>>>>>>> resolution
 @register('range', 1)
 @register('range', 2)
 def range_(frm, through=None):
@@ -486,6 +548,7 @@ COMPASS_HELPERS_LIBRARY.add(Number.wrap_python_function(math.tan), 'tan', 1)
 # ------------------------------------------------------------------------------
 # Fonts
 
+<<<<<<< HEAD
 def _font_url(path, only_path=False, cache_buster=True, inline=False):
     filepath = String.unquoted(path).value
     path = None
@@ -518,10 +581,62 @@ def _font_url(path, only_path=False, cache_buster=True, inline=False):
 
     if not only_path:
         url = 'url("%s")' % escape(url)
+=======
+def _fonts_root():
+    return config.STATIC_ROOT if config.FONTS_ROOT is None else config.FONTS_ROOT
+
+
+def _font_url(path, only_path=False, cache_buster=True, inline=False):
+    filepath = String.unquoted(path).value
+    file = None
+    FONTS_ROOT = _fonts_root()
+    if callable(FONTS_ROOT):
+        try:
+            _file, _storage = list(FONTS_ROOT(filepath))[0]
+            d_obj = _storage.modified_time(_file)
+            filetime = int(time.mktime(d_obj.timetuple()))
+            if inline:
+                file = _storage.open(_file)
+        except:
+            filetime = 'NA'
+    else:
+        _path = os.path.join(FONTS_ROOT, filepath.strip('/'))
+        if os.path.exists(_path):
+            filetime = int(os.path.getmtime(_path))
+            if inline:
+                file = open(_path, 'rb')
+        else:
+            filetime = 'NA'
+
+    BASE_URL = config.FONTS_URL or config.STATIC_URL
+    if file and inline:
+        font_type = None
+        if re.match(r'^([^?]+)[.](.*)([?].*)?$', path.value):
+            font_type = String.unquoted(re.match(r'^([^?]+)[.](.*)([?].*)?$', path.value).groups()[1]).value
+
+        if not FONT_TYPES.get(font_type):
+            raise Exception('Could not determine font type for "%s"' % path.value)
+
+        mime = FONT_TYPES.get(font_type)
+        if font_type == 'woff':
+            mime = 'application/font-woff'
+        elif font_type == 'eot':
+            mime = 'application/vnd.ms-fontobject'
+        url = 'data:' + (mime if '/' in mime else 'font/%s' % mime) + ';base64,' + base64.b64encode(file.read())
+        file.close()
+    else:
+        url = '%s/%s' % (BASE_URL.rstrip('/'), filepath.lstrip('/'))
+        if cache_buster and filetime != 'NA':
+            url = add_cache_buster(url, filetime)
+
+    if not only_path:
+        url = 'url(%s)' % escape(url)
+>>>>>>> resolution
     return String.unquoted(url)
 
 
 def _font_files(args, inline):
+<<<<<<< HEAD
     args = List.from_maybe_starargs(args)
     n = 0
     params = [[], []]
@@ -554,6 +669,32 @@ def _font_files(args, inline):
         else:
             fonts.append(_font_url(font, inline=inline))
     return List(fonts)
+=======
+    if args == ():
+        return String.unquoted("")
+
+    fonts = []
+    args_len = len(args)
+    skip_next = False
+    for index in range(len(args)):
+        arg = args[index]
+        if not skip_next:
+            font_type = args[index + 1] if args_len > (index + 1) else None
+            if font_type and font_type.value in FONT_TYPES:
+                skip_next = True
+            else:
+                if re.match(r'^([^?]+)[.](.*)([?].*)?$', arg.value):
+                    font_type = String.unquoted(re.match(r'^([^?]+)[.](.*)([?].*)?$', arg.value).groups()[1])
+
+            if font_type.value in FONT_TYPES:
+                fonts.append(String.unquoted('%s format("%s")' % (_font_url(arg, inline=inline), String.unquoted(FONT_TYPES[font_type.value]).value)))
+            else:
+                raise Exception('Could not determine font type for "%s"' % arg.value)
+        else:
+            skip_next = False
+
+    return List(fonts, separator=',')
+>>>>>>> resolution
 
 
 @register('font-url', 1)

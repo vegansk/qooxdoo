@@ -9,10 +9,15 @@ This limitation is completely arbitrary.
 
 from __future__ import absolute_import
 
+<<<<<<< HEAD
 import glob
 import os.path
 import logging
 import pytest
+=======
+import os.path
+import logging
+>>>>>>> resolution
 
 import scss
 
@@ -30,14 +35,26 @@ def test_pair_programmatic(scss_file_pair):
 
     with open(scss_fn) as fh:
         source = fh.read()
+<<<<<<< HEAD
     with open(css_fn) as fh:
         expected = fh.read()
+=======
+    try:
+        with open(css_fn) as fh:
+            expected = fh.read()
+    except IOError:
+        expected = ''
+>>>>>>> resolution
 
     directory, _ = os.path.split(scss_fn)
     include_dir = os.path.join(directory, 'include')
     scss.config.STATIC_ROOT = os.path.join(directory, 'static')
 
+<<<<<<< HEAD
     compiler = scss.Scss(scss_opts=dict(compress=0), search_paths=[include_dir])
+=======
+    compiler = scss.Scss(scss_opts=dict(style='expanded'), search_paths=[include_dir])
+>>>>>>> resolution
     actual = compiler.compile(source)
 
     # Normalize leading and trailing newlines

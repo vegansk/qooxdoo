@@ -79,6 +79,19 @@ qx.Class.define("qx.ui.mobile.core.Root",
   },
 
 
+  /*
+  *****************************************************************************
+     EVENTS
+  *****************************************************************************
+  */
+
+  events :
+  {
+    /**
+     * Event is fired when the scale factor of the application has changed.
+     */
+    "changeScaleFactor" : "qx.event.type.Event"
+  },
 
 
   /*
@@ -100,6 +113,42 @@ qx.Class.define("qx.ui.mobile.core.Root",
     // property apply
     _applyShowScrollbarY : function(value, old) {
       this._setStyle("overflow-y", value ? "auto" : "hidden");
+    },
+
+
+    /**
+     * Returns the application's scale factor.
+     * @return {Number} the scale factor.
+     */
+    getScaleFactor: function(value) {
+      var fontSize = qx.bom.element.Style.get(document.documentElement, "fontSize");
+      var scaleFactor = null;
+      if (fontSize.indexOf("px") != -1) {
+        scaleFactor = parseInt(fontSize, 10) / 16;
+      }
+      return scaleFactor;
+    },
+
+
+    /**
+    * Sets the application's scale factor. 
+    * @param value {Number} the scale factor. 
+    */
+    setScaleFactor : function(value) {
+      if (qx.core.Environment.get("qx.debug"))
+      {
+        this.assertNumber(value, "The scale factor is asserted to be of type Number");
+      }
+
+      var docElement = document.documentElement;
+      docElement.style.fontSize = value * 100 + "%";
+
+      // Force relayout - important for new Android devices and Firefox.
+      docElement.style.display = "none";
+      docElement.clientWidth = docElement.clientWidth;
+      docElement.style.display = "";
+
+      this.fireEvent("changeScaleFactor");
     },
 
 
@@ -147,7 +196,7 @@ qx.Class.define("qx.ui.mobile.core.Root",
       if(qx.core.Environment.get("os.name") == "ios") {
         document.documentElement.style.height = window.innerHeight + "px";
         window.scrollTo(0, 0);
-      } 
+      }
     }
   },
 

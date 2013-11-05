@@ -71,7 +71,7 @@ qx.Class.define("qx.ui.mobile.container.ScrollComposite",
     this.addListener("touchend", this._onTouchEnd, this);
     this.addListener("swipe", this._onSwipe, this);
 
-    this._setLayout(new qx.ui.mobile.layout.VBox());
+    this._setLayout(new qx.ui.mobile.layout.HBox());
     this._add(this._scrollContainer, {flex:1});
 
     this._updateScrollIndicator(this.__lastOffset[1]);
@@ -117,13 +117,26 @@ qx.Class.define("qx.ui.mobile.container.ScrollComposite",
       apply : "_updateScrollIndicator"
     },
 
+
+    /**
+    * This flag controls whether this widget has a fixed height
+    * or grows till the property value of <code>height</code> has reached.
+    */
+    fixedHeight :
+    {
+      init : false,
+      check : "Boolean",
+      apply : "_applyFixedHeight"
+    },
+
+
     /**
      * The height of this widget.
      * Allowed values are length or percentage values according to <a src="https://developer.mozilla.org/en-US/docs/CSS/height" target="_blank">CSS height syntax</a>.
      */
     height :
     {
-      init : "150px",
+      init : "10rem",
       check : "String",
       nullable : true,
       apply : "_applyHeight"
@@ -157,6 +170,7 @@ qx.Class.define("qx.ui.mobile.container.ScrollComposite",
      */
     _createScrollContainer : function() {
       var scrollContainer = new qx.ui.mobile.container.Composite();
+      scrollContainer.setTransformUnit("px");
       scrollContainer.addCssClass("scroll-container-child");
       return scrollContainer;
     },
@@ -185,7 +199,7 @@ qx.Class.define("qx.ui.mobile.container.ScrollComposite",
       this.__distanceX = evt.getAllTouches()[0].screenX - this.__touchStartPoints[0];
       this.__distanceY = evt.getAllTouches()[0].screenY - this.__touchStartPoints[1];
 
-      if(this.__isVerticalScroll == null) {
+      if(this.__isVerticalScroll === null) {
         var cosDelta = this.__distanceX / this.__distanceY;
         this.__isVerticalScroll = Math.abs(cosDelta) < 2;
       }
@@ -278,7 +292,8 @@ qx.Class.define("qx.ui.mobile.container.ScrollComposite",
      */
     scrollTo : function(positionX, positionY) {
       var targetElement = this._scrollContainer.getContainerElement();
-      var lowerLimitY = targetElement.scrollHeight - targetElement.offsetHeight;
+
+      var lowerLimitY = targetElement.scrollHeight - this.getContentElement().clientHeight;
       var lowerLimitX = targetElement.scrollWidth - targetElement.offsetWidth - 4;
 
       var oldY = this._scrollContainer.getTranslateY();
@@ -319,13 +334,13 @@ qx.Class.define("qx.ui.mobile.container.ScrollComposite",
         }
       }
 
-      if(this.isScrollableX()) {
-         this._scrollContainer.setTranslateX(positionX);
-         this.__lastOffset[0] = positionX;
+      if (this.isScrollableX()) {
+        this._scrollContainer.setTranslateX(positionX);
+        this.__lastOffset[0] = positionX;
       }
-      if(this.isScrollableY()) {
-         this._scrollContainer.setTranslateY(positionY);
-         this.__lastOffset[1] = positionY;
+      if (this.isScrollableY()) {
+        this._scrollContainer.setTranslateY(positionY);
+        this.__lastOffset[1] = positionY;
       }
 
       this._updateScrollIndicator(this.__lastOffset[1]);
@@ -416,8 +431,18 @@ qx.Class.define("qx.ui.mobile.container.ScrollComposite",
 
 
     // Property apply
+    _applyFixedHeight : function(value, old) {
+      this._applyHeight(this.getHeight());
+    },
+
+
+    // Property apply
     _applyHeight : function(value, old) {
-      qx.bom.element.Style.set(this._scrollContainer.getContainerElement(), "max-height", value);
+      var cssProperty = "maxHeight";
+      if (this.getFixedHeight() === true) {
+        cssProperty = "height";
+      }
+      qx.bom.element.Style.set(this.getContainerElement(), cssProperty, this.getHeight());
     },
 
 
@@ -463,7 +488,7 @@ qx.Class.define("qx.ui.mobile.container.ScrollComposite",
      * @param easing {String} the css transition easing value
      */
     _applyEasing : function(easing) {
-      if(easing != null) {
+      if(easing !== null) {
         var transformPropertyName = qx.bom.Style.getPropertyName("transform");
         var transformCssName = qx.bom.Style.getCssName(transformPropertyName);
         easing = transformCssName+" "+easing;

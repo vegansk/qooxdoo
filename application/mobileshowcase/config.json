@@ -30,12 +30,6 @@
     "test-source",
     "translation",
     "minify-css",
-    "source-ios",
-    "source-android",
-    "source-indigo",
-    "build-ios",
-    "build-android",
-    "build-indigo",
     "validate-config",
     "validate-manifest",
     "watch"
@@ -50,7 +44,11 @@
     "QOOXDOO_PATH" : "../../",
     "LOCALES"      : [ "en" ],
     "CACHE"        : "${TMPDIR}/qx${QOOXDOO_VERSION}/cache",
+<<<<<<< HEAD
     "THEME"        : "flat",  // possible values: "indigo","flat"
+=======
+    "THEME"        : "indigo",  // possible values: "indigo","flat"
+>>>>>>> resolution
     "CSS_COMB_URI" : "./resource/${APPLICATION}/css/${THEME}-style-min.css",
     "CSS_COMBINED" : "${BUILD_PATH}/${CSS_COMB_URI}",
     "ROOT"         : ".",
@@ -116,41 +114,6 @@
       }
     },
 
-    "source-ios" :
-    {
-      "extend" : ["source"],
-      "let" : { "THEME" : "ios" }
-    },
-
-    "source-android" :
-    {
-      "extend" : ["source"],
-      "let" : { "THEME" : "android" }
-    },
-
-    "source-indigo" :
-    {
-      "extend" : ["source"],
-      "let" : { "THEME" : "indigo" }
-    },
-
-    "build-ios" :
-    {
-      "extend" : ["build"],
-      "let" : { "THEME" : "ios" }
-    },
-
-    "build-android" :
-    {
-      "extend" : ["build"],
-      "let" : { "THEME" : "android" }
-    },
-
-    "build-indigo" :
-    {
-      "extend" : ["build"],
-      "let" : { "THEME" : "indigo" }
-    },
 
     "source" :
     {

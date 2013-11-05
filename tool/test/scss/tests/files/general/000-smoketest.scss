@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+@option style:legacy;
+
+>>>>>>> resolution
 @import "lib";
 @import "part";
 
@@ -5,7 +10,12 @@ div {
     @include transition(opacity $transition-time linear, margin $transition-time linear);
 }
 
+<<<<<<< HEAD
 
 h1 {
     @include junk;
+=======
+h1 {
+    @include junk;  // This mixin does not exist intentionally!
+>>>>>>> resolution
 }
