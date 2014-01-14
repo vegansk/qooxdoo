@@ -8,3 +8,6 @@
 /simulator/
 /test/
 /source/script/
+/source/resource/*/css/flat.css
+/source/resource/*/css/indigo.css
+

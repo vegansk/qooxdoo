@@ -90,8 +90,11 @@
         "qx.nativeScrollBars" : true,
         "qx.allowUrlSettings" : true,
         "qx.mobile.emulatetouch" : true
-      }
+      },
+
+      "run" : ["build-theme"]
     },
+
 
     "build-script" :
     {
@@ -99,7 +102,7 @@
       "add-css" :
       [
         {
-          "uri" : "resource/qx/mobile/css/indigo.css"
+          "uri" : "./resource/${APPLICATION}/css/indigo.css"
         }
       ]
     },
@@ -117,7 +120,7 @@
       "add-css" :
       [
         {
-          "uri" : "../../../framework/source/resource/qx/mobile/css/indigo.css"
+          "uri" : "./resource/${APPLICATION}/css/indigo.css"
         }
       ]
     },
@@ -128,7 +131,7 @@
       "add-css" :
       [
         {
-          "uri" : "../../../framework/source/resource/qx/mobile/css/indigo.css"
+          "uri" : "./resource/${APPLICATION}/css/indigo.css"
         }
       ]
     },
@@ -136,6 +139,27 @@
     "translation" :
     {
       "translate" : { "poentry-with-occurrences" : false  }
+    },
+
+    "build-theme" :
+    {
+      "desc"   : "Compiles the theme SCSS",
+      "extend" : ["cache"],
+      "let" :
+      {
+        "MOBILE_THEME_PATH" : "${QOOXDOO_PATH}/framework/source/resource/qx/mobile/",
+        "SHARED_THEME_PATH" : "${QOOXDOO_PATH}/framework/source/resource/qx/scss/",
+        "MOBILE_CSS_PATH" : "source/resource/${APPLICATION}/css",
+      },
+      "shell" :
+      {
+        "command" :
+        [
+          "${PYTHON_CMD} ${QOOXDOO_PATH}/tool/bin/scss.py ${MOBILE_THEME_PATH}scss/indigo.scss -o ${MOBILE_CSS_PATH}/indigo.css --load-path=${MOBILE_THEME_PATH}scss,${SHARED_THEME_PATH}",
+        ]
+      }
     }
   }
+
+
 }

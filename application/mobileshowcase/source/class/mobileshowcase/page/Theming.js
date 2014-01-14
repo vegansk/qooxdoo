@@ -26,8 +26,6 @@
 
 /**
  * Mobile page responsible for switching between provided themes.
- *
- * @asset(qx/mobile/css/*)
  */
 qx.Class.define("mobileshowcase.page.Theming",
 {
@@ -48,10 +46,10 @@ qx.Class.define("mobileshowcase.page.Theming",
   {
     THEMES : [{
       "name": "Indigo",
-      "css": "qx/mobile/css/indigo.css"
+      "css": "resource/mobileshowcase/css/indigo.css"
     }, {
       "name": "Flat",
-      "css": "qx/mobile/css/flat.css"
+      "css": "resource/mobileshowcase/css/flat.css"
     }]
   },
 

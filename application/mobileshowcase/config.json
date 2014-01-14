@@ -30,6 +30,7 @@
     "test-source",
     "translation",
     "minify-css",
+    "build-theme",
     "validate-config",
     "validate-manifest",
     "watch"
@@ -44,7 +45,7 @@
     "QOOXDOO_PATH" : "../../",
     "LOCALES"      : [ "en" ],
     "CACHE"        : "${TMPDIR}/qx${QOOXDOO_VERSION}/cache",
-    "THEME"        : "indigo",  // possible values: "indigo","flat"
+    "THEME"        : "indigo",  // possible values: "indigo","flat",
     "CSS_COMB_URI" : "./resource/${APPLICATION}/css/${THEME}-style-min.css",
     "CSS_COMBINED" : "${BUILD_PATH}/${CSS_COMB_URI}",
     "ROOT"         : ".",
@@ -70,21 +71,6 @@
 
   "jobs" :
   {
-    // Uncomment the following entry to add a contrib or library to your
-    // project; make sure to adapt the path to the Manifest.json; if you are
-    // using a contrib: library, it will be downloaded into the path specified
-    // by the 'cache/downloads' config key
-    /*
-    , "libraries" :
-    {
-      "library" :
-      [
-        {
-          "manifest" : "contrib://SkeletonApplication/trunk/Manifest.json"
-        }
-      ]
-    },
-    */
 
     "mobile-common" :
     {
@@ -122,7 +108,11 @@
         {
           "add-nocache-param" : true
         }
-      }
+      },
+      "run" :
+      [
+        "build-theme"
+      ]
     },
 
 
@@ -131,7 +121,7 @@
       "let" : {
         "BUILD_PATH" : "${ROOT}/build-${THEME}"
       },
-      "=run" : ["build-resources", "build-files", "build-script", "minify-css"]
+      "=run" : ["build-theme", "build-resources", "build-files", "build-script", "minify-css"]
     },
 
 
@@ -139,7 +129,7 @@
     {
       "extend" : ["mobile-common"],
       "add-css" : [
-        { "uri" : "../${QOOXDOO_PATH}/framework/source/resource/qx/mobile/css/${THEME}.css" },
+        { "uri" : "./resource/${APPLICATION}/css/${THEME}.css" },
         { "uri" : "./resource/${APPLICATION_CSS}" }
       ]
     },
@@ -147,9 +137,8 @@
     "build-script" :
     {
       "extend" : ["mobile-common"],
-      //"add-css" : [ { "uri" : "${CSS_COMB_URI}" } ]
       "add-css" : [
-        { "uri" : "./resource/qx/mobile/css/${THEME}.css" },
+        { "uri" : "./resource/${APPLICATION}/css/${THEME}.css" },
         { "uri" : "./resource/${APPLICATION_CSS}" }
       ]
     },
@@ -179,7 +168,7 @@
         "${APPLICATION}.simulation.*"
       ],
       "add-css" : [
-        { "uri" : "../${QOOXDOO_PATH}/framework/source/resource/qx/mobile/css/${THEME}.css" },
+        { "uri" : "./resource/${APPLICATION}/css/${THEME}.css" },
         { "uri" : "./resource/${APPLICATION_CSS}" }
       ]
     },
@@ -197,7 +186,7 @@
       {
         "command" :
         [
-          "${CATCMD} ${QOOXDOO_PATH}/framework/source/resource/qx/mobile/css/${THEME}/${THEME}.css ${ROOT}/source/resource/${APPLICATION_CSS} | ${QOOXDOO_PATH}/tool/bin/cssmin.py > ${CSS_COMBINED}"
+          "${CATCMD} ./resource/${APPLICATION}/css/${THEME}.css ${ROOT}/source/resource/${APPLICATION_CSS} | ${QOOXDOO_PATH}/tool/bin/cssmin.py > ${CSS_COMBINED}"
         ]
       }
     },
@@ -218,6 +207,41 @@
           "${CATCMD} ${ROOT}/source/resource/${APPLICATION_CSS} | ${CSSMIN_CMD} > ${BUILD_PATH}/resource/${APPLICATION_CSS}"
         ]
       }
+    },
+
+
+     "build-theme" : 
+    {
+      "desc": "Watch and compile the theme scss",
+      "extend": ["cache"],
+      "let": {
+        "QX_MOBILE_THEME_PATH": "${QOOXDOO_PATH}/framework/source/resource/qx/mobile/scss",
+        "QX_SHARED_THEME_PATH": "${QOOXDOO_PATH}/framework/source/resource/qx/scss/",
+        "MOBILE_CSS_PATH" : "${ROOT}/source/resource/${APPLICATION}/css"
+      },
+      "shell": {
+        "command": "sass -C -t compressed -I ${QX_MOBILE_THEME_PATH} -I ${QX_SHARED_THEME_PATH} --watch ${QX_MOBILE_THEME_PATH}:${MOBILE_CSS_PATH}"
+      }
     }
+
+    /*
+    "build-theme" :
+    {
+      "desc"   : "Compiles the theme SCSS",
+      "extend" : ["cache"],
+      "let" :
+      {
+        "MOBILE_THEME_PATH" : "${QOOXDOO_PATH}/framework/source/resource/qx/mobile/",
+        "SHARED_THEME_PATH" : "${QOOXDOO_PATH}/framework/source/resource/qx/scss/",
+        "MOBILE_CSS_PATH" : "source/resource/${APPLICATION}/css",
+      },
+      "shell" :
+      {
+        "command" :
+        [
+          "${PYTHON_CMD} ${QOOXDOO_PATH}/tool/bin/scss.py ${MOBILE_THEME_PATH}scss/flat.scss -o ${MOBILE_CSS_PATH}/flat.css --load-path=${MOBILE_THEME_PATH}scss,${SHARED_THEME_PATH} && ${PYTHON_CMD} ${QOOXDOO_PATH}/tool/bin/scss.py ${MOBILE_THEME_PATH}scss/indigo.scss -o ${MOBILE_CSS_PATH}/indigo.css --load-path=${MOBILE_THEME_PATH}scss,${SHARED_THEME_PATH}",
+        ]
+      }
+    }*/
   }
 }

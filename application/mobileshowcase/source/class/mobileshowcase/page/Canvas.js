@@ -20,8 +20,6 @@
 
 /**
  * Mobile page showing a HTML5 canvas example.
- *
- * @asset(qx/mobile/css/*)
  */
 qx.Class.define("mobileshowcase.page.Canvas",
 {
