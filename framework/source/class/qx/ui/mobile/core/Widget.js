@@ -791,13 +791,13 @@ qx.Class.define("qx.ui.mobile.core.Widget",
     {
       if(value)
       {
-        this.removeCssClass("disabled");
-        this._setStyle('anonymous',this.getAnonymous());
+        this.removeClass("disabled");
+        this.setStyle('anonymous',this.getAnonymous());
       }
       else
       {
-        this.addCssClass("disabled");
-        this._setStyle('anonymous',true);
+        this.addClass("disabled");
+        this.setStyle('anonymous',true);
       }
     },
 

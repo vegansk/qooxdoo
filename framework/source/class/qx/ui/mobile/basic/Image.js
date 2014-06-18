@@ -51,16 +51,19 @@ qx.Class.define("qx.ui.mobile.basic.Image",
    */
   construct : function(source)
   {
-    this.base(arguments);
-
     if (qx.ui.mobile.basic.Image.ROOT === null) {
       qx.ui.mobile.basic.Image.ROOT = qx.core.Init.getApplication().getRoot();
     }
 
-    if (source) {
-      this.setSource(source);
+    if (arguments[0] instanceof qxWeb) {
+      this.base(arguments, source);
     } else {
-      this.initSource();
+      this.base(arguments);
+      if (source) {
+        this.setSource(source);
+      } else {
+        this.initSource();
+      }
     }
 
     qx.ui.mobile.basic.Image.ROOT.addListener("changeAppScale", this._onChangeAppScale, this);
@@ -99,7 +102,18 @@ qx.Class.define("qx.ui.mobile.basic.Image",
 
 
     /** @type {String} a 1px*1px sized transparent image. */
-    PLACEHOLDER_IMAGE : null
+    PLACEHOLDER_IMAGE : null,
+
+    /**
+     * [mobileWidget description]
+     * @return {[type]} [description]
+     * @attach {qxWeb}
+     */
+    image : function(source) {
+      var images = new qx.ui.mobile.basic.Image(this);
+      images.init(source);
+      return images;
+    }
   },
 
 
@@ -134,6 +148,10 @@ qx.Class.define("qx.ui.mobile.basic.Image",
 
   members :
   {
+    init : function(source) {
+      this.setSource(source);
+    },
+
     // overridden
     _getTagName : function() {
       return "img";
@@ -275,7 +293,8 @@ qx.Class.define("qx.ui.mobile.basic.Image",
       // Output a warning if the image could not loaded and quit
       if (imageInfo.failed)
       {
-        this.warn("Image could not be loaded: " + source);
+        //this.warn("Image could not be loaded: " + source); TODO
+        console.warn("Image could not be loaded: " + source);
         this.fireEvent("loadingFailed");
       }
       else if (imageInfo.aborted)
@@ -319,6 +338,9 @@ qx.Class.define("qx.ui.mobile.basic.Image",
   defer : function(statics) {
     statics.PIXEL_RATIOS = ["3", "2", "1.5"];
     statics.PLACEHOLDER_IMAGE = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+    qxWeb.$attach({
+      mobileImage: statics.image
+    });
   },
 
 
