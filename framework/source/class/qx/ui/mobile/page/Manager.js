@@ -103,7 +103,7 @@ qx.Class.define("qx.ui.mobile.page.Manager",
       this.__detailNavigation.getLayout().setShowAnimation(false);
 
       this.__masterContainer.forceHide();
-      
+
       setTimeout(function() {
         if (qx.bom.Viewport.isLandscape()) {
           this.__masterContainer.show();
@@ -319,7 +319,7 @@ qx.Class.define("qx.ui.mobile.page.Manager",
     addMaster : function(pages) {
       if (this.__isTablet) {
         if(pages) {
-          if(!qx.lang.Type.isArray(pages)) {
+          if(!qx.lang.Type.isArray(pages) || pages instanceof qxWeb) {
             pages = [pages];
           }
 

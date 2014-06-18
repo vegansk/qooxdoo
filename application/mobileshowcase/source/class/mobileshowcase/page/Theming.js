@@ -66,8 +66,8 @@ qx.Class.define("mobileshowcase.page.Theming",
      * Preloads all css files for preventing flickering on theme switches.
      */
     __preloadThemes : function() {
-      for(var i = 0; i < this.self(arguments).THEMES.length; i++) {
-        var cssResource = this.self(arguments).THEMES[i].css;
+      for(var i = 0; i < mobileshowcase.page.Theming.THEMES.length; i++) {
+        var cssResource = mobileshowcase.page.Theming.THEMES[i].css;
         var cssURI = qx.util.ResourceManager.getInstance().toUri(cssResource);
 
         var req = new qx.bom.request.Xhr();
