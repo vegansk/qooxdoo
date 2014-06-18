@@ -48,7 +48,12 @@ qx.Class.define("qx.ui.mobile.basic.Label",
    */
   construct : function(value)
   {
-    this.base(arguments, value);
+    if (arguments[0] instanceof qxWeb) {
+      this.base(arguments, value);
+    } else {
+      this.base(arguments);
+    }
+
     if (typeof value == "string") {
       this.setValue(value);
     }

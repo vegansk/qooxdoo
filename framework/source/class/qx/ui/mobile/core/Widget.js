@@ -28,8 +28,8 @@
 qx.Class.define("qx.ui.mobile.core.Widget",
 {
   extend : qx.ui.website.Widget,
-  //TODO: MEvent -> Emitter
-  include : [qx.locale.MTranslation, qx.core.MEvent],
+  //TODO: MEvent -> Emitter, MAssert only for qx.debug
+  include : [qx.locale.MTranslation, qx.core.MEvent, qx.core.MAssert],
 
 
   /*
@@ -572,7 +572,7 @@ qx.Class.define("qx.ui.mobile.core.Widget",
       qx.ui.mobile.core.Widget.ATTRIBUTE_MAPPING[property] = {
         attribute : attribute,
         values : values
-      }
+      };
     },
 
 
@@ -609,7 +609,7 @@ qx.Class.define("qx.ui.mobile.core.Widget",
       qx.ui.mobile.core.Widget.STYLE_MAPPING[property] = {
         style : style,
         values : values
-      }
+      };
     },
 
 
@@ -697,6 +697,15 @@ qx.Class.define("qx.ui.mobile.core.Widget",
       }
       return this.__classPrefix;
     },
+
+    // TODO
+    toHashCode : function() {
+      return null;
+    },
+
+    // addListener : function(type, listener, self, capture) {
+    //   this.on(type, listener, self, capture);
+    // },
 
 
     /*
@@ -869,10 +878,10 @@ qx.Class.define("qx.ui.mobile.core.Widget",
       if (qx.core.Environment.get("qx.debug"))
       {
         if (child.getLayoutParent() === this) {
-          throw new Error("The widget is already added this widget. Please remove it first.")
+          throw new Error("The widget is already added this widget. Please remove it first.");
         }
 
-        qx.core.Assert.assertInArray(beforeWidget, this._getChildren(), "The 'before' widget is not a child of this widget!");
+        this.assertInArray(beforeWidget, this._getChildren(), "The 'before' widget is not a child of this widget!");
       }
 
       if (child == beforeWidget) {
@@ -900,10 +909,10 @@ qx.Class.define("qx.ui.mobile.core.Widget",
       if (qx.core.Environment.get("qx.debug"))
       {
         if (child.getLayoutParent() === this) {
-          throw new Error("The child is already added to this widget. Please remove it first.")
+          throw new Error("The child is already added to this widget. Please remove it first.");
         }
 
-        qx.core.Assert.assertInArray(afterWidget, this._getChildren(), "The 'after' widget is not a child of this widget!");
+        this.assertInArray(afterWidget, this._getChildren(), "The 'after' widget is not a child of this widget!");
       }
 
       if (child == afterWidget) {
@@ -1082,7 +1091,7 @@ qx.Class.define("qx.ui.mobile.core.Widget",
     {
       if (qx.core.Environment.get("qx.debug")) {
         if (layout) {
-          qx.core.Assert.assertInstance(layout, qx.ui.mobile.layout.Abstract);
+          this.assertInstance(layout, qx.ui.mobile.layout.Abstract);
         }
       }
 
