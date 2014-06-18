@@ -21,11 +21,15 @@
  * This is the base class for all mobile widgets.
  *
  * @use(qx.ui.mobile.core.EventHandler)
+ * @require(qx.module.Manipulating)
+ * @require(qx.module.Css)
+ * @require(qx.module.Attribute)
  */
 qx.Class.define("qx.ui.mobile.core.Widget",
 {
-  extend : qx.core.Object,
-  include : [qx.locale.MTranslation],
+  extend : qx.ui.website.Widget,
+  //TODO: MEvent -> Emitter
+  include : [qx.locale.MTranslation, qx.core.MEvent],
 
 
   /*
@@ -34,16 +38,13 @@ qx.Class.define("qx.ui.mobile.core.Widget",
   *****************************************************************************
   */
 
-  construct : function()
+  construct : function(selector, context)
   {
-    this.base(arguments);
-
-    this._setContainerElement(this._createContainerElement());
-
-    // Init member variables
-
+    this.base(arguments, selector, context);
     this.__children = [];
-
+    if (this.length === 0) {
+      this._setContainerElement(this._createContainerElement());
+    }
     this.setId(this.getId());
     this.initDefaultCssClass();
     this.initName();
@@ -248,7 +249,7 @@ qx.Class.define("qx.ui.mobile.core.Widget",
 
 
     /**
-     * The name attribute of the container element. Usefull when you want to find
+     * The name attribute of the container element. Useful when you want to find
      * an element by its name attribute.
      */
     name :
@@ -429,6 +430,17 @@ qx.Class.define("qx.ui.mobile.core.Widget",
     __domUpdatedScheduleId : null,
 
     /**
+     * [mobileWidget description]
+     * @return {[type]} [description]
+     * @attach {qxWeb}
+     */
+    mobileWidget : function() {
+      var widgets = new qx.ui.mobile.core.Widget(this);
+      widgets.init();
+      return widgets;
+    },
+
+    /**
      * Event handler. Called when the application is in shutdown.
      * @internal
      */
@@ -446,7 +458,7 @@ qx.Class.define("qx.ui.mobile.core.Widget",
      */
     getCurrentId : function()
     {
-      return qx.ui.mobile.core.Widget.__idCounter
+      return qx.ui.mobile.core.Widget.__idCounter;
     },
 
 
@@ -663,12 +675,29 @@ qx.Class.define("qx.ui.mobile.core.Widget",
 
   members :
   {
-    __containerElement : null,
     __contentElement : null,
 
     __layoutParent : null,
     __children : null,
     __layoutManager : null,
+    __classPrefix : null,
+
+
+    init : function() {
+      if (!this.base(arguments)) {
+        return false;
+      }
+    },
+
+
+    getCssPrefix : function() {
+      if (!this.__classPrefix) {
+        var split = this.classname.split(".");
+        this.__classPrefix = "qx-mobile" + split[split.length - 1].toLowerCase();
+      }
+      return this.__classPrefix;
+    },
+
 
     /*
     ---------------------------------------------------------------------------
@@ -695,7 +724,7 @@ qx.Class.define("qx.ui.mobile.core.Widget",
     */
     _createContainerElement : function()
     {
-      return qx.dom.Element.create(this._getTagName());
+      return qxWeb.create("<" + this._getTagName() + ">")[0];
     },
 
 
@@ -743,8 +772,10 @@ qx.Class.define("qx.ui.mobile.core.Widget",
         qx.ui.mobile.core.Widget.unregisterWidget(old);
       }
       // Change the id of the DOM element
-      var element = this.getContainerElement();
-      element.id = value;
+      // var element = this.getContainerElement();
+      // element.id = value;
+      this.setAttribute("id", value);
+
       // Register the widget
       qx.ui.mobile.core.Widget.registerWidget(this);
 
@@ -841,7 +872,7 @@ qx.Class.define("qx.ui.mobile.core.Widget",
           throw new Error("The widget is already added this widget. Please remove it first.")
         }
 
-        this.assertInArray(beforeWidget, this._getChildren(), "The 'before' widget is not a child of this widget!");
+        qx.core.Assert.assertInArray(beforeWidget, this._getChildren(), "The 'before' widget is not a child of this widget!");
       }
 
       if (child == beforeWidget) {
@@ -872,7 +903,7 @@ qx.Class.define("qx.ui.mobile.core.Widget",
           throw new Error("The child is already added to this widget. Please remove it first.")
         }
 
-        this.assertInArray(afterWidget, this._getChildren(), "The 'after' widget is not a child of this widget!");
+        qx.core.Assert.assertInArray(afterWidget, this._getChildren(), "The 'after' widget is not a child of this widget!");
       }
 
       if (child == afterWidget) {
@@ -1051,7 +1082,7 @@ qx.Class.define("qx.ui.mobile.core.Widget",
     {
       if (qx.core.Environment.get("qx.debug")) {
         if (layout) {
-          this.assertInstance(layout, qx.ui.mobile.layout.Abstract);
+          qx.core.Assert.assertInstance(layout, qx.ui.mobile.layout.Abstract);
         }
       }
 
@@ -1197,7 +1228,7 @@ qx.Class.define("qx.ui.mobile.core.Widget",
         }
       }
 
-      qx.bom.element.Style.set(this.getContainerElement(),"transform", propertyValue);
+      this.setStyle("transform", propertyValue);
     },
 
 
@@ -1243,11 +1274,11 @@ qx.Class.define("qx.ui.mobile.core.Widget",
 
       var element = this.getContainerElement();
       if (value != null) {
-        qx.bom.element.Attribute.set(element, attribute, value);
+        this.setAttribute(attribute, value);
       }
       else
       {
-        qx.bom.element.Attribute.reset(element, attribute);
+        this.removeAttribute(attribute);
       }
       this._domUpdated();
     },
@@ -1261,8 +1292,7 @@ qx.Class.define("qx.ui.mobile.core.Widget",
      */
     _getAttribute : function(attribute)
     {
-      var element = this.getContainerElement();
-      return qx.bom.element.Attribute.get(element, attribute);
+      return this.getAttribute(attribute);
     },
 
 
@@ -1295,20 +1325,20 @@ qx.Class.define("qx.ui.mobile.core.Widget",
      */
     _setStyle : function(style, value)
     {
-      var mapping = qx.ui.mobile.core.Widget.STYLE_MAPPING[style]
+      var mapping = qx.ui.mobile.core.Widget.STYLE_MAPPING[style];
       if (mapping)
       {
         style = mapping.style || style;
         value = mapping.values[value];
       }
 
-      var element = this.getContainerElement();
       if (value != null) {
-        qx.bom.element.Style.set(element, style, value);
+        this.setStyle(style, value);
       }
       else
       {
-        qx.bom.element.Style.reset(element, style);
+        //TODO: qx.module.Css.reset
+        this.setStyle(style, "");
       }
       this._domUpdated();
     },
@@ -1322,8 +1352,7 @@ qx.Class.define("qx.ui.mobile.core.Widget",
      */
     _getStyle : function(style)
     {
-      var element = this.getContainerElement();
-      return qx.bom.element.Style.get(element, style);
+      return this.getStyle(style);
     },
 
     /*
@@ -1351,7 +1380,7 @@ qx.Class.define("qx.ui.mobile.core.Widget",
      * @param cssClass {String} The CSS class to add
      */
     addCssClass : function(cssClass) {
-      qx.bom.element.Class.add(this.getContainerElement(), cssClass);
+      this.addClass(cssClass);
       this._domUpdated();
     },
 
@@ -1364,7 +1393,7 @@ qx.Class.define("qx.ui.mobile.core.Widget",
      */
     addCssClasses : function(cssClasses) {
       if(cssClasses){
-        qx.bom.element.Class.addClasses(this.getContainerElement(), cssClasses);
+        this.addClasses(cssClasses);
         this._domUpdated();
       }
     },
@@ -1376,7 +1405,7 @@ qx.Class.define("qx.ui.mobile.core.Widget",
      * @param cssClass {String} The CSS class to remove
      */
     removeCssClass : function(cssClass) {
-      qx.bom.element.Class.remove(this.getContainerElement(), cssClass);
+      this.removeClass(cssClass);
       this._domUpdated();
     },
 
@@ -1388,7 +1417,7 @@ qx.Class.define("qx.ui.mobile.core.Widget",
      */
     removeCssClasses : function(cssClasses) {
        if(cssClasses){
-         qx.bom.element.Class.removeClasses(this.getContainerElement(), cssClasses);
+         this.removeClasses(cssClasses);
          this._domUpdated();
        }
     },
@@ -1415,7 +1444,7 @@ qx.Class.define("qx.ui.mobile.core.Widget",
      * @return {Boolean} Whether the CSS class is set or not
      */
     hasCssClass : function(cssClass) {
-      return qx.bom.element.Class.has(this.getContainerElement(), cssClass);
+      return this.hasClass(cssClass);
     },
 
 
@@ -1555,7 +1584,7 @@ qx.Class.define("qx.ui.mobile.core.Widget",
      */
     _setContainerElement : function(element)
     {
-      this.__containerElement = element;
+      this.push(element);
     },
 
 
@@ -1568,7 +1597,7 @@ qx.Class.define("qx.ui.mobile.core.Widget",
      */
     getContainerElement : function()
     {
-      return this.__containerElement;
+      return this[0];
     },
 
 
@@ -1651,7 +1680,7 @@ qx.Class.define("qx.ui.mobile.core.Widget",
       }
     }
 
-    this.__layoutParent = this.__containerElement = this.__contentElement = null;
+    this.__layoutParent = this.__contentElement = null;
     if(this.__layoutManager) {
       this.__layoutManager.dispose();
     }
@@ -1669,5 +1698,8 @@ qx.Class.define("qx.ui.mobile.core.Widget",
 
   defer : function(statics) {
     qx.bom.Lifecycle.onShutdown(statics.onShutdown, statics);
+    qxWeb.$attach({
+      mobileWidget: statics.mobileWidget
+    });
   }
 });

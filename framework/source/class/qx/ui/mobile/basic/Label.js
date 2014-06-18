@@ -48,8 +48,8 @@ qx.Class.define("qx.ui.mobile.basic.Label",
    */
   construct : function(value)
   {
-    this.base(arguments);
-    if (value) {
+    this.base(arguments, value);
+    if (typeof value == "string") {
       this.setValue(value);
     }
     this.initWrap();
@@ -110,6 +110,20 @@ qx.Class.define("qx.ui.mobile.basic.Label",
   },
 
 
+  statics : {
+    /**
+     * [mobileWidget description]
+     * @return {[type]} [description]
+     * @attach {qxWeb}
+     */
+    label : function(value) {
+      var labels = new qx.ui.mobile.basic.Label(this);
+      labels.init(value);
+      return labels;
+    }
+  },
+
+
 
 
   /*
@@ -120,6 +134,13 @@ qx.Class.define("qx.ui.mobile.basic.Label",
 
   members :
   {
+    init : function(value) {
+      if (value) {
+        this.setValue(value);
+      }
+    },
+
+
     // property apply
     _applyValue : function(value, old)
     {
@@ -169,5 +190,17 @@ qx.Class.define("qx.ui.mobile.basic.Label",
     if (qx.core.Environment.get("qx.dynlocale")) {
       qx.locale.Manager.getInstance().removeListener("changeLocale", this._onChangeLocale, this);
     }
+  },
+
+  /*
+  *****************************************************************************
+     DEFER
+  *****************************************************************************
+  */
+
+  defer : function(statics) {
+    qxWeb.$attach({
+      mobileLabel: statics.label
+    });
   }
 });

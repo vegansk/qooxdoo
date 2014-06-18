@@ -52,10 +52,14 @@ qx.Class.define("qx.ui.mobile.basic.Atom",
    */
   construct : function(label, icon)
   {
-    this.base(arguments);
-    this.__createChildren(label, icon);
-
+    if (arguments[0] instanceof qxWeb) {
+      this.base(arguments, label);
+    } else {
+      this.base(arguments);
+      this.__createChildren(label, icon);
+    }
     this.addCssClass("gap");
+
   },
 
   /*
@@ -130,11 +134,28 @@ qx.Class.define("qx.ui.mobile.basic.Atom",
     }
   },
 
+  statics : {
+    /**
+     * [mobileWidget description]
+     * @return {[type]} [description]
+     * @attach {qxWeb}
+     */
+    atom : function(label, icon) {
+      var atoms = new qx.ui.mobile.basic.Atom(this);
+      atoms.init(label, icon);
+      return atoms;
+    }
+  },
+
   members :
   {
     __label : null,
     __icon : null,
     __childrenContainer : null,
+
+    init : function(label, icon) {
+      this.__createChildren(label, icon);
+    },
 
 
         // property apply
@@ -326,5 +347,17 @@ qx.Class.define("qx.ui.mobile.basic.Atom",
 
   destruct : function() {
     this._disposeObjects("__label", "__icon", "__childrenContainer");
+  },
+
+  /*
+  *****************************************************************************
+     DEFER
+  *****************************************************************************
+  */
+
+  defer : function(statics) {
+    qxWeb.$attach({
+      mobileAtom: statics.atom
+    });
   }
 });
