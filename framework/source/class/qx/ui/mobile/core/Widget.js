@@ -21,15 +21,18 @@
  * This is the base class for all mobile widgets.
  *
  * @use(qx.ui.mobile.core.EventHandler)
- * @require(qx.module.Manipulating)
- * @require(qx.module.Css)
- * @require(qx.module.Attribute)
+ * @require(qx.module.Core)
  */
 qx.Class.define("qx.ui.mobile.core.Widget",
 {
   extend : qx.ui.website.Widget,
   //TODO: MEvent -> Emitter, MAssert only for qx.debug
-  include : [qx.locale.MTranslation, qx.core.MEvent, qx.core.MAssert],
+  include : [
+    qx.locale.MTranslation,
+    qx.core.MEvent,
+    qx.core.MAssert,
+    qx.core.MProperty,
+    qx.data.MBinding ],
 
 
   /*

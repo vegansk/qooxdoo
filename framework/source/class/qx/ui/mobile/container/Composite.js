@@ -50,6 +50,20 @@ qx.Class.define("qx.ui.mobile.container.Composite",
   include : [ qx.ui.mobile.core.MChildrenHandling, qx.ui.mobile.core.MLayoutHandling],
 
 
+  statics : {
+    /**
+     * [mobileWidget description]
+     * @return {[type]} [description]
+     * @attach {qxWeb}
+     */
+    composite : function(layout) {
+      var composites = new qx.ui.mobile.container.Composite(this);
+      composites.init(layout);
+      return composites;
+    }
+  },
+
+
   /*
   *****************************************************************************
      CONSTRUCTOR
@@ -62,10 +76,25 @@ qx.Class.define("qx.ui.mobile.container.Composite",
    */
   construct : function(layout)
   {
-    this.base(arguments);
-    if (layout) {
-      this.setLayout(layout);
+    if (arguments[0] instanceof qxWeb) {
+      this.base(arguments, arguments[0]);
+    } else {
+      this.base(arguments);
+      if (layout) {
+        this.setLayout(layout);
+      }
     }
+  },
+
+
+  members : {
+
+    init : function(layout) {
+      if (layout) {
+        this.setLayout(layout);
+      }
+    }
+
   },
 
 
@@ -81,5 +110,9 @@ qx.Class.define("qx.ui.mobile.container.Composite",
   {
     qx.ui.mobile.core.MChildrenHandling.remap(members);
     qx.ui.mobile.core.MLayoutHandling.remap(members);
+
+    qxWeb.$attach({
+      mobileComposite: statics.composite
+    });
   }
 });

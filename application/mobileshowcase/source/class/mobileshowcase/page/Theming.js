@@ -120,10 +120,10 @@ qx.Class.define("mobileshowcase.page.Theming",
       var themeForm = new qx.ui.mobile.form.Form();
 
       var themeRadioGroup = new qx.ui.mobile.form.RadioGroup();
-      for (var i = 0; i < this.self(arguments).THEMES.length; i++) {
+      for (var i = 0; i < mobileshowcase.page.Theming.THEMES.length; i++) {
         var radioButton = new qx.ui.mobile.form.RadioButton();
         themeRadioGroup.add(radioButton);
-        themeForm.add(radioButton, this.self(arguments).THEMES[i].name);
+        themeForm.add(radioButton, mobileshowcase.page.Theming.THEMES[i].name);
 
         radioButton.addListener("tap", this.__switchTheme, {
           "self": this,
@@ -297,7 +297,7 @@ qx.Class.define("mobileshowcase.page.Theming",
      * @param src {qx.ui.mobile.core.Widget} Source widget of this event.
      */
     __switchTheme : function() {
-      var cssResource = this.self.self(arguments).THEMES[this.index].css;
+      var cssResource = mobileshowcase.page.Theming.THEMES[this.index].css;
       var cssURI = qx.util.ResourceManager.getInstance().toUri(cssResource);
       this.self.__changeCSS(cssURI);
     },

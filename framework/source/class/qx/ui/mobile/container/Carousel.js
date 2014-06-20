@@ -50,6 +50,23 @@ qx.Class.define("qx.ui.mobile.container.Carousel",
   include : qx.ui.mobile.core.MResize,
 
 
+  statics : {
+
+    /**
+     * [carousel description]
+     * @param  {[type]} transitionDuration [description]
+     * @return {[type]}                    [description]
+     * @attach {qxWeb}
+     */
+    carousel : function(transitionDuration) {
+      var carousels = new qx.ui.mobile.container.Carousel(this);
+      carousels.init(transitionDuration);
+      return carousels;
+    }
+
+  },
+
+
   /*
   *****************************************************************************
      CONSTRUCTOR
@@ -61,49 +78,13 @@ qx.Class.define("qx.ui.mobile.container.Carousel",
   */
   construct : function(transitionDuration)
   {
-    this.base(arguments);
-    if (transitionDuration) {
-      this.setTransitionDuration(transitionDuration);
+    if (arguments[0] instanceof qxWeb) {
+      this.base(arguments, arguments[0]);
+      this.init();
+    } else {
+      this.base(arguments);
+      this.init(transitionDuration);
     }
-
-    this.__snapPointsX = [];
-    this.__onMoveOffset = [0, 0];
-    this.__lastOffset = [0, 0];
-    this.__boundsX = [0, 0];
-    this.__pages = [];
-    this.__paginationLabels = [];
-
-    var carouselScroller = this.__carouselScroller = new qx.ui.mobile.container.Composite(new qx.ui.mobile.layout.HBox());
-    carouselScroller.setTransformUnit("px");
-    carouselScroller.addCssClass("carousel-scroller");
-
-    carouselScroller.addListener("pointerdown", this._onPointerDown, this);
-    carouselScroller.addListener("pointerup", this._onPointerUp, this);
-    carouselScroller.addListener("track", this._onTrack, this);
-    carouselScroller.addListener("swipe", this._onSwipe, this);
-
-    this.addListener("touchmove", qx.bom.Event.preventDefault, this);
-
-    this.addListener("appear", this._onContainerUpdate, this);
-
-    qx.event.Registration.addListener(this.__carouselScroller.getContainerElement(),"transitionEnd",this._onScrollerTransitionEnd, this);
-    qx.event.Registration.addListener(window, "orientationchange", this._onContainerUpdate, this);
-    qx.event.Registration.addListener(window, "resize", this._onContainerUpdate, this);
-    qx.event.Registration.addListener(this.getContentElement(), "scroll", this._onNativeScroll, this);
-
-    var pagination = this.__pagination = new qx.ui.mobile.container.Composite();
-    pagination.setLayout(new qx.ui.mobile.layout.HBox());
-    pagination.setTransformUnit("px");
-    pagination.addCssClass("carousel-pagination");
-
-    this.setLayout(new qx.ui.mobile.layout.VBox());
-
-    this._add(carouselScroller, {
-      flex: 1
-    });
-    this._add(pagination, {
-      flex: 1
-    });
   },
 
 
@@ -190,6 +171,52 @@ qx.Class.define("qx.ui.mobile.container.Carousel",
     __isPageScrollTarget : null,
     __deltaX : null,
     __deltaY : null,
+
+
+    init : function(transitionDuration) {
+      if (transitionDuration) {
+        this.setTransitionDuration(transitionDuration);
+      }
+
+      this.__snapPointsX = [];
+      this.__onMoveOffset = [0, 0];
+      this.__lastOffset = [0, 0];
+      this.__boundsX = [0, 0];
+      this.__pages = [];
+      this.__paginationLabels = [];
+
+      var carouselScroller = this.__carouselScroller = new qx.ui.mobile.container.Composite(new qx.ui.mobile.layout.HBox());
+      carouselScroller.setTransformUnit("px");
+      carouselScroller.addCssClass("carousel-scroller");
+
+      carouselScroller.addListener("pointerdown", this._onPointerDown, this);
+      carouselScroller.addListener("pointerup", this._onPointerUp, this);
+      carouselScroller.addListener("track", this._onTrack, this);
+      carouselScroller.addListener("swipe", this._onSwipe, this);
+
+      this.addListener("touchmove", qx.bom.Event.preventDefault, this);
+
+      this.addListener("appear", this._onContainerUpdate, this);
+
+      qx.event.Registration.addListener(this.__carouselScroller.getContainerElement(),"transitionEnd",this._onScrollerTransitionEnd, this);
+      qx.event.Registration.addListener(window, "orientationchange", this._onContainerUpdate, this);
+      qx.event.Registration.addListener(window, "resize", this._onContainerUpdate, this);
+      qx.event.Registration.addListener(this.getContentElement(), "scroll", this._onNativeScroll, this);
+
+      var pagination = this.__pagination = new qx.ui.mobile.container.Composite();
+      pagination.setLayout(new qx.ui.mobile.layout.HBox());
+      pagination.setTransformUnit("px");
+      pagination.addCssClass("carousel-pagination");
+
+      this.setLayout(new qx.ui.mobile.layout.VBox());
+
+      this._add(carouselScroller, {
+        flex: 1
+      });
+      this._add(pagination, {
+        flex: 1
+      });
+    },
 
 
     // overridden
@@ -764,5 +791,12 @@ qx.Class.define("qx.ui.mobile.container.Carousel",
     qx.util.DisposeUtil.disposeArray(this,"__paginationLabels");
 
     this.__pages = this.__paginationLabels = this.__snapPointsX = this.__onMoveOffset = this.__lastOffset = this.__boundsX = this.__isPageScrollTarget = null;
+  },
+
+
+  defer : function(statics) {
+    qxWeb.$attach({
+      mobileCarousel: statics.carousel
+    });
   }
 });
