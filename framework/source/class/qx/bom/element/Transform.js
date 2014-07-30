@@ -120,6 +120,23 @@ qx.Bootstrap.define("qx.bom.element.Transform",
 
 
     /**
+     * Converts the given map to a string of transform properties.
+     *
+     * @param transforms {Map} The transforms map. For a detailed description,
+     * take a look at the {@link #transform} method.
+     * @return {String} The CSS value.
+     */
+    getCssValue : function(transforms) {
+      var transformCss = this.__mapToCss(transforms);
+      if (this.__cssKeys != null) {
+        var style = this.__cssKeys["name"];
+        return transformCss;
+      }
+      return "";
+    },
+
+
+    /**
      * Sets the transform-origin property of the given element.
      *
      * Spec: http://www.w3.org/TR/css3-3d-transforms/#transform-origin-property

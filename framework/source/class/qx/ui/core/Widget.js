@@ -57,6 +57,9 @@ qx.Class.define("qx.ui.core.Widget",
     // Create basic element
     this.__contentElement = this.__createContentElement();
 
+    // Hold left and right positions
+    this.__position = {};
+
     // Initialize properties
     this.initFocusable();
     this.initSelectable();
@@ -929,6 +932,12 @@ qx.Class.define("qx.ui.core.Widget",
     __layoutManager : null,
 
 
+    /**
+     * @type {Map} Map of top and left property. Holds the computed position of the content element
+     */
+    __position : null,
+
+
     // overridden
     _getLayout : function() {
       return this.__layoutManager;
@@ -1013,13 +1022,23 @@ qx.Class.define("qx.ui.core.Widget",
       var content = this.getContentElement();
       var inner = changes.size || this._updateInsets;
       var pixel = "px";
-
       var contentStyles = {};
       // Move content to new position
       if (changes.position)
       {
-        contentStyles.left = left + pixel;
-        contentStyles.top = top + pixel;
+        // no CSS transform
+        if (!qx.core.Environment.get("css.transform")) {
+          contentStyles.left = left + pixel;
+          contentStyles.top = top + pixel;
+        }
+
+        // CSS transform available
+        else {
+          contentStyles.transform = qx.bom.element.Transform.getCssValue({translate : [left + pixel, top + pixel, 0]});
+        }
+
+        this.__position.left = left;
+        this.__position.top = top;
       }
 
       if (inner || changes.margin)
@@ -1130,21 +1149,38 @@ qx.Class.define("qx.ui.core.Widget",
 
       // Move
       var domEl = elem.getDomElement();
+
+      var pixel = "px";
+
+      var top = bounds.top;
+      var left = bounds.left;
+
+      var contentStyles = {
+        width : bounds.width + pixel,
+        height : bounds.height + pixel
+      };
+
+      // no CSS transform
+      if (!qx.core.Environment.get("css.transform")) {
+        contentStyles.left = left + pixel;
+        contentStyles.top = top + pixel;
+      }
+
+      // CSS transform available
+      else {
+        contentStyles.transform = qx.bom.element.Transform.getCssValue({translate : [left + pixel, top + pixel, 0]});
+      }
+
       // use the DOM element because the cache of the qx.html.Element could be
       // wrong due to changes made by the decorators which work on the DOM element too
       if (domEl) {
-        domEl.style.top = bounds.top + "px";
-        domEl.style.left = bounds.left + "px";
-        domEl.style.width = bounds.width + "px";
-        domEl.style.height = bounds.height + "px";
+        qx.bom.element.Style.setStyles(domEl, contentStyles);
       } else {
-        elem.setStyles({
-          left : bounds.left + "px",
-          top : bounds.top + "px",
-          width : bounds.width + "px",
-          height : bounds.height + "px"
-        });
+        elem.setStyles(contentStyles);
       }
+
+      this.__position.left = left;
+      this.__position.top = top;
 
       // Remember element
       if (!this.__separators) {
@@ -1612,7 +1648,9 @@ qx.Class.define("qx.ui.core.Widget",
 
       var styles = {
         "zIndex": 10,
-        "boxSizing": "border-box"
+        "boxSizing": "border-box",
+        "top" : "0px",
+        "left" : "0px"
       };
 
       if (!qx.ui.root.Inline ||
@@ -3711,7 +3749,25 @@ qx.Class.define("qx.ui.core.Widget",
     {
       var domEl = this.getContentElement().getDomElement();
       if (domEl) {
-        domEl.style.left = value + "px";
+        var top = this.__position.top;
+        var left = value;
+        var pixel = "px";
+
+        var contentStyles = {};
+
+        // no CSS transform
+        if (!qx.core.Environment.get("css.transform")) {
+          contentStyles.left = left + pixel;
+          contentStyles.top = top + pixel;
+        }
+
+        // CSS transform available
+        else {
+          contentStyles.transform = qx.bom.element.Transform.getCssValue({translate : [left + pixel, top + pixel, 0]});
+        }
+
+        qx.bom.element.Style.setStyles(domEl, contentStyles);
+        this.__position.left = left;
       } else {
         throw new Error("DOM element is not yet created!");
       }
@@ -3732,7 +3788,25 @@ qx.Class.define("qx.ui.core.Widget",
     {
       var domEl = this.getContentElement().getDomElement();
       if (domEl) {
-        domEl.style.top = value + "px";
+        var top = value;
+        var left = this.__position.left;
+        var pixel = "px";
+
+        var contentStyles = {};
+
+        // no CSS transform
+        if (!qx.core.Environment.get("css.transform")) {
+          contentStyles.left = left + pixel;
+          contentStyles.top = top + pixel;
+        }
+
+        // CSS transform available
+        else {
+          contentStyles.transform = qx.bom.element.Transform.getCssValue({translate : [left + pixel, top + pixel, 0]});
+        }
+
+        qx.bom.element.Style.setStyles(domEl, contentStyles);
+        this.__position.top = top;
       } else {
         throw new Error("DOM element is not yet created!");
       }
@@ -3755,8 +3829,23 @@ qx.Class.define("qx.ui.core.Widget",
       var domEl = this.getContentElement().getDomElement();
       if (domEl)
       {
-        domEl.style.left = left + "px";
-        domEl.style.top = top + "px";
+        var pixel = "px";
+        var contentStyles = {};
+
+        // no CSS transform
+        if (!qx.core.Environment.get("css.transform")) {
+          contentStyles.left = left + pixel;
+          contentStyles.top = top + pixel;
+        }
+
+        // CSS transform available
+        else {
+          contentStyles.transform = qx.bom.element.Transform.getCssValue({translate : [left + pixel, top + pixel, 0]});
+        }
+
+        qx.bom.element.Style.setStyles(domEl, contentStyles);
+        this.__position.left = left;
+        this.__position.top = top;
       }
       else
       {
