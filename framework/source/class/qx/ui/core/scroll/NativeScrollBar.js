@@ -266,6 +266,7 @@ qx.Class.define("qx.ui.core.scroll.NativeScrollBar",
      */
     _updateScrollBar : function()
     {
+      var pixel = "px";
       var isHorizontal = this.__isHorizontal;
 
       var bounds = this.getBounds();
@@ -287,20 +288,46 @@ qx.Class.define("qx.ui.core.scroll.NativeScrollBar",
       if (qx.core.Environment.get("engine.name") == "mshtml")
       {
         var bounds = this.getBounds();
-        this.getContentElement().setStyles({
-          left: (isHorizontal ? bounds.left : (bounds.left -1)) + "px",
-          top: (isHorizontal ? (bounds.top - 1) : bounds.top) + "px",
-          width: (isHorizontal ? bounds.width : bounds.width + 1) + "px",
-          height: (isHorizontal ? bounds.height + 1 : bounds.height) + "px"
-        });
+        var left = (isHorizontal ? bounds.left : (bounds.left -1));
+        var top = (isHorizontal ? (bounds.top - 1) : bounds.top);
+
+        var contentStyles = {
+          width: (isHorizontal ? bounds.width : bounds.width + 1) + pixel,
+          height: (isHorizontal ? bounds.height + 1 : bounds.height) + pixel
+        };
+
+        // no CSS transform
+        if (!qx.core.Environment.get("css.transform")) {
+          contentStyles.left = left + pixel;
+          contentStyles.top = top + pixel;
+        }
+
+        // CSS transform available
+        else {
+          contentStyles.transform = qx.bom.element.Transform.getCssValue({translate : [left + pixel, top + pixel, 0]});
+        }
+
+        this.getContentElement().setStyles(contentStyles);
       }
 
-      this._getScrollPaneElement().setStyles({
-        left: 0,
-        top: 0,
-        width: (isHorizontal ? innerSize : 1) + "px",
-        height: (isHorizontal ? 1 : innerSize) + "px"
-      });
+      // pane element styles
+      var contentStyles = {
+        width: (isHorizontal ? innerSize : 1) + pixel,
+        height: (isHorizontal ? 1 : innerSize) + pixel
+      };
+
+      // no CSS transform
+      if (!qx.core.Environment.get("css.transform")) {
+        contentStyles.left = 0;
+        contentStyles.top = 0;
+      }
+
+      // CSS transform available
+      else {
+        contentStyles.transform = qx.bom.element.Transform.getCssValue({translate : [0, 0, 0]});
+      }
+
+      this._getScrollPaneElement().setStyles(contentStyles);
 
       this.updatePosition(this.getPosition());
     },
